@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TL STUDIO - Login</title>
+  <title>TL STUDIO - Soluções Digitais</title>
   <style>
     * {
       margin: 0;
@@ -13,60 +13,29 @@
     }
 
     body {
-      min-height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
       background-color: #0b0f19;
       color: #e2e8f0;
-      position: relative;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
 
-    .top-bar {
-      position: absolute;
-      top: 20px;
-      right: 20px;
-    }
-
-    .btn-guest {
-      background: transparent;
-      border: 1px solid rgba(0, 242, 254, 0.4);
-      color: #00f2fe;
-      padding: 6px 14px;
-      font-size: 0.8rem;
-      border-radius: 6px;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .btn-guest:hover {
-      background: rgba(0, 242, 254, 0.1);
-      border-color: #00f2fe;
-      box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
-    }
-
-    .login-card {
-      background: rgba(15, 23, 42, 0.75);
-      border: 1px solid rgba(56, 189, 248, 0.2);
+    /* Header Navbar */
+    header {
+      background: rgba(15, 23, 42, 0.85);
+      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
       backdrop-filter: blur(12px);
-      padding: 2.5rem;
-      border-radius: 16px;
-      width: 100%;
-      max-width: 400px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-    }
-
-    .header {
-      text-align: center;
-      margin-bottom: 2rem;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     .brand {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 700;
       color: #ffffff;
       letter-spacing: 1.5px;
@@ -76,100 +45,254 @@
       color: #00f2fe;
     }
 
-    .subtitle {
-      font-size: 0.9rem;
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+
+    nav a {
       color: #94a3b8;
-      margin-top: 0.5rem;
-    }
-
-    .form-group {
-      margin-bottom: 1.25rem;
-    }
-
-    .form-group label {
-      display: block;
-      font-size: 0.85rem;
-      color: #cbd5e1;
-      margin-bottom: 0.5rem;
-    }
-
-    .form-group input {
-      width: 100%;
-      padding: 0.75rem 1rem;
-      border-radius: 8px;
-      border: 1px solid #1e293b;
-      background: #0f172a;
-      color: #fff;
+      text-decoration: none;
       font-size: 0.95rem;
-      outline: none;
-      transition: border-color 0.2s;
+      transition: color 0.2s;
     }
 
-    .form-group input:focus {
-      border-color: #00f2fe;
+    nav a:hover {
+      color: #00f2fe;
     }
 
     .btn-login {
-      width: 100%;
-      padding: 0.85rem;
-      border: none;
-      border-radius: 8px;
       background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
       color: #fff;
-      font-size: 1rem;
+      border: none;
+      padding: 8px 18px;
+      font-size: 0.85rem;
       font-weight: 600;
+      border-radius: 6px;
       cursor: pointer;
-      margin-top: 0.5rem;
-      transition: opacity 0.2s;
+      text-decoration: none;
+      transition: opacity 0.2s, box-shadow 0.2s;
     }
 
     .btn-login:hover {
       opacity: 0.9;
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.4);
     }
 
-    .footer-links {
+    /* Hero Section */
+    .hero {
       text-align: center;
-      margin-top: 1.5rem;
+      padding: 4rem 1.5rem 3rem;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      color: #ffffff;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      color: #94a3b8;
+      line-height: 1.6;
+    }
+
+    /* Products Grid */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem 4rem;
+      width: 100%;
+      flex: 1;
+    }
+
+    .section-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 2rem;
+      color: #ffffff;
+      border-left: 4px solid #00f2fe;
+      padding-left: 0.75rem;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.75);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      backdrop-filter: blur(8px);
+      border-radius: 12px;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-5px);
+      border-color: rgba(0, 242, 254, 0.4);
+      box-shadow: 0 10px 25px -5px rgba(0, 242, 254, 0.1);
+    }
+
+    .card-badge {
+      align-self: flex-start;
+      background: rgba(0, 242, 254, 0.1);
+      color: #00f2fe;
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 4px;
+      margin-bottom: 1rem;
+      border: 1px solid rgba(0, 242, 254, 0.2);
+    }
+
+    .card-title {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.5rem;
+    }
+
+    .card-desc {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.5;
+      margin-bottom: 1.5rem;
+    }
+
+    .card-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 1rem;
+      border-top: 1px solid #1e293b;
+    }
+
+    .price {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: #00f2fe;
+    }
+
+    .btn-buy {
+      background: #1e293b;
+      color: #fff;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      padding: 8px 16px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .btn-buy:hover {
+      background: #00f2fe;
+      color: #0b0f19;
+      border-color: #00f2fe;
+    }
+
+    /* Footer */
+    footer {
+      background: #070a12;
+      border-top: 1px solid #1e293b;
+      padding: 2rem 1.5rem;
+      text-align: center;
       font-size: 0.85rem;
       color: #64748b;
-    }
-
-    .footer-links a {
-      color: #00f2fe;
-      text-decoration: none;
     }
   </style>
 </head>
 <body>
 
-  <div class="top-bar">
-    <button class="btn-guest">Entrar sem logar &rarr;</button>
-  </div>
+  <!-- Navbar Header -->
+  <header>
+    <div class="brand">TL <span>STUDIO</span></div>
+    <nav>
+      <a href="#">Serviços</a>
+      <a href="#">Portfólio</a>
+      <a href="#">Contato</a>
+      <button class="btn-login">Login</button>
+    </nav>
+  </header>
 
-  <div class="login-card">
-    <div class="header">
-      <div class="brand">TL <span>STUDIO</span></div>
-      <p class="subtitle">Acesse sua conta para continuar</p>
-    </div>
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Soluções Digitais de <span>Alto Impacto</span></h1>
+    <p>Páginas web modernas, configurações profissionais para servidores de Discord, artes exclusivas e edições marcantes para o seu projeto.</p>
+  </section>
 
-    <form onsubmit="return false;">
-      <div class="form-group">
-        <label for="email">E-mail</label>
-        <input type="email" id="email" placeholder="seu@email.com">
+  <!-- Main Store Section -->
+  <main class="container">
+    <h2 class="section-title">Nossos Serviços</h2>
+
+    <div class="grid">
+      <!-- Card 1 -->
+      <div class="card">
+        <span class="card-badge">WEB DEVELOPMENT</span>
+        <h3 class="card-title">Página Web</h3>
+        <p class="card-desc">Desenvolvimento de página web responsiva, otimizada e com design moderno ajustado ao seu negócio.</p>
+        <div class="card-footer">
+          <span class="price">Sob Consulta</span>
+          <button class="btn-buy">Ver Detalhes</button>
+        </div>
       </div>
 
-      <div class="form-group">
-        <label for="password">Senha</label>
-        <input type="password" id="password" placeholder="••••••••">
+      <!-- Card 2 -->
+      <div class="card">
+        <span class="card-badge">DISCORD</span>
+        <h3 class="card-title">Configuração de Servidor</h3>
+        <p class="card-desc">Estruturação completa de cargos, canais, permissões, bots de suporte e integração com Webhooks.</p>
+        <div class="card-footer">
+          <span class="price">Sob Consulta</span>
+          <button class="btn-buy">Ver Detalhes</button>
+        </div>
       </div>
 
-      <button type="submit" class="btn-login">Entrar</button>
-    </form>
+      <!-- Card 3 -->
+      <div class="card">
+        <span class="card-badge">DESIGN</span>
+        <h3 class="card-title">Artes e Banners</h3>
+        <p class="card-desc">Criação de identidade visual, flyers promocionais e artes para redes sociais ou guilda/facção.</p>
+        <div class="card-footer">
+          <span class="price">Sob Consulta</span>
+          <button class="btn-buy">Ver Detalhes</button>
+        </div>
+      </div>
 
-    <div class="footer-links">
-      <p>Não tem uma conta? <a href="#">Cadastre-se</a></p>
+      <!-- Card 4 -->
+      <div class="card">
+        <span class="card-badge">VIDEO</span>
+        <h3 class="card-title">Edição de Vídeo</h3>
+        <p class="card-desc">Cortes dinâmicos e edição de vídeos curtos para Reels, TikTok, YouTube Shorts ou divulgações.</p>
+        <div class="card-footer">
+          <span class="price">Sob Consulta</span>
+          <button class="btn-buy">Ver Detalhes</button>
+        </div>
+      </div>
     </div>
-  </div>
+  </main>
+
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 TL STUDIO. Todos os direitos reservados.</p>
+  </footer>
 
 </body>
 </html>
