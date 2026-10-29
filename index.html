@@ -98,7 +98,7 @@
     }
 
     /* ==========================================
-       3. MOLDURAS TÉCNICAS E SISTEMA DE HUD (DETALHADO)
+       3. MOLDURAS TÉCNICAS E SISTEMA DE HUD
        ========================================== */
     .cyber-frame {
       position: relative;
@@ -112,7 +112,6 @@
       transition: var(--transition);
     }
 
-    /* Cantoneiras Técnicas Precision */
     .cyber-frame::before {
       content: '';
       position: absolute;
@@ -135,7 +134,6 @@
       pointer-events: none;
     }
 
-    /* Slot de Imagem High-Tech com Scanline e Tags */
     .media-slot {
       position: relative;
       width: 100%;
@@ -205,7 +203,6 @@
       box-shadow: 0 0 10px rgba(0, 242, 254, 0.25);
     }
 
-    /* Status Dot Tech */
     .tech-status-dot {
       display: inline-block;
       width: 6px;
@@ -216,7 +213,7 @@
     }
 
     /* ==========================================
-       4. HEADER & NAVBAR ADVANCED GLASS
+       4. HEADER & NAVBAR GLASS
        ========================================== */
     header {
       position: sticky;
@@ -393,7 +390,7 @@
     }
 
     /* ==========================================
-       6. HERO SECTION COM HUD METRICS & BANNER
+       6. HERO SECTION
        ========================================== */
     .container {
       max-width: 1200px;
@@ -466,7 +463,6 @@
       margin-bottom: 3rem;
     }
 
-    /* Hero Banner com Detalhes Técnicos */
     .hero-banner-frame {
       width: 100%;
       max-width: 1050px;
@@ -478,7 +474,6 @@
       height: 100%;
     }
 
-    /* Barra de Métricas HUD (Detalhe Extra) */
     .hud-metrics-bar {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -519,7 +514,7 @@
     }
 
     /* ==========================================
-       7. SEÇÕES & COMPONENTES DETALHADOS
+       7. SEÇÕES & COMPONENTES
        ========================================== */
     section {
       padding: 5.5rem 0;
@@ -680,6 +675,100 @@
       box-shadow: 0 0 25px rgba(0, 242, 254, 0.7);
     }
 
+    /* --- ÁREA 3: PARCEIROS & CLIENTES (SHOWCASE DE LOGOS / GUILDAS) --- */
+    .partners-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .partner-card {
+      padding: 2rem 1.5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      transition: var(--transition);
+    }
+
+    .partner-card:hover {
+      border-color: var(--cyan-neon);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2);
+    }
+
+    .partner-avatar {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid var(--cyan-neon);
+      background: #050812;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.3rem;
+      color: var(--cyan-neon);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
+      overflow: hidden;
+    }
+
+    .partner-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .partner-info h4 {
+      font-size: 1.1rem;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .partner-info span {
+      font-size: 0.75rem;
+      color: var(--cyan-neon);
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    /* --- ÁREA 4: TIMELINE DO PROCESSO DE TRABALHO (PASSO A PASSO) --- */
+    .workflow-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      position: relative;
+    }
+
+    .workflow-step-card {
+      padding: 2.2rem 1.8rem;
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .step-number {
+      font-size: 2.2rem;
+      font-weight: 900;
+      color: rgba(0, 242, 254, 0.25);
+      line-height: 1;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    .workflow-step-card h4 {
+      font-size: 1.2rem;
+      color: #fff;
+      font-weight: 800;
+    }
+
+    .workflow-step-card p {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+    }
+
     /* --- GALERIA / PORTFÓLIO --- */
     .portfolio-grid {
       display: grid;
@@ -824,7 +913,7 @@
       padding-left: 24px;
     }
 
-    /* --- LINKS ÚTEIS / MÍDIAS --- */
+    /* --- LINKS ÚTEIS --- */
     .links-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -869,7 +958,7 @@
     }
 
     /* ==========================================
-       8. FOOTER COMPLEXO
+       8. FOOTER
        ========================================== */
     footer {
       background: rgba(1, 2, 4, 0.98);
@@ -944,6 +1033,8 @@
       <a href="#inicio" class="menu-link">Início <span class="tech-status-dot"></span></a>
       <a href="#sobre" class="menu-link">Sobre a Loja <span class="tech-status-dot"></span></a>
       <a href="#produtos" class="menu-link">Produtos & Serviços <span class="tech-status-dot"></span></a>
+      <a href="#parceiros" class="menu-link">Parceiros & Guildas <span class="tech-status-dot"></span></a>
+      <a href="#processo" class="menu-link">Como Trabalhamos <span class="tech-status-dot"></span></a>
       <a href="#portfolio" class="menu-link">Galeria / Portfólio <span class="tech-status-dot"></span></a>
       <a href="#comentarios" class="menu-link">Avaliações <span class="tech-status-dot"></span></a>
       <a href="#faq" class="menu-link">FAQ <span class="tech-status-dot"></span></a>
@@ -976,7 +1067,7 @@
         </div>
       </div>
 
-      <!-- Barra de Métricas HUD (Detalhes Extras) -->
+      <!-- Barra de Métricas HUD -->
       <div class="hud-metrics-bar">
         <div class="metric-chip">
           <div class="metric-icon">⚡</div>
@@ -1022,7 +1113,6 @@
             </div>
           </div>
 
-          <!-- Moldura Ilustrativa Sobre a Loja -->
           <div class="cyber-frame about-showcase-frame">
             <div class="media-slot" style="height: 100%;">
               <div class="scanline"></div>
@@ -1160,6 +1250,90 @@
       </div>
     </section>
 
+    <!-- ÁREA 3: PARCEIROS, GUILDAS E CLIENTES -->
+    <section id="parceiros">
+      <div class="section-header">
+        <span class="section-subtitle">Autoridade & Ecossistema</span>
+        <h2 class="section-title">Parceiros, Guildas & Clientes</h2>
+      </div>
+
+      <div class="partners-grid">
+        <div class="cyber-frame partner-card">
+          <div class="partner-avatar">
+            <img src="img/partner_l7.jpg" alt="L7 Esports" onerror="this.style.display='none'; this.parentElement.innerHTML='⚡';">
+          </div>
+          <div class="partner-info">
+            <h4>L7 ESPORTS™</h4>
+            <span>Guilda Oficial & Comp</span>
+          </div>
+        </div>
+
+        <div class="cyber-frame partner-card">
+          <div class="partner-avatar">
+            <img src="img/partner_rp.jpg" alt="FiveM RP" onerror="this.style.display='none'; this.parentElement.innerHTML='🎮';">
+          </div>
+          <div class="partner-info">
+            <h4>Facções & FiveM</h4>
+            <span>Gestão & Servidores RP</span>
+          </div>
+        </div>
+
+        <div class="cyber-frame partner-card">
+          <div class="partner-avatar">
+            <img src="img/partner_ale.jpg" alt="Alê Nail Designer" onerror="this.style.display='none'; this.parentElement.innerHTML='💅';">
+          </div>
+          <div class="partner-info">
+            <h4>Alê Nail Designer</h4>
+            <span>Web & Catálogo Digital</span>
+          </div>
+        </div>
+
+        <div class="cyber-frame partner-card">
+          <div class="partner-avatar">
+            <img src="img/partner_tl.jpg" alt="TL STUDIO" onerror="this.style.display='none'; this.parentElement.innerHTML='🚀';">
+          </div>
+          <div class="partner-info">
+            <h4>TL STUDIO NETWORK</h4>
+            <span>Parceiro Tecnológico</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ÁREA 4: TIMELINE DO PROCESSO DE TRABALHO -->
+    <section id="processo">
+      <div class="section-header">
+        <span class="section-subtitle">Fluxo Operacional</span>
+        <h2 class="section-title">Como o Projeto Acontece</h2>
+      </div>
+
+      <div class="workflow-grid">
+        <div class="cyber-frame workflow-step-card">
+          <div class="step-number">01</div>
+          <h4>Briefing & Alinhamento</h4>
+          <p>Você nos envia a ideia inicial, referências visuais e os requisitos exatos do que deseja para o seu projeto.</p>
+        </div>
+
+        <div class="cyber-frame workflow-step-card">
+          <div class="step-number">02</div>
+          <h4>Desenvolvimento HUD</h4>
+          <p>Nossa equipe entra em ação estruturando o código, configurando o Discord ou produzindo as artes com padrão de elite.</p>
+        </div>
+
+        <div class="cyber-frame workflow-step-card">
+          <div class="step-number">03</div>
+          <h4>Revisão & Ajustes</h4>
+          <p>Apresentamos o resultado preliminar para validação e realizamos todos os ajustes necessários para garantir sua total satisfação.</p>
+        </div>
+
+        <div class="cyber-frame workflow-step-card">
+          <div class="step-number">04</div>
+          <h4>Entrega Oficial</h4>
+          <p>Projeto finalizado, testado e entregue com suporte dedicado para você colocar sua marca em destaque no digital.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- Galeria / Portfólio -->
     <section id="portfolio">
       <div class="section-header">
@@ -1284,7 +1458,6 @@
         </div>
 
         <div class="cyber-frame faq-item">
-          <div class="cyber-frame-corner"></div>
           <div class="faq-question">Posso solicitar alterações no projeto?</div>
           <div class="faq-answer">Sim! Cada projeto conta com etapas de aprovação para garantir que tudo fique exatamente de acordo com suas preferências.</div>
         </div>
@@ -1323,7 +1496,7 @@
           <span class="link-arrow">→</span>
         </a>
 
-        <a href="#" class="link-card cyber-frame">
+        <a href="#" class="cyber-frame link-card">
           <div class="link-info">
             <h4>Portfólio</h4>
             <span>Projetos Anteriores</span>
