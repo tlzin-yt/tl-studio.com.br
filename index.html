@@ -675,7 +675,166 @@
       box-shadow: 0 0 25px rgba(0, 242, 254, 0.7);
     }
 
-    /* --- ÁREA 3: PARCEIROS & CLIENTES (SHOWCASE DE LOGOS / GUILDAS) --- */
+    /* --- CALCULADORA DE ORÇAMENTO INTERATIVA --- */
+    .calc-card {
+      padding: 3rem 2.5rem;
+    }
+
+    .calc-grid {
+      display: grid;
+      grid-template-columns: 1.5fr 1fr;
+      gap: 2.5rem;
+      align-items: flex-start;
+    }
+
+    .calc-options-group h4 {
+      font-size: 1.1rem;
+      color: #fff;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .calc-options-group h4 span {
+      color: var(--cyan-neon);
+    }
+
+    .calc-checkboxes {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-bottom: 2rem;
+    }
+
+    .calc-option {
+      background: rgba(5, 8, 18, 0.6);
+      border: 1px solid rgba(0, 242, 254, 0.15);
+      padding: 1rem 1.2rem;
+      border-radius: var(--radius-sm);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: var(--transition);
+      user-select: none;
+    }
+
+    .calc-option:hover {
+      border-color: var(--cyan-neon);
+      background: rgba(0, 242, 254, 0.05);
+    }
+
+    .calc-option-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .calc-option input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--cyan-neon);
+      cursor: pointer;
+    }
+
+    .calc-option-label {
+      font-size: 0.95rem;
+      color: var(--text-main);
+      font-weight: 600;
+    }
+
+    .calc-option-price {
+      font-size: 0.85rem;
+      color: var(--cyan-neon);
+      font-weight: 800;
+    }
+
+    .calc-summary-panel {
+      background: rgba(2, 4, 8, 0.85);
+      border: 1px solid var(--border-glow);
+      border-radius: var(--radius-sm);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.15);
+    }
+
+    .summary-header h4 {
+      font-size: 1.2rem;
+      color: #fff;
+      font-weight: 800;
+      margin-bottom: 0.3rem;
+    }
+
+    .summary-header p {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+    }
+
+    .summary-items {
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 1rem 0;
+      min-height: 90px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .summary-item-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .total-label {
+      font-size: 0.9rem;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .total-price {
+      font-size: 1.6rem;
+      font-weight: 900;
+      color: var(--cyan-neon);
+      text-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+    }
+
+    .btn-send-whatsapp {
+      width: 100%;
+      background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+      color: #fff;
+      border: none;
+      padding: 12px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 0 20px rgba(0, 114, 255, 0.4);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .btn-send-whatsapp:hover {
+      opacity: 0.95;
+      box-shadow: 0 0 30px rgba(0, 242, 254, 0.7);
+      transform: translateY(-2px);
+    }
+
+    /* --- PARCEIROS & CLIENTES --- */
     .partners-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -733,7 +892,7 @@
       text-transform: uppercase;
     }
 
-    /* --- ÁREA 4: TIMELINE DO PROCESSO DE TRABALHO (PASSO A PASSO) --- */
+    /* --- TIMELINE DO PROCESSO DE TRABALHO --- */
     .workflow-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -992,6 +1151,10 @@
       opacity: 0.8;
     }
 
+    @media (max-width: 850px) {
+      .calc-grid { grid-template-columns: 1fr; }
+    }
+
     @media (max-width: 768px) {
       header { padding: 1rem 1.5rem; }
       .hero h1 { font-size: 2.8rem; }
@@ -1033,6 +1196,7 @@
       <a href="#inicio" class="menu-link">Início <span class="tech-status-dot"></span></a>
       <a href="#sobre" class="menu-link">Sobre a Loja <span class="tech-status-dot"></span></a>
       <a href="#produtos" class="menu-link">Produtos & Serviços <span class="tech-status-dot"></span></a>
+      <a href="#calculadora" class="menu-link">Calculadora de Orçamento <span class="tech-status-dot"></span></a>
       <a href="#parceiros" class="menu-link">Parceiros & Guildas <span class="tech-status-dot"></span></a>
       <a href="#processo" class="menu-link">Como Trabalhamos <span class="tech-status-dot"></span></a>
       <a href="#portfolio" class="menu-link">Galeria / Portfólio <span class="tech-status-dot"></span></a>
@@ -1250,7 +1414,79 @@
       </div>
     </section>
 
-    <!-- ÁREA 3: PARCEIROS, GUILDAS E CLIENTES -->
+    <!-- CALCULADORA DE ORÇAMENTO INTERATIVA -->
+    <section id="calculadora">
+      <div class="section-header">
+        <span class="section-subtitle">Estimativa em Tempo Real</span>
+        <h2 class="section-title">Calculadora de Orçamento</h2>
+      </div>
+
+      <div class="cyber-frame calc-card">
+        <div class="calc-grid">
+          <!-- Opções -->
+          <div class="calc-options-group">
+            <h4><span>✦</span> Selecione os Serviços Desejados:</h4>
+            
+            <div class="calc-checkboxes">
+              <label class="calc-option">
+                <div class="calc-option-left">
+                  <input type="checkbox" class="service-calc-item" data-name="Página Web Responsiva" data-price="150">
+                  <span class="calc-option-label">Página Web Responsiva</span>
+                </div>
+                <span class="calc-option-price">+ R$ 150</span>
+              </label>
+
+              <label class="calc-option">
+                <div class="calc-option-left">
+                  <input type="checkbox" class="service-calc-item" data-name="Configuração Servidor Discord" data-price="80">
+                  <span class="calc-option-label">Configuração de Servidor Discord</span>
+                </div>
+                <span class="calc-option-price">+ R$ 80</span>
+              </label>
+
+              <label class="calc-option">
+                <div class="calc-option-left">
+                  <input type="checkbox" class="service-calc-item" data-name="Pacote de Artes & Banners" data-price="50">
+                  <span class="calc-option-label">Pacote de Artes & Banners</span>
+                </div>
+                <span class="calc-option-price">+ R$ 50</span>
+              </label>
+
+              <label class="calc-option">
+                <div class="calc-option-left">
+                  <input type="checkbox" class="service-calc-item" data-name="Edição de Vídeo Curto (Reels/TikTok)" data-price="40">
+                  <span class="calc-option-label">Edição de Vídeo Curto</span>
+                </div>
+                <span class="calc-option-price">+ R$ 40</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Painel de Resumo -->
+          <div class="calc-summary-panel">
+            <div class="summary-header">
+              <h4>Resumo da Estimativa</h4>
+              <p>Valores estimativos para planejamento inicial.</p>
+            </div>
+
+            <div class="summary-items" id="summary-items-list">
+              <div style="color: var(--text-dim); font-size: 0.85rem; font-style: italic;">Nenhum serviço selecionado.</div>
+            </div>
+
+            <div class="summary-total">
+              <span class="total-label">Total Estimado:</span>
+              <span class="total-price" id="calc-total-display">R$ 0</span>
+            </div>
+
+            <button class="btn-send-whatsapp" id="btn-send-order">
+              Enviar Projeto no Atendimento →
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PARCEIROS, GUILDAS E CLIENTES -->
     <section id="parceiros">
       <div class="section-header">
         <span class="section-subtitle">Autoridade & Ecossistema</span>
@@ -1300,7 +1536,7 @@
       </div>
     </section>
 
-    <!-- ÁREA 4: TIMELINE DO PROCESSO DE TRABALHO -->
+    <!-- TIMELINE DO PROCESSO DE TRABALHO -->
     <section id="processo">
       <div class="section-header">
         <span class="section-subtitle">Fluxo Operacional</span>
@@ -1516,8 +1752,9 @@
     </div>
   </footer>
 
-  <!-- Script JS do Menu Drawer -->
+  <!-- Script JS do Menu Drawer e da Calculadora -->
   <script>
+    // Menu Drawer
     const menuToggle = document.getElementById('menu-toggle');
     const btnClose = document.getElementById('btn-close');
     const sidebar = document.getElementById('sidebar');
@@ -1540,6 +1777,45 @@
 
     menuLinks.forEach(link => {
       link.addEventListener('click', closeSidebar);
+    });
+
+    // Calculadora Interativa
+    const checkboxes = document.querySelectorAll('.service-calc-item');
+    const summaryItemsList = document.getElementById('summary-items-list');
+    const totalDisplay = document.getElementById('calc-total-display');
+
+    function updateCalculator() {
+      let total = 0;
+      let selectedHtml = '';
+      let hasSelection = false;
+
+      checkboxes.forEach(chk => {
+        if (chk.checked) {
+          hasSelection = true;
+          const name = chk.getAttribute('data-name');
+          const price = parseInt(chk.getAttribute('data-price'), 10);
+          total += price;
+
+          selectedHtml += `
+            <div class="summary-item-row">
+              <span>✦ ${name}</span>
+              <span>R$ ${price}</span>
+            </div>
+          `;
+        }
+      });
+
+      if (hasSelection) {
+        summaryItemsList.innerHTML = selectedHtml;
+      } else {
+        summaryItemsList.innerHTML = '<div style="color: var(--text-dim); font-size: 0.85rem; font-style: italic;">Nenhum serviço selecionado.</div>';
+      }
+
+      totalDisplay.textContent = `R$ ${total}`;
+    }
+
+    checkboxes.forEach(chk => {
+      chk.addEventListener('change', updateCalculator);
     });
   </script>
 
