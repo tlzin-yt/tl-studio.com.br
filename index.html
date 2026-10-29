@@ -3,47 +3,141 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TL STUDIO - Soluções Digitais</title>
+  <title>TL STUDIO — Soluções Digitais & Design de Elite</title>
+  
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+
   <style>
+    /* ==========================================
+       1. VARIÁVEIS GLOBAIS E RESET
+       ========================================== */
+    :root {
+      --bg-dark: #05070c;
+      --bg-card: rgba(13, 18, 30, 0.65);
+      --bg-card-hover: rgba(20, 27, 45, 0.85);
+      --border-color: rgba(0, 242, 254, 0.15);
+      --border-glow: rgba(0, 242, 254, 0.4);
+      --cyan-neon: #00f2fe;
+      --blue-accent: #0072ff;
+      --purple-accent: #7928ca;
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-sm: 8px;
+      --radius-md: 16px;
+      --radius-lg: 24px;
+      --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
     * {
       margin: 0;
       padding: 0;
       box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: 'Inter', sans-serif;
     }
 
-    body {
-      background-color: #0b0f19;
-      color: #e2e8f0;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+    html {
       scroll-behavior: smooth;
     }
 
-    /* Header Navbar */
+    body {
+      background-color: var(--bg-dark);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Background FX (Glows em degradê de fundo) */
+    .bg-fx-1 {
+      position: fixed;
+      top: -10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 800px;
+      height: 450px;
+      background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(0, 114, 255, 0.05) 50%, transparent 70%);
+      filter: blur(80px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .bg-fx-2 {
+      position: fixed;
+      bottom: -10%;
+      right: -5%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(121, 40, 202, 0.1) 0%, rgba(0, 242, 254, 0.03) 60%, transparent 80%);
+      filter: blur(100px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Grid Decorativa de Fundo */
+    .bg-grid {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 50px 50px;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Typography Headings */
+    h1, h2, h3, h4, .brand {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+
+    /* ==========================================
+       2. HEADER & NAVBAR
+       ========================================== */
     header {
-      background: rgba(15, 23, 42, 0.9);
-      border-bottom: 1px solid rgba(56, 189, 248, 0.2);
-      backdrop-filter: blur(12px);
       position: sticky;
       top: 0;
       z-index: 100;
-      padding: 1rem 2rem;
+      background: rgba(5, 7, 12, 0.75);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      backdrop-filter: blur(16px);
+      padding: 1.1rem 2.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
+      transition: var(--transition);
     }
 
     .brand {
       font-size: 1.6rem;
-      font-weight: 700;
+      font-weight: 800;
       color: #ffffff;
-      letter-spacing: 1.5px;
+      letter-spacing: 2px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .brand-icon {
+      width: 10px;
+      height: 10px;
+      background: var(--cyan-neon);
+      border-radius: 50%;
+      box-shadow: 0 0 12px var(--cyan-neon);
     }
 
     .brand span {
-      color: #00f2fe;
+      background: linear-gradient(135deg, var(--cyan-neon) 0%, var(--blue-accent) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
     }
 
     .header-actions {
@@ -53,51 +147,71 @@
     }
 
     .btn-login {
+      position: relative;
       background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
       color: #fff;
       border: none;
-      padding: 8px 18px;
-      font-size: 0.85rem;
-      font-weight: 600;
-      border-radius: 6px;
+      padding: 10px 22px;
+      font-size: 0.9rem;
+      font-weight: 700;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      text-decoration: none;
-      transition: opacity 0.2s, box-shadow 0.2s;
+      overflow: hidden;
+      transition: var(--transition);
+      box-shadow: 0 4px 20px rgba(0, 114, 255, 0.35);
+    }
+
+    .btn-login::before {
+      content: '';
+      position: absolute;
+      top: 0; left: -100%;
+      width: 100%; height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      transition: 0.5s;
+    }
+
+    .btn-login:hover::before {
+      left: 100%;
     }
 
     .btn-login:hover {
-      opacity: 0.9;
-      box-shadow: 0 0 12px rgba(0, 242, 254, 0.4);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 25px rgba(0, 242, 254, 0.5);
     }
 
     .menu-toggle {
-      background: transparent;
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      color: #00f2fe;
-      font-size: 1.2rem;
-      padding: 6px 12px;
-      border-radius: 6px;
+      background: rgba(15, 23, 42, 0.8);
+      border: 1px solid var(--border-color);
+      color: var(--cyan-neon);
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      display: flex;
+      justify-content: center;
+      align-items: center;
       cursor: pointer;
-      transition: all 0.2s;
+      transition: var(--transition);
+      font-size: 1.2rem;
     }
 
     .menu-toggle:hover {
-      background: rgba(0, 242, 254, 0.1);
+      border-color: var(--cyan-neon);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
+      background: rgba(0, 242, 254, 0.08);
     }
 
-    /* Overlay Sidebar Navigation */
+    /* ==========================================
+       3. SIDEBAR NAVIGATION
+       ========================================== */
     .sidebar-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.6);
-      backdrop-filter: blur(4px);
+      inset: 0;
+      background: rgba(3, 5, 9, 0.8);
+      backdrop-filter: blur(8px);
       z-index: 200;
       opacity: 0;
       pointer-events: none;
-      transition: opacity 0.3s ease;
+      transition: var(--transition);
     }
 
     .sidebar-overlay.active {
@@ -107,18 +221,18 @@
 
     .sidebar {
       position: fixed;
-      top: 0;
-      right: -300px;
-      width: 300px;
+      top: 0; right: -360px;
+      width: 360px;
       height: 100%;
-      background: #0f172a;
-      border-left: 1px solid rgba(56, 189, 248, 0.2);
+      background: rgba(8, 12, 22, 0.95);
+      border-left: 1px solid var(--border-glow);
+      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
       z-index: 201;
-      padding: 2rem 1.5rem;
+      padding: 2.5rem 2rem;
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
-      transition: right 0.3s ease;
+      gap: 2rem;
+      transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .sidebar.active {
@@ -129,281 +243,542 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      border-bottom: 1px solid #1e293b;
-      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+      padding-bottom: 1.2rem;
     }
 
     .btn-close {
       background: transparent;
       border: none;
-      color: #94a3b8;
-      font-size: 1.5rem;
+      color: var(--text-muted);
+      font-size: 1.8rem;
       cursor: pointer;
+      transition: var(--transition);
     }
 
     .btn-close:hover {
-      color: #00f2fe;
+      color: var(--cyan-neon);
+      transform: rotate(90deg);
     }
 
     .sidebar-nav {
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 0.75rem;
     }
 
     .sidebar-nav a {
-      color: #cbd5e1;
+      color: var(--text-muted);
       text-decoration: none;
-      font-size: 1rem;
-      font-weight: 500;
-      padding: 8px 12px;
-      border-radius: 6px;
-      transition: background 0.2s, color 0.2s;
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 12px 16px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
     }
 
     .sidebar-nav a:hover {
-      background: rgba(0, 242, 254, 0.1);
-      color: #00f2fe;
+      color: var(--text-main);
+      background: rgba(0, 242, 254, 0.06);
+      border-color: rgba(0, 242, 254, 0.2);
+      transform: translateX(6px);
     }
 
-    /* Container Principal */
+    .sidebar-nav a::after {
+      content: '→';
+      opacity: 0;
+      transition: var(--transition);
+      color: var(--cyan-neon);
+    }
+
+    .sidebar-nav a:hover::after {
+      opacity: 1;
+    }
+
+    /* ==========================================
+       4. CONTAINER & HERO SECTION
+       ========================================== */
     .container {
-      max-width: 1100px;
+      max-width: 1200px;
       margin: 0 auto;
-      padding: 0 1.5rem;
+      padding: 0 2rem;
       width: 100%;
-      flex: 1;
+      position: relative;
+      z-index: 1;
     }
 
-    /* Hero Section */
     .hero {
       text-align: center;
-      padding: 5rem 1rem 4rem;
+      padding: 7rem 1rem 5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .badge-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(0, 242, 254, 0.08);
+      border: 1px solid var(--border-glow);
+      padding: 6px 16px;
+      border-radius: 30px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--cyan-neon);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 2rem;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
+    }
+
+    .pulse-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--cyan-neon);
+      border-radius: 50%;
+      box-shadow: 0 0 10px var(--cyan-neon);
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(0, 242, 254, 0); }
+      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0); }
     }
 
     .hero h1 {
-      font-size: 2.8rem;
+      font-size: 3.8rem;
       font-weight: 800;
-      margin-bottom: 1rem;
-      color: #ffffff;
+      line-height: 1.15;
+      margin-bottom: 1.5rem;
+      letter-spacing: -1px;
     }
 
     .hero h1 span {
-      background: linear-gradient(135deg, #00f2fe 0%, #4facfe 100%);
+      background: linear-gradient(135deg, #ffffff 0%, var(--cyan-neon) 50%, var(--blue-accent) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
 
     .hero p {
-      font-size: 1.15rem;
-      color: #94a3b8;
-      max-width: 700px;
-      margin: 0 auto;
-      line-height: 1.6;
+      font-size: 1.25rem;
+      color: var(--text-muted);
+      max-width: 720px;
+      line-height: 1.7;
+      font-weight: 400;
     }
 
-    /* Sections Shared Styling */
+    /* ==========================================
+       5. SEÇÕES & COMPONENTES DETALHADOS
+       ========================================== */
     section {
-      padding: 4rem 0;
-      border-bottom: 1px solid #1e293b;
+      padding: 5rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .section-header {
+      margin-bottom: 3rem;
+    }
+
+    .section-subtitle {
+      color: var(--cyan-neon);
+      font-size: 0.85rem;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+      display: block;
     }
 
     .section-title {
-      font-size: 1.6rem;
-      font-weight: 700;
-      margin-bottom: 2rem;
+      font-size: 2.2rem;
+      font-weight: 800;
       color: #ffffff;
-      border-left: 4px solid #00f2fe;
-      padding-left: 0.75rem;
+      letter-spacing: -0.5px;
     }
 
-    /* Sobre a Loja */
-    .about-content {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid rgba(56, 189, 248, 0.15);
-      border-radius: 12px;
-      padding: 2rem;
-      line-height: 1.7;
-      color: #cbd5e1;
+    /* --- SOBRE A LOJA --- */
+    .about-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-lg);
+      padding: 3rem;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
     }
 
-    /* Produtos Grid */
-    .grid {
+    .about-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 2px;
+      background: linear-gradient(90deg, transparent, var(--cyan-neon), transparent);
+    }
+
+    .about-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 1.5rem;
+      grid-template-columns: 2fr 1fr;
+      gap: 2.5rem;
+      align-items: center;
     }
 
-    .card {
-      background: rgba(15, 23, 42, 0.75);
-      border: 1px solid rgba(56, 189, 248, 0.15);
-      backdrop-filter: blur(8px);
-      border-radius: 12px;
-      padding: 1.5rem;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      transition: transform 0.2s, border-color 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-4px);
-      border-color: rgba(0, 242, 254, 0.4);
-    }
-
-    .card-badge {
-      align-self: flex-start;
-      background: rgba(0, 242, 254, 0.1);
-      color: #00f2fe;
-      font-size: 0.75rem;
-      font-weight: 600;
-      padding: 4px 8px;
-      border-radius: 4px;
-      margin-bottom: 1rem;
-      border: 1px solid rgba(0, 242, 254, 0.2);
-    }
-
-    .card-title {
-      font-size: 1.2rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 0.5rem;
-    }
-
-    .card-desc {
-      font-size: 0.9rem;
-      color: #94a3b8;
-      line-height: 1.5;
+    .about-text p {
+      font-size: 1.1rem;
+      color: var(--text-muted);
+      line-height: 1.8;
       margin-bottom: 1.5rem;
     }
 
-    .card-footer {
+    .stats-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+      padding-left: 2.5rem;
+    }
+
+    .stat-item h3 {
+      font-size: 2.2rem;
+      font-weight: 800;
+      color: var(--cyan-neon);
+    }
+
+    .stat-item p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* --- CARDS DE PRODUTOS/SERVIÇOS --- */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
+      gap: 2rem;
+    }
+
+    .product-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(12px);
+      border-radius: var(--radius-md);
+      padding: 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      transition: var(--transition);
+    }
+
+    .product-card:hover {
+      transform: translateY(-8px);
+      background: var(--bg-card-hover);
+      border-color: var(--border-glow);
+      box-shadow: 0 15px 35px rgba(0, 242, 254, 0.12);
+    }
+
+    .card-icon-wrapper {
+      width: 50px;
+      height: 50px;
+      border-radius: var(--radius-sm);
+      background: rgba(0, 242, 254, 0.08);
+      border: 1px solid rgba(0, 242, 254, 0.2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1.5rem;
+      color: var(--cyan-neon);
+      font-size: 1.4rem;
+      font-weight: 700;
+    }
+
+    .card-badge {
+      position: absolute;
+      top: 2rem; right: 2rem;
+      background: rgba(0, 242, 254, 0.1);
+      color: var(--cyan-neon);
+      font-size: 0.7rem;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 20px;
+      border: 1px solid rgba(0, 242, 254, 0.25);
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .product-title {
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+
+    .product-desc {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 2rem;
+    }
+
+    .product-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-top: auto;
-      padding-top: 1rem;
-      border-top: 1px solid #1e293b;
+      padding-top: 1.25rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .price {
-      font-size: 1.1rem;
-      font-weight: 700;
-      color: #00f2fe;
+    .price-tag {
+      display: flex;
+      flex-direction: column;
     }
 
-    .btn-buy {
-      background: #1e293b;
+    .price-label {
+      font-size: 0.7rem;
+      color: var(--text-dim);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .price-value {
+      font-size: 1.15rem;
+      font-weight: 800;
+      color: var(--cyan-neon);
+    }
+
+    .btn-details {
+      background: rgba(255, 255, 255, 0.05);
       color: #fff;
-      border: 1px solid rgba(56, 189, 248, 0.3);
-      padding: 8px 14px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      padding: 10px 18px;
       font-size: 0.85rem;
       font-weight: 600;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      transition: all 0.2s;
+      transition: var(--transition);
     }
 
-    .btn-buy:hover {
-      background: #00f2fe;
-      color: #0b0f19;
-      border-color: #00f2fe;
+    .btn-details:hover {
+      background: var(--cyan-neon);
+      color: #05070c;
+      border-color: var(--cyan-neon);
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+      font-weight: 700;
     }
 
-    /* Comentários */
+    /* --- AVALIAÇÕES / COMENTÁRIOS --- */
     .comments-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
       gap: 1.5rem;
     }
 
     .comment-card {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid #1e293b;
-      border-radius: 10px;
-      padding: 1.25rem;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.8rem;
+      position: relative;
+      transition: var(--transition);
     }
 
-    .comment-author {
-      font-weight: 600;
-      color: #00f2fe;
-      font-size: 0.95rem;
-      margin-bottom: 0.25rem;
+    .comment-card:hover {
+      border-color: rgba(0, 242, 254, 0.3);
+      transform: translateY(-4px);
+    }
+
+    .stars {
+      color: #ffb703;
+      font-size: 0.9rem;
+      margin-bottom: 1rem;
+      letter-spacing: 2px;
     }
 
     .comment-text {
-      font-size: 0.9rem;
-      color: #94a3b8;
-      line-height: 1.5;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      font-style: italic;
     }
 
-    /* FAQ */
-    .faq-item {
-      background: rgba(15, 23, 42, 0.6);
-      border: 1px solid #1e293b;
-      border-radius: 8px;
-      padding: 1.2rem;
-      margin-bottom: 1rem;
-    }
-
-    .faq-question {
-      font-weight: 600;
-      color: #ffffff;
-      margin-bottom: 0.5rem;
-    }
-
-    .faq-answer {
-      font-size: 0.9rem;
-      color: #94a3b8;
-      line-height: 1.5;
-    }
-
-    /* Links Úteis */
-    .links-container {
+    .author-info {
       display: flex;
-      flex-wrap: wrap;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--cyan-neon), var(--purple-accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 800;
+      color: #fff;
+      font-size: 0.9rem;
+    }
+
+    .author-details h4 {
+      font-size: 0.95rem;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .author-details span {
+      font-size: 0.75rem;
+      color: var(--text-dim);
+    }
+
+    /* --- FAQ (PERGUNTAS FREQUENTES) --- */
+    .faq-wrapper {
+      max-width: 800px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
       gap: 1rem;
     }
 
-    .link-btn {
-      background: #0f172a;
-      border: 1px solid rgba(56, 189, 248, 0.2);
-      color: #cbd5e1;
-      padding: 10px 18px;
-      border-radius: 8px;
+    .faq-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      padding: 1.5rem;
+      transition: var(--transition);
+    }
+
+    .faq-item:hover {
+      border-color: rgba(0, 242, 254, 0.3);
+    }
+
+    .faq-question {
+      font-size: 1.1rem;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 0.6rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .faq-question::before {
+      content: '✦';
+      color: var(--cyan-neon);
+      font-size: 0.8rem;
+    }
+
+    .faq-answer {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      line-height: 1.6;
+      padding-left: 20px;
+    }
+
+    /* --- LINKS ÚTEIS / MÍDIAS --- */
+    .links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .link-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
       text-decoration: none;
-      font-size: 0.9rem;
-      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: var(--transition);
     }
 
-    .link-btn:hover {
-      border-color: #00f2fe;
-      color: #00f2fe;
-      background: rgba(0, 242, 254, 0.05);
+    .link-card:hover {
+      background: rgba(0, 242, 254, 0.08);
+      border-color: var(--cyan-neon);
+      transform: translateY(-4px);
+      box-shadow: 0 10px 25px rgba(0, 242, 254, 0.15);
     }
 
-    /* Footer */
+    .link-info h4 {
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      margin-bottom: 0.2rem;
+    }
+
+    .link-info span {
+      color: var(--text-dim);
+      font-size: 0.8rem;
+    }
+
+    .link-arrow {
+      color: var(--cyan-neon);
+      font-size: 1.2rem;
+      transition: var(--transition);
+    }
+
+    .link-card:hover .link-arrow {
+      transform: translateX(4px);
+    }
+
+    /* ==========================================
+       6. FOOTER
+       ========================================== */
     footer {
-      background: #070a12;
-      padding: 2rem 1.5rem;
+      background: #030408;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      padding: 3rem 2rem;
       text-align: center;
-      font-size: 0.85rem;
-      color: #64748b;
+      margin-top: auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    footer p {
+      color: var(--text-dim);
+      font-size: 0.9rem;
+    }
+
+    /* Responsive Adjustments */
+    @media (max-width: 768px) {
+      header { padding: 1rem 1.5rem; }
+      .hero h1 { font-size: 2.5rem; }
+      .about-grid { grid-template-columns: 1fr; }
+      .stats-container { border-left: none; border-top: 1px solid rgba(255,255,255,0.08); padding-left: 0; padding-top: 1.5rem; flex-direction: row; justify-content: space-between; }
     }
   </style>
 </head>
 <body>
 
+  <!-- Efeitos FX e Grid Background -->
+  <div class="bg-fx-1"></div>
+  <div class="bg-fx-2"></div>
+  <div class="bg-grid"></div>
+
   <!-- Navbar -->
   <header>
-    <div class="brand">TL <span>STUDIO</span></div>
+    <div class="brand">
+      <div class="brand-icon"></div>
+      TL <span>STUDIO</span>
+    </div>
     <div class="header-actions">
-      <button class="btn-login" id="btn-login">Login</button>
-      <button class="menu-toggle" id="menu-toggle">☰</button>
+      <button class="btn-login">Login</button>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir Menu">☰</button>
     </div>
   </header>
 
-  <!-- Menu Lateral Overlay -->
+  <!-- Sidebar Overlay & Menu Drawer -->
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -421,63 +796,109 @@
   </aside>
 
   <!-- Conteúdo Principal -->
-  <div class="container">
+  <main class="container">
 
-    <!-- Hero / Título & Descrição -->
+    <!-- Hero Section -->
     <section class="hero" id="inicio">
-      <h1>TL STUDIO <span>Soluções Digitais</span></h1>
-      <p>Projetos web modernos, configurações de servidores, edições exclusivas e artes personalizadas para elevar o nível da sua marca digital.</p>
+      <div class="badge-status">
+        <div class="pulse-dot"></div>
+        Plataforma em Exibição Frontend
+      </div>
+      <h1>Sua Presença Digital <span>Elevada ao Máximo.</span></h1>
+      <p>Desenvolvimento web moderno, arquitetura para servidores de Discord, edições de vídeo dinâmicas e artes de alto impacto visual para o seu projeto.</p>
     </section>
 
     <!-- Sobre a Loja -->
     <section id="sobre">
-      <h2 class="section-title">Sobre a Loja</h2>
-      <div class="about-content">
-        <p>A <strong>TL STUDIO</strong> é focada no desenvolvimento de soluções digitais de alto desempenho e design moderno. Atuamos com criação de páginas web personalizadas, estruturação e automação de servidores no Discord, produção audiovisual para redes sociais e identidade visual completa.</p>
+      <div class="section-header">
+        <span class="section-subtitle">Conheça Nossa Estrutura</span>
+        <h2 class="section-title">Sobre a TL STUDIO</h2>
+      </div>
+      <div class="about-card">
+        <div class="about-grid">
+          <div class="about-text">
+            <p>A <strong>TL STUDIO</strong> desenvolve ecossistemas digitais focados na experiência do usuário e na estética moderna. Criamos desde landing pages e aplicações web sob medida até a configuração técnica completa de servidores e criação de identidades visuais marcantes.</p>
+            <p>Nosso compromisso é entregar qualidade profissional, aliando performance, código limpo e layouts otimizados para converter visitantes em clientes.</p>
+          </div>
+          <div class="stats-container">
+            <div class="stat-item">
+              <h3>100%</h3>
+              <p>Foco na Experiência</p>
+            </div>
+            <div class="stat-item">
+              <h3>High</h3>
+              <p>Performance & Design</p>
+            </div>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Produtos / Serviços -->
+    <!-- Produtos e Serviços -->
     <section id="produtos">
-      <h2 class="section-title">Produtos e Serviços</h2>
-      <div class="grid">
-        <div class="card">
-          <span class="card-badge">WEB DEVELOPMENT</span>
-          <h3 class="card-title">Página Web</h3>
-          <p class="card-desc">Desenvolvimento de páginas web responsivas, otimizadas e com design ajustado ao seu projeto.</p>
-          <div class="card-footer">
-            <span class="price">Sob Consulta</span>
-            <button class="btn-buy">Ver Detalhes</button>
+      <div class="section-header">
+        <span class="section-subtitle">Serviços Exclusivos</span>
+        <h2 class="section-title">Nossos Produtos</h2>
+      </div>
+
+      <div class="products-grid">
+        <!-- Card 1 -->
+        <div class="product-card">
+          <span class="card-badge">WEB</span>
+          <div class="card-icon-wrapper">&lt;/&gt;</div>
+          <h3 class="product-title">Página Web</h3>
+          <p class="product-desc">Desenvolvimento web personalizado com design ultra-moderno, responsivo para celulares e focado em performance.</p>
+          <div class="product-footer">
+            <div class="price-tag">
+              <span class="price-label">A partir de</span>
+              <span class="price-value">Sob Consulta</span>
+            </div>
+            <button class="btn-details">Ver Detalhes</button>
           </div>
         </div>
 
-        <div class="card">
+        <!-- Card 2 -->
+        <div class="product-card">
           <span class="card-badge">DISCORD</span>
-          <h3 class="card-title">Configuração de Servidor</h3>
-          <p class="card-desc">Estruturação de cargos, canais, permissões, bots de suporte e automação com Webhooks.</p>
-          <div class="card-footer">
-            <span class="price">Sob Consulta</span>
-            <button class="btn-buy">Ver Detalhes</button>
+          <div class="card-icon-wrapper">⚙</div>
+          <h3 class="product-title">Configuração de Servidor</h3>
+          <p class="product-desc">Estruturação de cargos, canais, sistemas de tickets, automação por Webhooks e configuração completa de bots.</p>
+          <div class="product-footer">
+            <div class="price-tag">
+              <span class="price-label">A partir de</span>
+              <span class="price-value">Sob Consulta</span>
+            </div>
+            <button class="btn-details">Ver Detalhes</button>
           </div>
         </div>
 
-        <div class="card">
+        <!-- Card 3 -->
+        <div class="product-card">
           <span class="card-badge">DESIGN</span>
-          <h3 class="card-title">Artes e Banners</h3>
-          <p class="card-desc">Criação de banners, flyers promocionais e artes personalizadas para redes sociais e equipes.</p>
-          <div class="card-footer">
-            <span class="price">Sob Consulta</span>
-            <button class="btn-buy">Ver Detalhes</button>
+          <div class="card-icon-wrapper">🎨</div>
+          <h3 class="product-title">Artes e Banners</h3>
+          <p class="product-desc">Identidade visual impactante, flyers promocionais e artes profissionais para redes sociais, facções ou guildas.</p>
+          <div class="product-footer">
+            <div class="price-tag">
+              <span class="price-label">A partir de</span>
+              <span class="price-value">Sob Consulta</span>
+            </div>
+            <button class="btn-details">Ver Detalhes</button>
           </div>
         </div>
 
-        <div class="card">
-          <span class="card-badge">VIDEO</span>
-          <h3 class="card-title">Edição de Vídeo</h3>
-          <p class="card-desc">Cortes dinâmicos e edições para Reels, TikTok, Shorts ou materiais de divulgação.</p>
-          <div class="card-footer">
-            <span class="price">Sob Consulta</span>
-            <button class="btn-buy">Ver Detalhes</button>
+        <!-- Card 4 -->
+        <div class="product-card">
+          <span class="card-badge">MÍDIA</span>
+          <div class="card-icon-wrapper">🎬</div>
+          <h3 class="product-title">Edição de Vídeo</h3>
+          <p class="product-desc">Cortes dinâmicos, efeitos visuais e ritmo otimizado para vídeos curtos no TikTok, Instagram Reels e Shorts.</p>
+          <div class="product-footer">
+            <div class="price-tag">
+              <span class="price-label">A partir de</span>
+              <span class="price-value">Sob Consulta</span>
+            </div>
+            <button class="btn-details">Ver Detalhes</button>
           </div>
         </div>
       </div>
@@ -485,51 +906,113 @@
 
     <!-- Comentários / Avaliações -->
     <section id="comentarios">
-      <h2 class="section-title">Comentários dos Clientes</h2>
+      <div class="section-header">
+        <span class="section-subtitle">Depoimentos</span>
+        <h2 class="section-title">O Que Dizem Nossos Clientes</h2>
+      </div>
+
       <div class="comments-grid">
         <div class="comment-card">
-          <div class="comment-author">Cliente #1</div>
-          <p class="comment-text">"Página entregue rapidamente e com visual incrível. O suporte e a atenção aos detalhes foram excelentes."</p>
+          <div class="stars">★★★★★</div>
+          <p class="comment-text">"O design da página web superou totalmente nossas expectativas. O suporte foi ágil e o resultado final muito profissional."</p>
+          <div class="author-info">
+            <div class="avatar">C1</div>
+            <div class="author-details">
+              <h4>Cliente Verificado</h4>
+              <span>Projeto Web</span>
+            </div>
+          </div>
         </div>
+
         <div class="comment-card">
-          <div class="comment-author">Cliente #2</div>
-          <p class="comment-text">"O servidor do Discord ficou totalmente organizado e profissional. Recomendarei para toda a comunidade."</p>
+          <div class="stars">★★★★★</div>
+          <p class="comment-text">"Servidor do Discord completamente organizado, rápido e com permissões alinhadas. Recomendo muito o trabalho!"</p>
+          <div class="author-info">
+            <div class="avatar">C2</div>
+            <div class="author-details">
+              <h4>Cliente Verificado</h4>
+              <span>Configuração Discord</span>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- FAQ -->
     <section id="faq">
-      <h2 class="section-title">Perguntas Frequentes (FAQ)</h2>
-      <div class="faq-item">
-        <div class="faq-question">Como funciona a entrega dos serviços?</div>
-        <div class="faq-answer">Após o alinhamento das especificações do seu projeto, a entrega é efetuada diretamente pelos nossos canais oficiais de atendimento.</div>
+      <div class="section-header">
+        <span class="section-subtitle">Dúvidas Frequentes</span>
+        <h2 class="section-title">Perguntas Frequentes</h2>
       </div>
-      <div class="faq-item">
-        <div class="faq-question">Quais são as formas de pagamento aceitas?</div>
-        <div class="faq-answer">Aceitamos PIX e as principais opções de transferência digital com confirmação imediata.</div>
+
+      <div class="faq-wrapper">
+        <div class="faq-item">
+          <div class="faq-question">Como funciona a contratação e entrega?</div>
+          <div class="faq-answer">Você escolhe o serviço desejado, define as especificações com nossa equipe via atendimento e acompanhada cada etapa da criação até a entrega final.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Quais são os métodos de pagamento?</div>
+          <div class="faq-answer">Aceitamos PIX com confirmação rápida e transferências diretas instantâneas.</div>
+        </div>
+
+        <div class="faq-item">
+          <div class="faq-question">Posso solicitar alterações no projeto?</div>
+          <div class="faq-answer">Sim! Cada projeto conta com etapas de aprovação para garantir que tudo fique exatamente de acordo com suas preferências.</div>
+        </div>
       </div>
     </section>
 
     <!-- Links Úteis -->
     <section id="links">
-      <h2 class="section-title">Links e Contatos</h2>
-      <div class="links-container">
-        <a href="#" class="link-btn">Servidor no Discord</a>
-        <a href="#" class="link-btn">Atendimento via WhatsApp</a>
-        <a href="#" class="link-btn">Instagram Oficial</a>
-        <a href="#" class="link-btn">Portfólio Completo</a>
+      <div class="section-header">
+        <span class="section-subtitle">Conecte-se Conosco</span>
+        <h2 class="section-title">Links & Atendimento</h2>
+      </div>
+
+      <div class="links-grid">
+        <a href="#" class="link-card">
+          <div class="link-info">
+            <h4>Discord Oficial</h4>
+            <span>Comunidade e Suporte</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+        <a href="#" class="link-card">
+          <div class="link-info">
+            <h4>WhatsApp Direct</h4>
+            <span>Atendimento Comercial</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+        <a href="#" class="link-card">
+          <div class="link-info">
+            <h4>Instagram</h4>
+            <span>Nossos Trabalhos</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
+
+        <a href="#" class="link-card">
+          <div class="link-info">
+            <h4>Portfólio</h4>
+            <span>Projetos Anteriores</span>
+          </div>
+          <span class="link-arrow">→</span>
+        </a>
       </div>
     </section>
 
-  </div>
+  </main>
 
   <!-- Footer -->
   <footer>
-    <p>&copy; 2026 TL STUDIO. Todos os direitos reservados.</p>
+    <p>&copy; 2026 TL STUDIO. Todos os direitos reservados. Interfaces de alto desempenho.</p>
   </footer>
 
-  <!-- Script simples para alternar o Menu Lateral (sem backend) -->
+  <!-- Script JS do Menu Drawer -->
   <script>
     const menuToggle = document.getElementById('menu-toggle');
     const btnClose = document.getElementById('btn-close');
