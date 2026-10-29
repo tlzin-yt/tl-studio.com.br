@@ -12,14 +12,14 @@
 
   <style>
     /* ==========================================
-       1. VARIÁVEIS GLOBAIS E RESET
+       1. VARIÁVEIS GLOBAIS E PALETA CYBER
        ========================================== */
     :root {
       --bg-dark: #030509;
-      --bg-card: rgba(10, 15, 26, 0.72);
-      --bg-card-hover: rgba(16, 24, 42, 0.88);
-      --border-color: rgba(0, 242, 254, 0.18);
-      --border-glow: rgba(0, 242, 254, 0.5);
+      --bg-card: rgba(10, 15, 26, 0.78);
+      --bg-card-hover: rgba(16, 25, 45, 0.92);
+      --border-color: rgba(0, 242, 254, 0.22);
+      --border-glow: rgba(0, 242, 254, 0.65);
       --cyan-neon: #00f2fe;
       --blue-accent: #0072ff;
       --purple-accent: #7928ca;
@@ -54,7 +54,7 @@
     }
 
     /* ==========================================
-       2. IMAGEM DE FUNDO TL-STUDIO + OVERLAYS FX
+       2. FUNDO TL-STUDIO + MÁSCARA E GRID
        ========================================== */
     .bg-image-container {
       position: fixed;
@@ -69,38 +69,14 @@
       height: 100%;
       object-fit: cover;
       object-position: center;
-      filter: brightness(0.35) contrast(1.15) saturate(1.2);
+      filter: brightness(0.3) contrast(1.2) saturate(1.3);
       transform: scale(1.02);
-      transition: transform 10s ease;
     }
 
-    /* Máscaras de Gradiente para Leitura Perfeita */
     .bg-overlay-dark {
       position: fixed;
       inset: 0;
-      background: radial-gradient(circle at 50% 20%, rgba(3, 5, 9, 0.4) 0%, rgba(3, 5, 9, 0.85) 75%, #030509 100%);
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .bg-overlay-vignette {
-      position: fixed;
-      inset: 0;
-      background: linear-gradient(to bottom, rgba(3, 5, 9, 0.8) 0%, transparent 25%, transparent 75%, #030509 100%);
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* Glows e Grid Cyberpunk */
-    .bg-fx-cyan {
-      position: fixed;
-      top: -15%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 900px;
-      height: 500px;
-      background: radial-gradient(circle, rgba(0, 242, 254, 0.15) 0%, rgba(0, 114, 255, 0.05) 55%, transparent 75%);
-      filter: blur(90px);
+      background: radial-gradient(circle at 50% 15%, rgba(3, 5, 9, 0.3) 0%, rgba(3, 5, 9, 0.88) 70%, #030509 100%);
       z-index: 0;
       pointer-events: none;
     }
@@ -109,35 +85,141 @@
       position: fixed;
       inset: 0;
       background-image: 
-        linear-gradient(to right, rgba(0, 242, 254, 0.03) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 242, 254, 0.03) 1px, transparent 1px);
-      background-size: 60px 60px;
+        linear-gradient(to right, rgba(0, 242, 254, 0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 242, 254, 0.035) 1px, transparent 1px);
+      background-size: 50px 50px;
       z-index: 0;
       pointer-events: none;
     }
 
-    /* Typography Headings */
     h1, h2, h3, h4, .brand {
       font-family: 'Plus Jakarta Sans', sans-serif;
     }
 
     /* ==========================================
-       3. HEADER & NAVBAR GLASSMORPHISM
+       3. MOLDURAS CIBERNÉTICAS FUTURISTAS (HQ-DETAILS)
+       ========================================== */
+    .cyber-frame {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-color);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.6);
+      transition: var(--transition);
+    }
+
+    /* Cantoneiras Futuristas em CSS */
+    .cyber-frame::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0;
+      width: 16px; height: 16px;
+      border-top: 3px solid var(--cyan-neon);
+      border-left: 3px solid var(--cyan-neon);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    .cyber-frame::after {
+      content: '';
+      position: absolute;
+      bottom: 0; right: 0;
+      width: 16px; height: 16px;
+      border-bottom: 3px solid var(--cyan-neon);
+      border-right: 3px solid var(--cyan-neon);
+      z-index: 3;
+      pointer-events: none;
+    }
+
+    /* Slot de Imagem Interna com Efeito HUD */
+    .media-slot {
+      position: relative;
+      width: 100%;
+      height: 200px;
+      background: #070c18;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-bottom: 1px solid rgba(0, 242, 254, 0.15);
+    }
+
+    .media-slot img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.5s ease, filter 0.5s ease;
+      filter: brightness(0.85) contrast(1.1);
+    }
+
+    .cyber-frame:hover .media-slot img {
+      transform: scale(1.08);
+      filter: brightness(1) contrast(1.15);
+    }
+
+    .media-slot-placeholder {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      color: var(--text-dim);
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+    }
+
+    .media-slot-placeholder span {
+      font-size: 1.8rem;
+      color: var(--cyan-neon);
+      opacity: 0.7;
+    }
+
+    /* Linha de Varredura Scanline na Imagem */
+    .scanline {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.25) 51%);
+      background-size: 100% 4px;
+      pointer-events: none;
+      z-index: 2;
+    }
+
+    /* Tag Neon na Imagem */
+    .hud-tag {
+      position: absolute;
+      top: 12px; left: 12px;
+      background: rgba(3, 5, 9, 0.85);
+      border: 1px solid var(--cyan-neon);
+      color: var(--cyan-neon);
+      font-size: 0.65rem;
+      font-weight: 800;
+      padding: 3px 8px;
+      border-radius: 4px;
+      letter-spacing: 1px;
+      z-index: 2;
+      backdrop-filter: blur(4px);
+    }
+
+    /* ==========================================
+       4. HEADER & NAVBAR GLASS
        ========================================== */
     header {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(3, 5, 9, 0.75);
-      border-bottom: 1px solid rgba(0, 242, 254, 0.15);
+      background: rgba(3, 5, 9, 0.85);
+      border-bottom: 1px solid rgba(0, 242, 254, 0.2);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       padding: 1.1rem 2.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      transition: var(--transition);
-      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.6);
     }
 
     .brand {
@@ -185,19 +267,6 @@
       box-shadow: 0 0 20px rgba(0, 114, 255, 0.4);
     }
 
-    .btn-login::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -100%;
-      width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
-      transition: 0.5s;
-    }
-
-    .btn-login:hover::before {
-      left: 100%;
-    }
-
     .btn-login:hover {
       transform: translateY(-2px);
       box-shadow: 0 0 30px rgba(0, 242, 254, 0.7);
@@ -225,7 +294,7 @@
     }
 
     /* ==========================================
-       4. SIDEBAR NAVIGATION
+       5. SIDEBAR NAVIGATION
        ========================================== */
     .sidebar-overlay {
       position: fixed;
@@ -312,19 +381,8 @@
       transform: translateX(8px);
     }
 
-    .sidebar-nav a::after {
-      content: '→';
-      opacity: 0;
-      transition: var(--transition);
-      color: var(--cyan-neon);
-    }
-
-    .sidebar-nav a:hover::after {
-      opacity: 1;
-    }
-
     /* ==========================================
-       5. CONTAINER & HERO SECTION
+       6. HERO SECTION & BANNER PRINCIPAL
        ========================================== */
     .container {
       max-width: 1200px;
@@ -337,7 +395,7 @@
 
     .hero {
       text-align: center;
-      padding: 7.5rem 1rem 5.5rem;
+      padding: 6rem 1rem 4rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -358,7 +416,6 @@
       text-transform: uppercase;
       margin-bottom: 2rem;
       box-shadow: 0 0 25px rgba(0, 242, 254, 0.2);
-      backdrop-filter: blur(8px);
     }
 
     .pulse-dot {
@@ -388,7 +445,6 @@
       background: linear-gradient(135deg, #ffffff 0%, var(--cyan-neon) 50%, var(--blue-accent) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
-      drop-shadow: 0 10px 20px rgba(0,0,0,0.5);
     }
 
     .hero p {
@@ -396,12 +452,23 @@
       color: var(--text-muted);
       max-width: 740px;
       line-height: 1.75;
-      font-weight: 400;
-      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+      margin-bottom: 3rem;
+    }
+
+    /* Moldura Gigante de Banner no Hero */
+    .hero-banner-frame {
+      width: 100%;
+      max-width: 1000px;
+      height: 380px;
+      margin: 0 auto;
+    }
+
+    .hero-banner-frame .media-slot {
+      height: 100%;
     }
 
     /* ==========================================
-       6. SEÇÕES & COMPONENTES DETALHADOS (GLASS)
+       7. SEÇÕES & COMPONENTES
        ========================================== */
     section {
       padding: 5rem 0;
@@ -420,7 +487,6 @@
       text-transform: uppercase;
       margin-bottom: 0.5rem;
       display: block;
-      text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
     }
 
     .section-title {
@@ -432,28 +498,12 @@
 
     /* --- SOBRE A LOJA --- */
     .about-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: var(--radius-lg);
       padding: 3.5rem;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-    }
-
-    .about-card::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 2px;
-      background: linear-gradient(90deg, transparent, var(--cyan-neon), transparent);
     }
 
     .about-grid {
       display: grid;
-      grid-template-columns: 2fr 1fr;
+      grid-template-columns: 1.2fr 1fr;
       gap: 3rem;
       align-items: center;
     }
@@ -465,30 +515,11 @@
       margin-bottom: 1.5rem;
     }
 
-    .stats-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1.8rem;
-      border-left: 1px solid rgba(255, 255, 255, 0.1);
-      padding-left: 3rem;
+    .about-showcase-frame {
+      height: 280px;
     }
 
-    .stat-item h3 {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: var(--cyan-neon);
-      text-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
-    }
-
-    .stat-item p {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    /* --- CARDS DE PRODUTOS/SERVIÇOS --- */
+    /* --- PRODUTOS COM MOLDURA DE IMAGEM --- */
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
@@ -496,93 +527,47 @@
     }
 
     .product-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: var(--radius-md);
-      padding: 2.2rem;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-      transition: var(--transition);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
 
     .product-card:hover {
-      transform: translateY(-8px);
-      background: var(--bg-card-hover);
       border-color: var(--border-glow);
       box-shadow: 0 15px 40px rgba(0, 242, 254, 0.2);
     }
 
-    .card-icon-wrapper {
-      width: 52px;
-      height: 52px;
-      border-radius: var(--radius-sm);
-      background: rgba(0, 242, 254, 0.08);
-      border: 1px solid rgba(0, 242, 254, 0.25);
+    .card-content {
+      padding: 1.8rem;
       display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-bottom: 1.5rem;
-      color: var(--cyan-neon);
-      font-size: 1.5rem;
-      font-weight: 800;
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
-    }
-
-    .card-badge {
-      position: absolute;
-      top: 2rem; right: 2rem;
-      background: rgba(0, 242, 254, 0.12);
-      color: var(--cyan-neon);
-      font-size: 0.7rem;
-      font-weight: 800;
-      padding: 5px 12px;
-      border-radius: 20px;
-      border: 1px solid rgba(0, 242, 254, 0.3);
-      letter-spacing: 1px;
-      text-transform: uppercase;
+      flex-direction: column;
+      flex: 1;
+      justify-content: space-between;
     }
 
     .product-title {
-      font-size: 1.4rem;
+      font-size: 1.35rem;
       font-weight: 800;
       color: #fff;
-      margin-bottom: 0.75rem;
+      margin-bottom: 0.6rem;
     }
 
     .product-desc {
       font-size: 0.95rem;
       color: var(--text-muted);
-      line-height: 1.65;
-      margin-bottom: 2rem;
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
     }
 
     .product-footer {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding-top: 1.25rem;
+      padding-top: 1.2rem;
       border-top: 1px solid rgba(255, 255, 255, 0.08);
     }
 
-    .price-tag {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .price-label {
-      font-size: 0.7rem;
-      color: var(--text-dim);
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
     .price-value {
-      font-size: 1.15rem;
+      font-size: 1.1rem;
       font-weight: 800;
       color: var(--cyan-neon);
     }
@@ -591,7 +576,7 @@
       background: rgba(255, 255, 255, 0.06);
       color: #fff;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 10px 20px;
+      padding: 8px 18px;
       font-size: 0.85rem;
       font-weight: 700;
       border-radius: var(--radius-sm);
@@ -606,6 +591,32 @@
       box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
     }
 
+    /* --- PORTFÓLIO / GALERIA DE MOLDURAS --- */
+    .portfolio-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 1.8rem;
+    }
+
+    .portfolio-card .media-slot {
+      height: 220px;
+    }
+
+    .portfolio-info {
+      padding: 1.2rem 1.5rem;
+    }
+
+    .portfolio-info h4 {
+      font-size: 1.1rem;
+      color: #fff;
+      font-weight: 700;
+    }
+
+    .portfolio-info p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+    }
+
     /* --- AVALIAÇÕES / COMENTÁRIOS --- */
     .comments-grid {
       display: grid;
@@ -614,19 +625,7 @@
     }
 
     .comment-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: var(--radius-md);
       padding: 2rem;
-      position: relative;
-      transition: var(--transition);
-    }
-
-    .comment-card:hover {
-      border-color: rgba(0, 242, 254, 0.4);
-      transform: translateY(-4px);
     }
 
     .stars {
@@ -650,18 +649,21 @@
       gap: 12px;
     }
 
-    .avatar {
-      width: 42px;
-      height: 42px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, var(--cyan-neon), var(--purple-accent));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 800;
-      color: #fff;
-      font-size: 0.95rem;
-      box-shadow: 0 0 12px rgba(0, 242, 254, 0.3);
+    /* Moldura de Avatar */
+    .avatar-frame {
+      width: 48px;
+      height: 48px;
+      position: relative;
+      border: 1px solid var(--cyan-neon);
+      border-radius: 8px;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .avatar-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
     }
 
     .author-details h4 {
@@ -675,7 +677,7 @@
       color: var(--text-dim);
     }
 
-    /* --- FAQ (PERGUNTAS FREQUENTES) --- */
+    /* --- FAQ --- */
     .faq-wrapper {
       max-width: 850px;
       margin: 0 auto;
@@ -685,17 +687,7 @@
     }
 
     .faq-item {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: var(--radius-sm);
       padding: 1.6rem;
-      transition: var(--transition);
-    }
-
-    .faq-item:hover {
-      border-color: rgba(0, 242, 254, 0.4);
     }
 
     .faq-question {
@@ -721,7 +713,7 @@
       padding-left: 24px;
     }
 
-    /* --- LINKS ÚTEIS / MÍDIAS --- */
+    /* --- LINKS ÚTEIS --- */
     .links-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
@@ -729,31 +721,23 @@
     }
 
     .link-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      border-radius: var(--radius-md);
       padding: 1.6rem;
       text-decoration: none;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      transition: var(--transition);
     }
 
     .link-card:hover {
       background: rgba(0, 242, 254, 0.1);
       border-color: var(--cyan-neon);
       transform: translateY(-4px);
-      box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2);
     }
 
     .link-info h4 {
       color: #fff;
       font-size: 1rem;
       font-weight: 700;
-      margin-bottom: 0.2rem;
     }
 
     .link-info span {
@@ -764,15 +748,10 @@
     .link-arrow {
       color: var(--cyan-neon);
       font-size: 1.3rem;
-      transition: var(--transition);
-    }
-
-    .link-card:hover .link-arrow {
-      transform: translateX(6px);
     }
 
     /* ==========================================
-       7. FOOTER
+       8. FOOTER
        ========================================== */
     footer {
       background: rgba(2, 3, 6, 0.95);
@@ -789,24 +768,21 @@
       font-size: 0.9rem;
     }
 
-    /* Ajustes Responsivos */
     @media (max-width: 768px) {
       header { padding: 1rem 1.5rem; }
-      .hero h1 { font-size: 2.6rem; }
+      .hero h1 { font-size: 2.5rem; }
       .about-grid { grid-template-columns: 1fr; }
-      .stats-container { border-left: none; border-top: 1px solid rgba(255,255,255,0.1); padding-left: 0; padding-top: 1.8rem; flex-direction: row; justify-content: space-between; }
+      .hero-banner-frame { height: 220px; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Background Imagem TL-STUDIO Integrada + Overlays Cyberpunk -->
+  <!-- Fundo Imagem Integrada TL-STUDIO -->
   <div class="bg-image-container">
     <img src="img/tl_studio.jpg" alt="Fundo TL STUDIO" onerror="this.style.display='none';">
   </div>
   <div class="bg-overlay-dark"></div>
-  <div class="bg-overlay-vignette"></div>
-  <div class="bg-fx-cyan"></div>
   <div class="bg-grid"></div>
 
   <!-- Navbar Glassmorphism -->
@@ -832,6 +808,7 @@
       <a href="#inicio" class="menu-link">Início</a>
       <a href="#sobre" class="menu-link">Sobre a Loja</a>
       <a href="#produtos" class="menu-link">Produtos & Serviços</a>
+      <a href="#portfolio" class="menu-link">Galeria / Portfólio</a>
       <a href="#comentarios" class="menu-link">Avaliações</a>
       <a href="#faq" class="menu-link">FAQ</a>
       <a href="#links" class="menu-link">Links Úteis</a>
@@ -848,7 +825,20 @@
         Plataforma em Exibição Frontend
       </div>
       <h1>Sua Presença Digital <span>Elevada ao Máximo.</span></h1>
-      <p>Desenvolvimento web moderno, arquitetura para servidores de Discord, edições de vídeo dinâmicas e artes de alto impacto visual para o seu projeto.</p>
+      <p>Desenvolvimento web moderno, arquitetura para servidores de Discord, edições de vídeo dinâmicas e artes digitais de alta performance.</p>
+
+      <!-- Moldura de Destaque / Banner Principal Hero -->
+      <div class="cyber-frame hero-banner-frame">
+        <div class="media-slot">
+          <div class="scanline"></div>
+          <span class="hud-tag">TL-STUDIO // HERO_BANNER.PNG</span>
+          <img src="img/hero_banner.jpg" alt="Banner TL Studio" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+          <div class="media-slot-placeholder" style="display: none;">
+            <span>🖼</span>
+            <p>img/hero_banner.jpg</p>
+          </div>
+        </div>
+      </div>
     </section>
 
     <!-- Sobre a Loja -->
@@ -857,27 +847,31 @@
         <span class="section-subtitle">Conheça Nossa Estrutura</span>
         <h2 class="section-title">Sobre a TL STUDIO</h2>
       </div>
-      <div class="about-card">
+      
+      <div class="cyber-frame about-card">
         <div class="about-grid">
           <div class="about-text">
             <p>A <strong>TL STUDIO</strong> desenvolve ecossistemas digitais focados na experiência do usuário e na estética moderna. Criamos desde páginas web e aplicações sob medida até a configuração técnica completa de servidores e criação de identidades visuais marcantes.</p>
             <p>Nosso compromisso é entregar qualidade profissional, aliando performance, código limpo e layouts otimizados para converter visitantes em clientes.</p>
           </div>
-          <div class="stats-container">
-            <div class="stat-item">
-              <h3>100%</h3>
-              <p>Foco na Experiência</p>
-            </div>
-            <div class="stat-item">
-              <h3>High</h3>
-              <p>Performance & Design</p>
+
+          <!-- Moldura Ilustrativa Sobre a Loja -->
+          <div class="cyber-frame about-showcase-frame">
+            <div class="media-slot" style="height: 100%;">
+              <div class="scanline"></div>
+              <span class="hud-tag">HQ_PREVIEW.JPG</span>
+              <img src="img/about_preview.jpg" alt="Sobre TL Studio" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+              <div class="media-slot-placeholder" style="display: none;">
+                <span>🖼</span>
+                <p>img/about_preview.jpg</p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Produtos e Serviços -->
+    <!-- Produtos e Serviços com Molduras -->
     <section id="produtos">
       <div class="section-header">
         <span class="section-subtitle">Serviços Exclusivos</span>
@@ -886,68 +880,150 @@
 
       <div class="products-grid">
         <!-- Card 1 -->
-        <div class="product-card">
-          <span class="card-badge">WEB</span>
-          <div class="card-icon-wrapper">&lt;/&gt;</div>
-          <h3 class="product-title">Página Web</h3>
-          <p class="product-desc">Desenvolvimento web personalizado com design ultra-moderno, responsivo para celulares e focado em performance.</p>
-          <div class="product-footer">
-            <div class="price-tag">
-              <span class="price-label">A partir de</span>
-              <span class="price-value">Sob Consulta</span>
+        <div class="cyber-frame product-card">
+          <div class="media-slot">
+            <div class="scanline"></div>
+            <span class="hud-tag">WEB_DEV</span>
+            <img src="img/product_web.jpg" alt="Página Web" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="media-slot-placeholder" style="display: none;">
+              <span>💻</span>
+              <p>img/product_web.jpg</p>
             </div>
-            <button class="btn-details">Ver Detalhes</button>
+          </div>
+          <div class="card-content">
+            <h3 class="product-title">Página Web</h3>
+            <p class="product-desc">Página web personalizada com design ultra-moderno, responsivo para celulares e focado em alta conversão.</p>
+            <div class="product-footer">
+              <span class="price-value">Sob Consulta</span>
+              <button class="btn-details">Ver Detalhes</button>
+            </div>
           </div>
         </div>
 
         <!-- Card 2 -->
-        <div class="product-card">
-          <span class="card-badge">DISCORD</span>
-          <div class="card-icon-wrapper">⚙</div>
-          <h3 class="product-title">Configuração de Servidor</h3>
-          <p class="product-desc">Estruturação de cargos, canais, sistemas de tickets, automação por Webhooks e configuração completa de bots.</p>
-          <div class="product-footer">
-            <div class="price-tag">
-              <span class="price-label">A partir de</span>
-              <span class="price-value">Sob Consulta</span>
+        <div class="cyber-frame product-card">
+          <div class="media-slot">
+            <div class="scanline"></div>
+            <span class="hud-tag">DISCORD</span>
+            <img src="img/product_discord.jpg" alt="Servidor Discord" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="media-slot-placeholder" style="display: none;">
+              <span>⚙</span>
+              <p>img/product_discord.jpg</p>
             </div>
-            <button class="btn-details">Ver Detalhes</button>
+          </div>
+          <div class="card-content">
+            <h3 class="product-title">Configuração Discord</h3>
+            <p class="product-desc">Estruturação de cargos, canais, sistemas de tickets, automação por Webhooks e bots customizados.</p>
+            <div class="product-footer">
+              <span class="price-value">Sob Consulta</span>
+              <button class="btn-details">Ver Detalhes</button>
+            </div>
           </div>
         </div>
 
         <!-- Card 3 -->
-        <div class="product-card">
-          <span class="card-badge">DESIGN</span>
-          <div class="card-icon-wrapper">🎨</div>
-          <h3 class="product-title">Artes e Banners</h3>
-          <p class="product-desc">Identidade visual impactante, flyers promocionais e artes profissionais para redes sociais, facções ou guildas.</p>
-          <div class="product-footer">
-            <div class="price-tag">
-              <span class="price-label">A partir de</span>
-              <span class="price-value">Sob Consulta</span>
+        <div class="cyber-frame product-card">
+          <div class="media-slot">
+            <div class="scanline"></div>
+            <span class="hud-tag">DESIGN</span>
+            <img src="img/product_design.jpg" alt="Artes e Banners" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="media-slot-placeholder" style="display: none;">
+              <span>🎨</span>
+              <p>img/product_design.jpg</p>
             </div>
-            <button class="btn-details">Ver Detalhes</button>
+          </div>
+          <div class="card-content">
+            <h3 class="product-title">Artes e Banners</h3>
+            <p class="product-desc">Identidade visual impactante, flyers promocionais e artes profissionais para redes sociais, equipes ou facções.</p>
+            <div class="product-footer">
+              <span class="price-value">Sob Consulta</span>
+              <button class="btn-details">Ver Detalhes</button>
+            </div>
           </div>
         </div>
 
         <!-- Card 4 -->
-        <div class="product-card">
-          <span class="card-badge">MÍDIA</span>
-          <div class="card-icon-wrapper">🎬</div>
-          <h3 class="product-title">Edição de Vídeo</h3>
-          <p class="product-desc">Cortes dinâmicos, efeitos visuais e ritmo otimizado para vídeos curtos no TikTok, Instagram Reels e Shorts.</p>
-          <div class="product-footer">
-            <div class="price-tag">
-              <span class="price-label">A partir de</span>
-              <span class="price-value">Sob Consulta</span>
+        <div class="cyber-frame product-card">
+          <div class="media-slot">
+            <div class="scanline"></div>
+            <span class="hud-tag">MEDIA</span>
+            <img src="img/product_video.jpg" alt="Edição de Vídeo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="media-slot-placeholder" style="display: none;">
+              <span>🎬</span>
+              <p>img/product_video.jpg</p>
             </div>
-            <button class="btn-details">Ver Detalhes</button>
+          </div>
+          <div class="card-content">
+            <h3 class="product-title">Edição de Vídeo</h3>
+            <p class="product-desc">Cortes dinâmicos, efeitos visuais e ritmo otimizado para vídeos curtos no TikTok, Instagram Reels e Shorts.</p>
+            <div class="product-footer">
+              <span class="price-value">Sob Consulta</span>
+              <button class="btn-details">Ver Detalhes</button>
+            </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Comentários / Avaliações -->
+    <!-- Galeria / Portfólio Recente -->
+    <section id="portfolio">
+      <div class="section-header">
+        <span class="section-subtitle">Showcase Visual</span>
+        <h2 class="section-title">Galeria de Trabalhos</h2>
+      </div>
+
+      <div class="portfolio-grid">
+        <div class="cyber-frame portfolio-card">
+          <div class="media-slot">
+            <div class="scanline"></div>
+            <span class="hud-tag">PROJECT #01</span>
+            <img src="img/portfolio_1.jpg" alt="Projeto 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="media-slot-placeholder" style="display: none;">
+              <span>🖼</span>
+              <p>img/portfolio_1.jpg</p>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <h4>Landing Page Gamer</h4>
+            <p>Desenvolvimento Web & UI</p>
+          </div>
+        </div>
+
+        <div class="cyber-frame portfolio-card">
+          <div class="media-slot">
+            <div class="scanline"></div>
+            <span class="hud-tag">PROJECT #02</span>
+            <img src="img/portfolio_2.jpg" alt="Projeto 2" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="media-slot-placeholder" style="display: none;">
+              <span>🖼</span>
+              <p>img/portfolio_2.jpg</p>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <h4>Servidor FiveM / RP</h4>
+            <p>Discord & Automação</p>
+          </div>
+        </div>
+
+        <div class="cyber-frame portfolio-card">
+          <div class="media-slot">
+            <div class="scanline"></div>
+            <span class="hud-tag">PROJECT #03</span>
+            <img src="img/portfolio_3.jpg" alt="Projeto 3" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+            <div class="media-slot-placeholder" style="display: none;">
+              <span>🖼</span>
+              <p>img/portfolio_3.jpg</p>
+            </div>
+          </div>
+          <div class="portfolio-info">
+            <h4>Identidade Guilda Esports</h4>
+            <p>Design Gráfico & Banner</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comentários com Molduras de Avatar -->
     <section id="comentarios">
       <div class="section-header">
         <span class="section-subtitle">Depoimentos</span>
@@ -955,11 +1031,13 @@
       </div>
 
       <div class="comments-grid">
-        <div class="comment-card">
+        <div class="cyber-frame comment-card">
           <div class="stars">★★★★★</div>
           <p class="comment-text">"O design da página web superou totalmente nossas expectativas. O suporte foi ágil e o resultado final muito profissional."</p>
           <div class="author-info">
-            <div class="avatar">C1</div>
+            <div class="avatar-frame">
+              <img src="img/avatar_1.jpg" alt="Cliente 1" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'color:var(--cyan-neon);display:flex;align-items:center;justify-content:center;height:100%;font-weight:800;\'>C1</span>';">
+            </div>
             <div class="author-details">
               <h4>Cliente Verificado</h4>
               <span>Projeto Web</span>
@@ -967,11 +1045,13 @@
           </div>
         </div>
 
-        <div class="comment-card">
+        <div class="cyber-frame comment-card">
           <div class="stars">★★★★★</div>
           <p class="comment-text">"Servidor do Discord completamente organizado, rápido e com permissões alinhadas. Recomendo muito o trabalho!"</p>
           <div class="author-info">
-            <div class="avatar">C2</div>
+            <div class="avatar-frame">
+              <img src="img/avatar_2.jpg" alt="Cliente 2" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'color:var(--cyan-neon);display:flex;align-items:center;justify-content:center;height:100%;font-weight:800;\'>C2</span>';">
+            </div>
             <div class="author-details">
               <h4>Cliente Verificado</h4>
               <span>Configuração Discord</span>
@@ -989,17 +1069,17 @@
       </div>
 
       <div class="faq-wrapper">
-        <div class="faq-item">
+        <div class="cyber-frame faq-item">
           <div class="faq-question">Como funciona a contratação e entrega?</div>
           <div class="faq-answer">Você escolhe o serviço desejado, define as especificações com nossa equipe via atendimento e acompanha cada etapa da criação até a entrega final.</div>
         </div>
 
-        <div class="faq-item">
+        <div class="cyber-frame faq-item">
           <div class="faq-question">Quais são os métodos de pagamento?</div>
           <div class="faq-answer">Aceitamos PIX com confirmação rápida e transferências diretas instantâneas.</div>
         </div>
 
-        <div class="faq-item">
+        <div class="cyber-frame faq-item">
           <div class="faq-question">Posso solicitar alterações no projeto?</div>
           <div class="faq-answer">Sim! Cada projeto conta com etapas de aprovação para garantir que tudo fique exatamente de acordo com suas preferências.</div>
         </div>
@@ -1014,7 +1094,7 @@
       </div>
 
       <div class="links-grid">
-        <a href="#" class="link-card">
+        <a href="#" class="cyber-frame link-card">
           <div class="link-info">
             <h4>Discord Oficial</h4>
             <span>Comunidade e Suporte</span>
@@ -1022,7 +1102,7 @@
           <span class="link-arrow">→</span>
         </a>
 
-        <a href="#" class="link-card">
+        <a href="#" class="cyber-frame link-card">
           <div class="link-info">
             <h4>WhatsApp Direct</h4>
             <span>Atendimento Comercial</span>
@@ -1030,7 +1110,7 @@
           <span class="link-arrow">→</span>
         </a>
 
-        <a href="#" class="link-card">
+        <a href="#" class="cyber-frame link-card">
           <div class="link-info">
             <h4>Instagram</h4>
             <span>Nossos Trabalhos</span>
@@ -1038,7 +1118,7 @@
           <span class="link-arrow">→</span>
         </a>
 
-        <a href="#" class="link-card">
+        <a href="#" class="cyber-frame link-card">
           <div class="link-info">
             <h4>Portfólio</h4>
             <span>Projetos Anteriores</span>
