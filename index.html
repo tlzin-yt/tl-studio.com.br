@@ -8,28 +8,28 @@
   <!-- Google Fonts: Inter & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 
   <style>
     /* ==========================================
        1. VARIÁVEIS GLOBAIS E RESET
        ========================================== */
     :root {
-      --bg-dark: #05070c;
-      --bg-card: rgba(13, 18, 30, 0.65);
-      --bg-card-hover: rgba(20, 27, 45, 0.85);
-      --border-color: rgba(0, 242, 254, 0.15);
-      --border-glow: rgba(0, 242, 254, 0.4);
+      --bg-dark: #030509;
+      --bg-card: rgba(10, 15, 26, 0.72);
+      --bg-card-hover: rgba(16, 24, 42, 0.88);
+      --border-color: rgba(0, 242, 254, 0.18);
+      --border-glow: rgba(0, 242, 254, 0.5);
       --cyan-neon: #00f2fe;
       --blue-accent: #0072ff;
       --purple-accent: #7928ca;
-      --text-main: #f1f5f9;
+      --text-main: #f8fafc;
       --text-muted: #94a3b8;
       --text-dim: #64748b;
-      --radius-sm: 8px;
-      --radius-md: 16px;
-      --radius-lg: 24px;
-      --transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      --radius-sm: 10px;
+      --radius-md: 18px;
+      --radius-lg: 28px;
+      --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * {
@@ -53,43 +53,65 @@
       position: relative;
     }
 
-    /* Background FX (Glows em degradê de fundo) */
-    .bg-fx-1 {
+    /* ==========================================
+       2. IMAGEM DE FUNDO TL-STUDIO + OVERLAYS FX
+       ========================================== */
+    .bg-image-container {
       position: fixed;
-      top: -10%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 800px;
-      height: 450px;
-      background: radial-gradient(circle, rgba(0, 242, 254, 0.12) 0%, rgba(0, 114, 255, 0.05) 50%, transparent 70%);
-      filter: blur(80px);
+      inset: 0;
       z-index: 0;
       pointer-events: none;
+      overflow: hidden;
     }
 
-    .bg-fx-2 {
-      position: fixed;
-      bottom: -10%;
-      right: -5%;
-      width: 600px;
-      height: 600px;
-      background: radial-gradient(circle, rgba(121, 40, 202, 0.1) 0%, rgba(0, 242, 254, 0.03) 60%, transparent 80%);
-      filter: blur(100px);
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    /* Grid Decorativa de Fundo */
-    .bg-grid {
-      position: fixed;
-      top: 0;
-      left: 0;
+    .bg-image-container img {
       width: 100%;
       height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(0.35) contrast(1.15) saturate(1.2);
+      transform: scale(1.02);
+      transition: transform 10s ease;
+    }
+
+    /* Máscaras de Gradiente para Leitura Perfeita */
+    .bg-overlay-dark {
+      position: fixed;
+      inset: 0;
+      background: radial-gradient(circle at 50% 20%, rgba(3, 5, 9, 0.4) 0%, rgba(3, 5, 9, 0.85) 75%, #030509 100%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .bg-overlay-vignette {
+      position: fixed;
+      inset: 0;
+      background: linear-gradient(to bottom, rgba(3, 5, 9, 0.8) 0%, transparent 25%, transparent 75%, #030509 100%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Glows e Grid Cyberpunk */
+    .bg-fx-cyan {
+      position: fixed;
+      top: -15%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 900px;
+      height: 500px;
+      background: radial-gradient(circle, rgba(0, 242, 254, 0.15) 0%, rgba(0, 114, 255, 0.05) 55%, transparent 75%);
+      filter: blur(90px);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .bg-grid {
+      position: fixed;
+      inset: 0;
       background-image: 
-        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
-      background-size: 50px 50px;
+        linear-gradient(to right, rgba(0, 242, 254, 0.03) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(0, 242, 254, 0.03) 1px, transparent 1px);
+      background-size: 60px 60px;
       z-index: 0;
       pointer-events: none;
     }
@@ -100,38 +122,40 @@
     }
 
     /* ==========================================
-       2. HEADER & NAVBAR
+       3. HEADER & NAVBAR GLASSMORPHISM
        ========================================== */
     header {
       position: sticky;
       top: 0;
       z-index: 100;
-      background: rgba(5, 7, 12, 0.75);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      backdrop-filter: blur(16px);
+      background: rgba(3, 5, 9, 0.75);
+      border-bottom: 1px solid rgba(0, 242, 254, 0.15);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
       padding: 1.1rem 2.5rem;
       display: flex;
       justify-content: space-between;
       align-items: center;
       transition: var(--transition);
+      box-shadow: 0 4px 30px rgba(0, 0, 0, 0.5);
     }
 
     .brand {
       font-size: 1.6rem;
-      font-weight: 800;
+      font-weight: 900;
       color: #ffffff;
       letter-spacing: 2px;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
     }
 
     .brand-icon {
-      width: 10px;
-      height: 10px;
+      width: 12px;
+      height: 12px;
       background: var(--cyan-neon);
       border-radius: 50%;
-      box-shadow: 0 0 12px var(--cyan-neon);
+      box-shadow: 0 0 15px var(--cyan-neon);
     }
 
     .brand span {
@@ -151,14 +175,14 @@
       background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
       color: #fff;
       border: none;
-      padding: 10px 22px;
+      padding: 10px 24px;
       font-size: 0.9rem;
       font-weight: 700;
       border-radius: var(--radius-sm);
       cursor: pointer;
       overflow: hidden;
       transition: var(--transition);
-      box-shadow: 0 4px 20px rgba(0, 114, 255, 0.35);
+      box-shadow: 0 0 20px rgba(0, 114, 255, 0.4);
     }
 
     .btn-login::before {
@@ -166,7 +190,7 @@
       position: absolute;
       top: 0; left: -100%;
       width: 100%; height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
       transition: 0.5s;
     }
 
@@ -176,38 +200,38 @@
 
     .btn-login:hover {
       transform: translateY(-2px);
-      box-shadow: 0 6px 25px rgba(0, 242, 254, 0.5);
+      box-shadow: 0 0 30px rgba(0, 242, 254, 0.7);
     }
 
     .menu-toggle {
-      background: rgba(15, 23, 42, 0.8);
+      background: rgba(10, 15, 26, 0.8);
       border: 1px solid var(--border-color);
       color: var(--cyan-neon);
-      width: 42px;
-      height: 42px;
+      width: 44px;
+      height: 44px;
       border-radius: var(--radius-sm);
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
       transition: var(--transition);
-      font-size: 1.2rem;
+      font-size: 1.3rem;
     }
 
     .menu-toggle:hover {
       border-color: var(--cyan-neon);
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.25);
-      background: rgba(0, 242, 254, 0.08);
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.35);
+      background: rgba(0, 242, 254, 0.12);
     }
 
     /* ==========================================
-       3. SIDEBAR NAVIGATION
+       4. SIDEBAR NAVIGATION
        ========================================== */
     .sidebar-overlay {
       position: fixed;
       inset: 0;
-      background: rgba(3, 5, 9, 0.8);
-      backdrop-filter: blur(8px);
+      background: rgba(2, 3, 6, 0.85);
+      backdrop-filter: blur(10px);
       z-index: 200;
       opacity: 0;
       pointer-events: none;
@@ -221,12 +245,12 @@
 
     .sidebar {
       position: fixed;
-      top: 0; right: -360px;
-      width: 360px;
+      top: 0; right: -380px;
+      width: 380px;
       height: 100%;
-      background: rgba(8, 12, 22, 0.95);
+      background: rgba(6, 9, 16, 0.96);
       border-left: 1px solid var(--border-glow);
-      box-shadow: -10px 0 40px rgba(0, 0, 0, 0.8);
+      box-shadow: -15px 0 50px rgba(0, 0, 0, 0.9);
       z-index: 201;
       padding: 2.5rem 2rem;
       display: flex;
@@ -264,7 +288,7 @@
     .sidebar-nav {
       display: flex;
       flex-direction: column;
-      gap: 0.75rem;
+      gap: 0.85rem;
     }
 
     .sidebar-nav a {
@@ -272,7 +296,7 @@
       text-decoration: none;
       font-size: 1.05rem;
       font-weight: 600;
-      padding: 12px 16px;
+      padding: 14px 18px;
       border-radius: var(--radius-sm);
       border: 1px solid transparent;
       transition: var(--transition);
@@ -283,9 +307,9 @@
 
     .sidebar-nav a:hover {
       color: var(--text-main);
-      background: rgba(0, 242, 254, 0.06);
-      border-color: rgba(0, 242, 254, 0.2);
-      transform: translateX(6px);
+      background: rgba(0, 242, 254, 0.08);
+      border-color: rgba(0, 242, 254, 0.3);
+      transform: translateX(8px);
     }
 
     .sidebar-nav a::after {
@@ -300,7 +324,7 @@
     }
 
     /* ==========================================
-       4. CONTAINER & HERO SECTION
+       5. CONTAINER & HERO SECTION
        ========================================== */
     .container {
       max-width: 1200px;
@@ -313,7 +337,7 @@
 
     .hero {
       text-align: center;
-      padding: 7rem 1rem 5rem;
+      padding: 7.5rem 1rem 5.5rem;
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -322,18 +346,19 @@
     .badge-status {
       display: inline-flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       background: rgba(0, 242, 254, 0.08);
       border: 1px solid var(--border-glow);
-      padding: 6px 16px;
+      padding: 8px 20px;
       border-radius: 30px;
       font-size: 0.8rem;
-      font-weight: 700;
+      font-weight: 800;
       color: var(--cyan-neon);
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
       text-transform: uppercase;
       margin-bottom: 2rem;
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.15);
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.2);
+      backdrop-filter: blur(8px);
     }
 
     .pulse-dot {
@@ -341,7 +366,7 @@
       height: 8px;
       background: var(--cyan-neon);
       border-radius: 50%;
-      box-shadow: 0 0 10px var(--cyan-neon);
+      box-shadow: 0 0 12px var(--cyan-neon);
       animation: pulse 1.8s infinite;
     }
 
@@ -352,29 +377,31 @@
     }
 
     .hero h1 {
-      font-size: 3.8rem;
-      font-weight: 800;
-      line-height: 1.15;
+      font-size: 4rem;
+      font-weight: 900;
+      line-height: 1.1;
       margin-bottom: 1.5rem;
-      letter-spacing: -1px;
+      letter-spacing: -1.5px;
     }
 
     .hero h1 span {
       background: linear-gradient(135deg, #ffffff 0%, var(--cyan-neon) 50%, var(--blue-accent) 100%);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
+      drop-shadow: 0 10px 20px rgba(0,0,0,0.5);
     }
 
     .hero p {
       font-size: 1.25rem;
       color: var(--text-muted);
-      max-width: 720px;
-      line-height: 1.7;
+      max-width: 740px;
+      line-height: 1.75;
       font-weight: 400;
+      text-shadow: 0 2px 10px rgba(0,0,0,0.8);
     }
 
     /* ==========================================
-       5. SEÇÕES & COMPONENTES DETALHADOS
+       6. SEÇÕES & COMPONENTES DETALHADOS (GLASS)
        ========================================== */
     section {
       padding: 5rem 0;
@@ -388,16 +415,17 @@
     .section-subtitle {
       color: var(--cyan-neon);
       font-size: 0.85rem;
-      font-weight: 700;
-      letter-spacing: 2px;
+      font-weight: 800;
+      letter-spacing: 2.5px;
       text-transform: uppercase;
       margin-bottom: 0.5rem;
       display: block;
+      text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
     }
 
     .section-title {
-      font-size: 2.2rem;
-      font-weight: 800;
+      font-size: 2.4rem;
+      font-weight: 900;
       color: #ffffff;
       letter-spacing: -0.5px;
     }
@@ -406,12 +434,13 @@
     .about-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-radius: var(--radius-lg);
-      padding: 3rem;
+      padding: 3.5rem;
       position: relative;
       overflow: hidden;
-      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
     }
 
     .about-card::before {
@@ -425,35 +454,36 @@
     .about-grid {
       display: grid;
       grid-template-columns: 2fr 1fr;
-      gap: 2.5rem;
+      gap: 3rem;
       align-items: center;
     }
 
     .about-text p {
       font-size: 1.1rem;
       color: var(--text-muted);
-      line-height: 1.8;
+      line-height: 1.85;
       margin-bottom: 1.5rem;
     }
 
     .stats-container {
       display: flex;
       flex-direction: column;
-      gap: 1.5rem;
-      border-left: 1px solid rgba(255, 255, 255, 0.08);
-      padding-left: 2.5rem;
+      gap: 1.8rem;
+      border-left: 1px solid rgba(255, 255, 255, 0.1);
+      padding-left: 3rem;
     }
 
     .stat-item h3 {
-      font-size: 2.2rem;
-      font-weight: 800;
+      font-size: 2.5rem;
+      font-weight: 900;
       color: var(--cyan-neon);
+      text-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
     }
 
     .stat-item p {
       font-size: 0.85rem;
       color: var(--text-dim);
-      font-weight: 600;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 1px;
     }
@@ -468,55 +498,58 @@
     .product-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
-      backdrop-filter: blur(12px);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-radius: var(--radius-md);
-      padding: 2rem;
+      padding: 2.2rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       position: relative;
       transition: var(--transition);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
     }
 
     .product-card:hover {
       transform: translateY(-8px);
       background: var(--bg-card-hover);
       border-color: var(--border-glow);
-      box-shadow: 0 15px 35px rgba(0, 242, 254, 0.12);
+      box-shadow: 0 15px 40px rgba(0, 242, 254, 0.2);
     }
 
     .card-icon-wrapper {
-      width: 50px;
-      height: 50px;
+      width: 52px;
+      height: 52px;
       border-radius: var(--radius-sm);
       background: rgba(0, 242, 254, 0.08);
-      border: 1px solid rgba(0, 242, 254, 0.2);
+      border: 1px solid rgba(0, 242, 254, 0.25);
       display: flex;
       align-items: center;
       justify-content: center;
       margin-bottom: 1.5rem;
       color: var(--cyan-neon);
-      font-size: 1.4rem;
-      font-weight: 700;
+      font-size: 1.5rem;
+      font-weight: 800;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.15);
     }
 
     .card-badge {
       position: absolute;
       top: 2rem; right: 2rem;
-      background: rgba(0, 242, 254, 0.1);
+      background: rgba(0, 242, 254, 0.12);
       color: var(--cyan-neon);
       font-size: 0.7rem;
-      font-weight: 700;
-      padding: 4px 10px;
+      font-weight: 800;
+      padding: 5px 12px;
       border-radius: 20px;
-      border: 1px solid rgba(0, 242, 254, 0.25);
+      border: 1px solid rgba(0, 242, 254, 0.3);
       letter-spacing: 1px;
       text-transform: uppercase;
     }
 
     .product-title {
-      font-size: 1.35rem;
-      font-weight: 700;
+      font-size: 1.4rem;
+      font-weight: 800;
       color: #fff;
       margin-bottom: 0.75rem;
     }
@@ -524,7 +557,7 @@
     .product-desc {
       font-size: 0.95rem;
       color: var(--text-muted);
-      line-height: 1.6;
+      line-height: 1.65;
       margin-bottom: 2rem;
     }
 
@@ -555,12 +588,12 @@
     }
 
     .btn-details {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.06);
       color: #fff;
       border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 10px 18px;
+      padding: 10px 20px;
       font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: 700;
       border-radius: var(--radius-sm);
       cursor: pointer;
       transition: var(--transition);
@@ -568,10 +601,9 @@
 
     .btn-details:hover {
       background: var(--cyan-neon);
-      color: #05070c;
+      color: #030509;
       border-color: var(--cyan-neon);
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
-      font-weight: 700;
+      box-shadow: 0 0 20px rgba(0, 242, 254, 0.5);
     }
 
     /* --- AVALIAÇÕES / COMENTÁRIOS --- */
@@ -584,28 +616,30 @@
     .comment-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-radius: var(--radius-md);
-      padding: 1.8rem;
+      padding: 2rem;
       position: relative;
       transition: var(--transition);
     }
 
     .comment-card:hover {
-      border-color: rgba(0, 242, 254, 0.3);
+      border-color: rgba(0, 242, 254, 0.4);
       transform: translateY(-4px);
     }
 
     .stars {
       color: #ffb703;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       margin-bottom: 1rem;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
     }
 
     .comment-text {
       font-size: 0.95rem;
       color: var(--text-muted);
-      line-height: 1.6;
+      line-height: 1.65;
       margin-bottom: 1.5rem;
       font-style: italic;
     }
@@ -617,8 +651,8 @@
     }
 
     .avatar {
-      width: 40px;
-      height: 40px;
+      width: 42px;
+      height: 42px;
       border-radius: 50%;
       background: linear-gradient(135deg, var(--cyan-neon), var(--purple-accent));
       display: flex;
@@ -626,7 +660,8 @@
       justify-content: center;
       font-weight: 800;
       color: #fff;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
+      box-shadow: 0 0 12px rgba(0, 242, 254, 0.3);
     }
 
     .author-details h4 {
@@ -642,23 +677,25 @@
 
     /* --- FAQ (PERGUNTAS FREQUENTES) --- */
     .faq-wrapper {
-      max-width: 800px;
+      max-width: 850px;
       margin: 0 auto;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      gap: 1.25rem;
     }
 
     .faq-item {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-radius: var(--radius-sm);
-      padding: 1.5rem;
+      padding: 1.6rem;
       transition: var(--transition);
     }
 
     .faq-item:hover {
-      border-color: rgba(0, 242, 254, 0.3);
+      border-color: rgba(0, 242, 254, 0.4);
     }
 
     .faq-question {
@@ -668,34 +705,36 @@
       margin-bottom: 0.6rem;
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 12px;
     }
 
     .faq-question::before {
       content: '✦';
       color: var(--cyan-neon);
-      font-size: 0.8rem;
+      font-size: 0.85rem;
     }
 
     .faq-answer {
       font-size: 0.95rem;
       color: var(--text-muted);
-      line-height: 1.6;
-      padding-left: 20px;
+      line-height: 1.65;
+      padding-left: 24px;
     }
 
     /* --- LINKS ÚTEIS / MÍDIAS --- */
     .links-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 1.25rem;
     }
 
     .link-card {
       background: var(--bg-card);
       border: 1px solid var(--border-color);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
       border-radius: var(--radius-md);
-      padding: 1.5rem;
+      padding: 1.6rem;
       text-decoration: none;
       display: flex;
       align-items: center;
@@ -704,10 +743,10 @@
     }
 
     .link-card:hover {
-      background: rgba(0, 242, 254, 0.08);
+      background: rgba(0, 242, 254, 0.1);
       border-color: var(--cyan-neon);
       transform: translateY(-4px);
-      box-shadow: 0 10px 25px rgba(0, 242, 254, 0.15);
+      box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2);
     }
 
     .link-info h4 {
@@ -724,19 +763,19 @@
 
     .link-arrow {
       color: var(--cyan-neon);
-      font-size: 1.2rem;
+      font-size: 1.3rem;
       transition: var(--transition);
     }
 
     .link-card:hover .link-arrow {
-      transform: translateX(4px);
+      transform: translateX(6px);
     }
 
     /* ==========================================
-       6. FOOTER
+       7. FOOTER
        ========================================== */
     footer {
-      background: #030408;
+      background: rgba(2, 3, 6, 0.95);
       border-top: 1px solid rgba(255, 255, 255, 0.08);
       padding: 3rem 2rem;
       text-align: center;
@@ -750,23 +789,27 @@
       font-size: 0.9rem;
     }
 
-    /* Responsive Adjustments */
+    /* Ajustes Responsivos */
     @media (max-width: 768px) {
       header { padding: 1rem 1.5rem; }
-      .hero h1 { font-size: 2.5rem; }
+      .hero h1 { font-size: 2.6rem; }
       .about-grid { grid-template-columns: 1fr; }
-      .stats-container { border-left: none; border-top: 1px solid rgba(255,255,255,0.08); padding-left: 0; padding-top: 1.5rem; flex-direction: row; justify-content: space-between; }
+      .stats-container { border-left: none; border-top: 1px solid rgba(255,255,255,0.1); padding-left: 0; padding-top: 1.8rem; flex-direction: row; justify-content: space-between; }
     }
   </style>
 </head>
 <body>
 
-  <!-- Efeitos FX e Grid Background -->
-  <div class="bg-fx-1"></div>
-  <div class="bg-fx-2"></div>
+  <!-- Background Imagem TL-STUDIO Integrada + Overlays Cyberpunk -->
+  <div class="bg-image-container">
+    <img src="img/tl_studio.jpg" alt="Fundo TL STUDIO" onerror="this.style.display='none';">
+  </div>
+  <div class="bg-overlay-dark"></div>
+  <div class="bg-overlay-vignette"></div>
+  <div class="bg-fx-cyan"></div>
   <div class="bg-grid"></div>
 
-  <!-- Navbar -->
+  <!-- Navbar Glassmorphism -->
   <header>
     <div class="brand">
       <div class="brand-icon"></div>
@@ -817,7 +860,7 @@
       <div class="about-card">
         <div class="about-grid">
           <div class="about-text">
-            <p>A <strong>TL STUDIO</strong> desenvolve ecossistemas digitais focados na experiência do usuário e na estética moderna. Criamos desde landing pages e aplicações web sob medida até a configuração técnica completa de servidores e criação de identidades visuais marcantes.</p>
+            <p>A <strong>TL STUDIO</strong> desenvolve ecossistemas digitais focados na experiência do usuário e na estética moderna. Criamos desde páginas web e aplicações sob medida até a configuração técnica completa de servidores e criação de identidades visuais marcantes.</p>
             <p>Nosso compromisso é entregar qualidade profissional, aliando performance, código limpo e layouts otimizados para converter visitantes em clientes.</p>
           </div>
           <div class="stats-container">
@@ -948,7 +991,7 @@
       <div class="faq-wrapper">
         <div class="faq-item">
           <div class="faq-question">Como funciona a contratação e entrega?</div>
-          <div class="faq-answer">Você escolhe o serviço desejado, define as especificações com nossa equipe via atendimento e acompanhada cada etapa da criação até a entrega final.</div>
+          <div class="faq-answer">Você escolhe o serviço desejado, define as especificações com nossa equipe via atendimento e acompanha cada etapa da criação até a entrega final.</div>
         </div>
 
         <div class="faq-item">
