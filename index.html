@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Loja Digital - Login</title>
+  <title>TL STUDIO - Login</title>
   <style>
     * {
       margin: 0;
@@ -19,6 +19,34 @@
       align-items: center;
       background-color: #0b0f19;
       color: #e2e8f0;
+      position: relative;
+    }
+
+    .top-bar {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+    }
+
+    .btn-guest {
+      background: transparent;
+      border: 1px solid rgba(0, 242, 254, 0.4);
+      color: #00f2fe;
+      padding: 6px 14px;
+      font-size: 0.8rem;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-guest:hover {
+      background: rgba(0, 242, 254, 0.1);
+      border-color: #00f2fe;
+      box-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
     }
 
     .login-card {
@@ -41,7 +69,7 @@
       font-size: 1.8rem;
       font-weight: 700;
       color: #ffffff;
-      letter-spacing: 1px;
+      letter-spacing: 1.5px;
     }
 
     .brand span {
@@ -114,9 +142,13 @@
 </head>
 <body>
 
+  <div class="top-bar">
+    <button class="btn-guest">Entrar sem logar &rarr;</button>
+  </div>
+
   <div class="login-card">
     <div class="header">
-      <div class="brand">DIGITAL<span>STORE</span></div>
+      <div class="brand">TL <span>STUDIO</span></div>
       <p class="subtitle">Acesse sua conta para continuar</p>
     </div>
 
