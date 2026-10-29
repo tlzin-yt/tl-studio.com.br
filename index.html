@@ -18,11 +18,12 @@
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      scroll-behavior: smooth;
     }
 
     /* Header Navbar */
     header {
-      background: rgba(15, 23, 42, 0.85);
+      background: rgba(15, 23, 42, 0.9);
       border-bottom: 1px solid rgba(56, 189, 248, 0.2);
       backdrop-filter: blur(12px);
       position: sticky;
@@ -45,21 +46,10 @@
       color: #00f2fe;
     }
 
-    nav {
+    .header-actions {
       display: flex;
       align-items: center;
-      gap: 1.5rem;
-    }
-
-    nav a {
-      color: #94a3b8;
-      text-decoration: none;
-      font-size: 0.95rem;
-      transition: color 0.2s;
-    }
-
-    nav a:hover {
-      color: #00f2fe;
+      gap: 1.2rem;
     }
 
     .btn-login {
@@ -80,16 +70,119 @@
       box-shadow: 0 0 12px rgba(0, 242, 254, 0.4);
     }
 
+    .menu-toggle {
+      background: transparent;
+      border: 1px solid rgba(56, 189, 248, 0.3);
+      color: #00f2fe;
+      font-size: 1.2rem;
+      padding: 6px 12px;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .menu-toggle:hover {
+      background: rgba(0, 242, 254, 0.1);
+    }
+
+    /* Overlay Sidebar Navigation */
+    .sidebar-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      backdrop-filter: blur(4px);
+      z-index: 200;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
+    }
+
+    .sidebar-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .sidebar {
+      position: fixed;
+      top: 0;
+      right: -300px;
+      width: 300px;
+      height: 100%;
+      background: #0f172a;
+      border-left: 1px solid rgba(56, 189, 248, 0.2);
+      z-index: 201;
+      padding: 2rem 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      transition: right 0.3s ease;
+    }
+
+    .sidebar.active {
+      right: 0;
+    }
+
+    .sidebar-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1e293b;
+      padding-bottom: 1rem;
+    }
+
+    .btn-close {
+      background: transparent;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.5rem;
+      cursor: pointer;
+    }
+
+    .btn-close:hover {
+      color: #00f2fe;
+    }
+
+    .sidebar-nav {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .sidebar-nav a {
+      color: #cbd5e1;
+      text-decoration: none;
+      font-size: 1rem;
+      font-weight: 500;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .sidebar-nav a:hover {
+      background: rgba(0, 242, 254, 0.1);
+      color: #00f2fe;
+    }
+
+    /* Container Principal */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      width: 100%;
+      flex: 1;
+    }
+
     /* Hero Section */
     .hero {
       text-align: center;
-      padding: 4rem 1.5rem 3rem;
-      max-width: 900px;
-      margin: 0 auto;
+      padding: 5rem 1rem 4rem;
     }
 
     .hero h1 {
-      font-size: 2.5rem;
+      font-size: 2.8rem;
       font-weight: 800;
       margin-bottom: 1rem;
       color: #ffffff;
@@ -102,22 +195,21 @@
     }
 
     .hero p {
-      font-size: 1.1rem;
+      font-size: 1.15rem;
       color: #94a3b8;
+      max-width: 700px;
+      margin: 0 auto;
       line-height: 1.6;
     }
 
-    /* Products Grid */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 2rem 1.5rem 4rem;
-      width: 100%;
-      flex: 1;
+    /* Sections Shared Styling */
+    section {
+      padding: 4rem 0;
+      border-bottom: 1px solid #1e293b;
     }
 
     .section-title {
-      font-size: 1.5rem;
+      font-size: 1.6rem;
       font-weight: 700;
       margin-bottom: 2rem;
       color: #ffffff;
@@ -125,9 +217,20 @@
       padding-left: 0.75rem;
     }
 
+    /* Sobre a Loja */
+    .about-content {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid rgba(56, 189, 248, 0.15);
+      border-radius: 12px;
+      padding: 2rem;
+      line-height: 1.7;
+      color: #cbd5e1;
+    }
+
+    /* Produtos Grid */
     .grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
       gap: 1.5rem;
     }
 
@@ -140,13 +243,12 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      transition: transform 0.2s, border-color 0.2s;
     }
 
     .card:hover {
-      transform: translateY(-5px);
+      transform: translateY(-4px);
       border-color: rgba(0, 242, 254, 0.4);
-      box-shadow: 0 10px 25px -5px rgba(0, 242, 254, 0.1);
     }
 
     .card-badge {
@@ -162,7 +264,7 @@
     }
 
     .card-title {
-      font-size: 1.25rem;
+      font-size: 1.2rem;
       font-weight: 700;
       color: #fff;
       margin-bottom: 0.5rem;
@@ -185,7 +287,7 @@
     }
 
     .price {
-      font-size: 1.2rem;
+      font-size: 1.1rem;
       font-weight: 700;
       color: #00f2fe;
     }
@@ -194,7 +296,7 @@
       background: #1e293b;
       color: #fff;
       border: 1px solid rgba(56, 189, 248, 0.3);
-      padding: 8px 16px;
+      padding: 8px 14px;
       font-size: 0.85rem;
       font-weight: 600;
       border-radius: 6px;
@@ -208,10 +310,81 @@
       border-color: #00f2fe;
     }
 
+    /* Comentários */
+    .comments-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .comment-card {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid #1e293b;
+      border-radius: 10px;
+      padding: 1.25rem;
+    }
+
+    .comment-author {
+      font-weight: 600;
+      color: #00f2fe;
+      font-size: 0.95rem;
+      margin-bottom: 0.25rem;
+    }
+
+    .comment-text {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    /* FAQ */
+    .faq-item {
+      background: rgba(15, 23, 42, 0.6);
+      border: 1px solid #1e293b;
+      border-radius: 8px;
+      padding: 1.2rem;
+      margin-bottom: 1rem;
+    }
+
+    .faq-question {
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 0.5rem;
+    }
+
+    .faq-answer {
+      font-size: 0.9rem;
+      color: #94a3b8;
+      line-height: 1.5;
+    }
+
+    /* Links Úteis */
+    .links-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .link-btn {
+      background: #0f172a;
+      border: 1px solid rgba(56, 189, 248, 0.2);
+      color: #cbd5e1;
+      padding: 10px 18px;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+
+    .link-btn:hover {
+      border-color: #00f2fe;
+      color: #00f2fe;
+      background: rgba(0, 242, 254, 0.05);
+    }
+
     /* Footer */
     footer {
       background: #070a12;
-      border-top: 1px solid #1e293b;
       padding: 2rem 1.5rem;
       text-align: center;
       font-size: 0.85rem;
@@ -221,78 +394,167 @@
 </head>
 <body>
 
-  <!-- Navbar Header -->
+  <!-- Navbar -->
   <header>
     <div class="brand">TL <span>STUDIO</span></div>
-    <nav>
-      <a href="#">Serviços</a>
-      <a href="#">Portfólio</a>
-      <a href="#">Contato</a>
-      <button class="btn-login">Login</button>
-    </nav>
+    <div class="header-actions">
+      <button class="btn-login" id="btn-login">Login</button>
+      <button class="menu-toggle" id="menu-toggle">☰</button>
+    </div>
   </header>
 
-  <!-- Hero Section -->
-  <section class="hero">
-    <h1>Soluções Digitais de <span>Alto Impacto</span></h1>
-    <p>Páginas web modernas, configurações profissionais para servidores de Discord, artes exclusivas e edições marcantes para o seu projeto.</p>
-  </section>
-
-  <!-- Main Store Section -->
-  <main class="container">
-    <h2 class="section-title">Nossos Serviços</h2>
-
-    <div class="grid">
-      <!-- Card 1 -->
-      <div class="card">
-        <span class="card-badge">WEB DEVELOPMENT</span>
-        <h3 class="card-title">Página Web</h3>
-        <p class="card-desc">Desenvolvimento de página web responsiva, otimizada e com design moderno ajustado ao seu negócio.</p>
-        <div class="card-footer">
-          <span class="price">Sob Consulta</span>
-          <button class="btn-buy">Ver Detalhes</button>
-        </div>
-      </div>
-
-      <!-- Card 2 -->
-      <div class="card">
-        <span class="card-badge">DISCORD</span>
-        <h3 class="card-title">Configuração de Servidor</h3>
-        <p class="card-desc">Estruturação completa de cargos, canais, permissões, bots de suporte e integração com Webhooks.</p>
-        <div class="card-footer">
-          <span class="price">Sob Consulta</span>
-          <button class="btn-buy">Ver Detalhes</button>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="card">
-        <span class="card-badge">DESIGN</span>
-        <h3 class="card-title">Artes e Banners</h3>
-        <p class="card-desc">Criação de identidade visual, flyers promocionais e artes para redes sociais ou guilda/facção.</p>
-        <div class="card-footer">
-          <span class="price">Sob Consulta</span>
-          <button class="btn-buy">Ver Detalhes</button>
-        </div>
-      </div>
-
-      <!-- Card 4 -->
-      <div class="card">
-        <span class="card-badge">VIDEO</span>
-        <h3 class="card-title">Edição de Vídeo</h3>
-        <p class="card-desc">Cortes dinâmicos e edição de vídeos curtos para Reels, TikTok, YouTube Shorts ou divulgações.</p>
-        <div class="card-footer">
-          <span class="price">Sob Consulta</span>
-          <button class="btn-buy">Ver Detalhes</button>
-        </div>
-      </div>
+  <!-- Menu Lateral Overlay -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">TL <span>STUDIO</span></div>
+      <button class="btn-close" id="btn-close">&times;</button>
     </div>
-  </main>
+    <nav class="sidebar-nav">
+      <a href="#inicio" class="menu-link">Início</a>
+      <a href="#sobre" class="menu-link">Sobre a Loja</a>
+      <a href="#produtos" class="menu-link">Produtos & Serviços</a>
+      <a href="#comentarios" class="menu-link">Avaliações</a>
+      <a href="#faq" class="menu-link">FAQ</a>
+      <a href="#links" class="menu-link">Links Úteis</a>
+    </nav>
+  </aside>
+
+  <!-- Conteúdo Principal -->
+  <div class="container">
+
+    <!-- Hero / Título & Descrição -->
+    <section class="hero" id="inicio">
+      <h1>TL STUDIO <span>Soluções Digitais</span></h1>
+      <p>Projetos web modernos, configurações de servidores, edições exclusivas e artes personalizadas para elevar o nível da sua marca digital.</p>
+    </section>
+
+    <!-- Sobre a Loja -->
+    <section id="sobre">
+      <h2 class="section-title">Sobre a Loja</h2>
+      <div class="about-content">
+        <p>A <strong>TL STUDIO</strong> é focada no desenvolvimento de soluções digitais de alto desempenho e design moderno. Atuamos com criação de páginas web personalizadas, estruturação e automação de servidores no Discord, produção audiovisual para redes sociais e identidade visual completa.</p>
+      </div>
+    </section>
+
+    <!-- Produtos / Serviços -->
+    <section id="produtos">
+      <h2 class="section-title">Produtos e Serviços</h2>
+      <div class="grid">
+        <div class="card">
+          <span class="card-badge">WEB DEVELOPMENT</span>
+          <h3 class="card-title">Página Web</h3>
+          <p class="card-desc">Desenvolvimento de páginas web responsivas, otimizadas e com design ajustado ao seu projeto.</p>
+          <div class="card-footer">
+            <span class="price">Sob Consulta</span>
+            <button class="btn-buy">Ver Detalhes</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <span class="card-badge">DISCORD</span>
+          <h3 class="card-title">Configuração de Servidor</h3>
+          <p class="card-desc">Estruturação de cargos, canais, permissões, bots de suporte e automação com Webhooks.</p>
+          <div class="card-footer">
+            <span class="price">Sob Consulta</span>
+            <button class="btn-buy">Ver Detalhes</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <span class="card-badge">DESIGN</span>
+          <h3 class="card-title">Artes e Banners</h3>
+          <p class="card-desc">Criação de banners, flyers promocionais e artes personalizadas para redes sociais e equipes.</p>
+          <div class="card-footer">
+            <span class="price">Sob Consulta</span>
+            <button class="btn-buy">Ver Detalhes</button>
+          </div>
+        </div>
+
+        <div class="card">
+          <span class="card-badge">VIDEO</span>
+          <h3 class="card-title">Edição de Vídeo</h3>
+          <p class="card-desc">Cortes dinâmicos e edições para Reels, TikTok, Shorts ou materiais de divulgação.</p>
+          <div class="card-footer">
+            <span class="price">Sob Consulta</span>
+            <button class="btn-buy">Ver Detalhes</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Comentários / Avaliações -->
+    <section id="comentarios">
+      <h2 class="section-title">Comentários dos Clientes</h2>
+      <div class="comments-grid">
+        <div class="comment-card">
+          <div class="comment-author">Cliente #1</div>
+          <p class="comment-text">"Página entregue rapidamente e com visual incrível. O suporte e a atenção aos detalhes foram excelentes."</p>
+        </div>
+        <div class="comment-card">
+          <div class="comment-author">Cliente #2</div>
+          <p class="comment-text">"O servidor do Discord ficou totalmente organizado e profissional. Recomendarei para toda a comunidade."</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <h2 class="section-title">Perguntas Frequentes (FAQ)</h2>
+      <div class="faq-item">
+        <div class="faq-question">Como funciona a entrega dos serviços?</div>
+        <div class="faq-answer">Após o alinhamento das especificações do seu projeto, a entrega é efetuada diretamente pelos nossos canais oficiais de atendimento.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question">Quais são as formas de pagamento aceitas?</div>
+        <div class="faq-answer">Aceitamos PIX e as principais opções de transferência digital com confirmação imediata.</div>
+      </div>
+    </section>
+
+    <!-- Links Úteis -->
+    <section id="links">
+      <h2 class="section-title">Links e Contatos</h2>
+      <div class="links-container">
+        <a href="#" class="link-btn">Servidor no Discord</a>
+        <a href="#" class="link-btn">Atendimento via WhatsApp</a>
+        <a href="#" class="link-btn">Instagram Oficial</a>
+        <a href="#" class="link-btn">Portfólio Completo</a>
+      </div>
+    </section>
+
+  </div>
 
   <!-- Footer -->
   <footer>
     <p>&copy; 2026 TL STUDIO. Todos os direitos reservados.</p>
   </footer>
+
+  <!-- Script simples para alternar o Menu Lateral (sem backend) -->
+  <script>
+    const menuToggle = document.getElementById('menu-toggle');
+    const btnClose = document.getElementById('btn-close');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('sidebar-overlay');
+    const menuLinks = document.querySelectorAll('.menu-link');
+
+    function openSidebar() {
+      sidebar.classList.add('active');
+      overlay.classList.add('active');
+    }
+
+    function closeSidebar() {
+      sidebar.classList.remove('active');
+      overlay.classList.remove('active');
+    }
+
+    menuToggle.addEventListener('click', openSidebar);
+    btnClose.addEventListener('click', closeSidebar);
+    overlay.addEventListener('click', closeSidebar);
+
+    menuLinks.forEach(link => {
+      link.addEventListener('click', closeSidebar);
+    });
+  </script>
 
 </body>
 </html>
