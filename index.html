@@ -47,11 +47,6 @@
     .cyber-frame::before { content: ''; position: absolute; top: 0; left: 0; width: 20px; height: 20px; border-top: 2px solid var(--cyan-neon); border-left: 2px solid var(--cyan-neon); z-index: 3; pointer-events: none; }
     .cyber-frame::after { content: ''; position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; border-bottom: 2px solid var(--cyan-neon); border-right: 2px solid var(--cyan-neon); z-index: 3; pointer-events: none; }
 
-    .media-slot { position: relative; width: 100%; height: 220px; background: #050812; overflow: hidden; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(0, 242, 254, 0.2); }
-    .media-slot img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease, filter 0.6s ease; filter: brightness(0.85) contrast(1.15); }
-    .cyber-frame:hover .media-slot img { transform: scale(1.07); filter: brightness(1.05) contrast(1.2); }
-    .hud-tag { position: absolute; top: 12px; left: 12px; background: rgba(2, 4, 8, 0.9); border: 1px solid var(--cyan-neon); color: var(--cyan-neon); font-size: 0.65rem; font-weight: 900; padding: 4px 10px; border-radius: 4px; z-index: 2; }
-
     header {
       position: sticky; top: 0; z-index: 100; background: rgba(2, 4, 8, 0.85);
       border-bottom: 1px solid rgba(0, 242, 254, 0.25); backdrop-filter: blur(25px);
@@ -120,14 +115,7 @@
     .section-title { font-size: 2.5rem; font-weight: 900; color: #fff; }
 
     .products-grid, .portfolio-grid, .comments-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
-    .product-card, .portfolio-card, .comment-card { display: flex; flex-direction: column; }
-    .card-content { padding: 2rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
-    .product-title { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.6rem; }
-    .product-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 1.5rem; }
-    .product-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1.2rem; border-top: 1px solid rgba(255, 255, 255, 0.08); }
-    .price-value { font-size: 1.15rem; font-weight: 900; color: var(--cyan-neon); }
-    .btn-details { background: rgba(255, 255, 255, 0.06); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); padding: 9px 20px; font-size: 0.85rem; font-weight: 800; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); }
-
+    .comment-card { display: flex; flex-direction: column; }
     .client-comment-form { background: var(--bg-card); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-md); margin-top: 2.5rem; max-width: 600px; }
     .client-comment-form input, .client-comment-form textarea, .client-comment-form select { width: 100%; background: #050812; border: 1px solid var(--border-color); padding: 10px; border-radius: var(--radius-sm); color: #fff; margin-bottom: 1rem; outline: none; }
 
@@ -205,7 +193,8 @@
         <input type="hidden" id="adm-prod-img-base64">
         <div class="admin-form">
           <input type="text" id="adm-prod-title" placeholder="Nome do Produto">
-          <input type="text" id="adm-prod-price" placeholder="Preço (Ex: R$ 150,00)">
+          <input type="text" id="adm-prod-price" placeholder="Preço (Ex: R$ 69,90)">
+          <input type="text" id="adm-prod-cat" placeholder="Categoria (Ex: DISCORD, WEB, DESIGN)">
           <textarea id="adm-prod-desc" placeholder="Descrição do Produto" rows="2"></textarea>
           
           <label class="file-input-label">
@@ -290,16 +279,16 @@
             <p id="display-about-p2">Nosso compromisso é entregar qualidade profissional, aliando performance, código limpo e layouts otimizados para converter visitantes em clientes.</p>
           </div>
           <div class="cyber-frame" style="height: 250px;">
-            <div class="media-slot" style="height: 100%;">
-              <span class="hud-tag">HQ_PREVIEW.JPG</span>
-              <img src="img/about_preview.jpg" alt="Sobre TL Studio" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop&q=60';">
+            <div style="position: relative; width: 100%; height: 100%; background: #050812; display: flex; align-items: center; justify-content: center;">
+              <span style="position: absolute; top: 12px; left: 12px; background: rgba(2, 4, 8, 0.9); border: 1px solid var(--cyan-neon); color: var(--cyan-neon); font-size: 0.65rem; font-weight: 900; padding: 4px 10px; border-radius: 4px; z-index: 2;">HQ_PREVIEW.JPG</span>
+              <img src="img/about_preview.jpg" alt="Sobre TL Studio" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop&q=60';">
             </div>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Produtos Dinâmicos -->
+    <!-- Produtos Dinâmicos com o Design Exato -->
     <section id="produtos">
       <div class="section-header">
         <span class="section-subtitle">Serviços Exclusivos</span>
@@ -517,7 +506,7 @@
       }
     });
 
-    // --- PRODUTOS ---
+    // --- PRODUTOS (Com Design Exato Solicitado) ---
     async function loadProducts() {
       const productsContainer = document.getElementById('products-container');
       try {
@@ -531,28 +520,46 @@
         querySnapshot.forEach((docItem) => {
           const prod = docItem.data();
           const prodId = docItem.id;
+          const tagCategoria = (prod.categoria || 'DISCORD').toUpperCase();
           
           html += `
-            <div class="cyber-frame product-card">
-              <div class="media-slot">
-                <span class="hud-tag">PRODUTO</span>
-                <img src="${prod.imagem || 'img/product_web.jpg'}" alt="${prod.titulo}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop&q=60';">
+            <div class="cyber-frame product-card" style="background: #080d18; border: 1px solid rgba(255,255,255,0.08); border-radius: 18px; overflow: hidden; display: flex; flex-direction: column;">
+              
+              <div style="position: relative; width: 100%; height: 230px; background: #020408; overflow: hidden; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                <span style="position: absolute; top: 14px; left: 14px; background: rgba(0, 0, 0, 0.85); border: 1px solid rgba(255, 255, 255, 0.15); color: #fff; font-size: 0.7rem; font-weight: 800; padding: 5px 12px; border-radius: 8px; letter-spacing: 1px; z-index: 2;">${tagCategoria}</span>
+                <img src="${prod.imagem || 'img/product_web.jpg'}" alt="${prod.titulo}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop&q=60';">
               </div>
-              <div class="card-content">
+
+              <div style="padding: 1.8rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between;">
                 <div>
-                  <h3 class="product-title">${prod.titulo}</h3>
-                  <p class="product-desc">${prod.descricao || ''}</p>
+                  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 1rem;">
+                    <div style="width: 42px; height: 42px; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; display: flex; align-items: center; justify-content: center; color: #fff; font-size: 1.1rem;">
+                      ★
+                    </div>
+                    <h3 style="font-size: 1.35rem; font-weight: 800; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif;">${prod.titulo}</h3>
+                  </div>
+
+                  <p style="font-size: 0.92rem; color: #94a3b8; line-height: 1.6; margin-bottom: 1.8rem; min-height: 45px;">${prod.descricao || ''}</p>
                 </div>
-                <div class="product-footer">
-                  <span class="price-value">${prod.preco}</span>
-                  <button class="btn-details" onclick="alert('Iniciando atendimento para: ${prod.titulo}')">Comprar</button>
+
+                <div style="border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 1.2rem; display: flex; justify-content: space-between; align-items: flex-end;">
+                  <div>
+                    <span style="display: block; font-size: 0.72rem; font-weight: 900; color: #94a3b8; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 4px;">INVESTIMENTO</span>
+                    <span style="font-size: 1.5rem; font-weight: 900; color: #ffffff; font-family: 'Plus Jakarta Sans', sans-serif; text-shadow: 0 0 12px rgba(255, 255, 255, 0.6);">${prod.preco}</span>
+                  </div>
+
+                  <button style="background: #ffffff; color: #000000; border: none; padding: 12px 24px; font-size: 0.9rem; font-weight: 900; border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 0 18px rgba(255, 255, 255, 0.3); transition: all 0.3s ease;" onclick="alert('Iniciando atendimento para: ${prod.titulo}')">
+                    🛒 Adquirir
+                  </button>
                 </div>
+
                 ${isAdmin ? `
-                  <div style="display:flex; gap:8px; margin-top:12px;">
-                    <button class="btn-edit" style="flex:1;" onclick="prepararEdicaoProduto('${prodId}', '${prod.titulo}', '${prod.preco}', '${(prod.descricao || '').replace(/'/g, "\\'")}')">Editar</button>
+                  <div style="display:flex; gap:8px; margin-top:15px; border-top:1px dashed rgba(0,242,254,0.3); padding-top:10px;">
+                    <button class="btn-edit" style="flex:1;" onclick="prepararEdicaoProduto('${prodId}', '${prod.titulo}', '${prod.preco}', '${(prod.descricao || '').replace(/'/g, "\\'")}', '${prod.categoria || ''}')">Editar</button>
                     <button class="btn-danger" style="flex:1;" onclick="deletarProduto('${prodId}')">Excluir</button>
                   </div>
                 ` : ''}
+
               </div>
             </div>
           `;
@@ -565,12 +572,13 @@
       const id = document.getElementById('adm-prod-id').value;
       const titulo = document.getElementById('adm-prod-title').value.trim();
       const preco = document.getElementById('adm-prod-price').value.trim();
+      const categoria = document.getElementById('adm-prod-cat').value.trim();
       const descricao = document.getElementById('adm-prod-desc').value.trim();
       let imagem = document.getElementById('adm-prod-img-base64').value;
 
       if (!titulo || !preco) { alert('Preencha o título e o preço.'); return; }
 
-      const dadosProduto = { titulo, preco, descricao };
+      const dadosProduto = { titulo, preco, categoria, descricao };
       if (imagem) dadosProduto.imagem = imagem;
 
       try {
@@ -578,6 +586,7 @@
           await updateDoc(doc(db, "produtos", id), dadosProduto);
           alert('Produto atualizado na nuvem com sucesso!');
         } else {
+          if (!imagem) { alert('Selecione uma imagem da galeria.'); return; }
           dadosProduto.criadoEm = serverTimestamp();
           await addDoc(collection(db, "produtos"), dadosProduto);
           alert('Produto salvo no banco de dados com sucesso!');
@@ -586,6 +595,7 @@
         document.getElementById('adm-prod-id').value = '';
         document.getElementById('adm-prod-title').value = '';
         document.getElementById('adm-prod-price').value = '';
+        document.getElementById('adm-prod-cat').value = '';
         document.getElementById('adm-prod-desc').value = '';
         document.getElementById('adm-prod-img-base64').value = '';
         document.getElementById('prod-preview-text').textContent = 'Nenhuma imagem selecionada.';
@@ -595,10 +605,11 @@
       }
     });
 
-    window.prepararEdicaoProduto = function(id, titulo, preco, desc) {
+    window.prepararEdicaoProduto = function(id, titulo, preco, desc, cat) {
       document.getElementById('adm-prod-id').value = id;
       document.getElementById('adm-prod-title').value = titulo;
       document.getElementById('adm-prod-price').value = preco;
+      document.getElementById('adm-prod-cat').value = cat;
       document.getElementById('adm-prod-desc').value = desc;
       document.getElementById('prod-preview-text').textContent = '✔ Mantém imagem anterior (ou escolha nova)';
       adminDashboard.style.display = 'block';
@@ -629,16 +640,18 @@
           const itemId = docItem.id;
 
           html += `
-            <div class="cyber-frame portfolio-card">
-              <div class="media-slot">
-                <span class="hud-tag">PROJETO</span>
-                <img src="${item.imagem}" alt="${item.titulo}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop&q=60';">
+            <div class="cyber-frame portfolio-card" style="display:flex; flex-direction:column;">
+              <div style="position: relative; width: 100%; height: 220px; background: #050812; overflow: hidden; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(0, 242, 254, 0.2);">
+                <span style="position: absolute; top: 12px; left: 12px; background: rgba(2, 4, 8, 0.9); border: 1px solid var(--cyan-neon); color: var(--cyan-neon); font-size: 0.65rem; font-weight: 900; padding: 4px 10px; border-radius: 4px; z-index: 2;">PROJETO</span>
+                <img src="${item.imagem}" alt="${item.titulo}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop&q=60';">
               </div>
-              <div style="padding: 1.5rem;">
-                <h4>${item.titulo}</h4>
-                <p style="color: var(--text-dim); font-size: 0.85rem;">${item.subtitulo || ''}</p>
+              <div style="padding: 1.5rem; display:flex; flex-direction:column; flex:1; justify-content:space-between;">
+                <div>
+                  <h4 style="color:#fff; font-size:1.2rem; margin-bottom:0.3rem;">${item.titulo}</h4>
+                  <p style="color: var(--text-dim); font-size: 0.85rem;">${item.subtitulo || ''}</p>
+                </div>
                 ${isAdmin ? `
-                  <div style="display:flex; gap:8px; margin-top:12px;">
+                  <div style="display:flex; gap:8px; margin-top:12px; border-top:1px dashed rgba(0,242,254,0.3); padding-top:10px;">
                     <button class="btn-edit" style="flex:1;" onclick="prepararEdicaoGaleria('${itemId}', '${item.titulo}', '${item.subtitulo}')">Editar</button>
                     <button class="btn-danger" style="flex:1;" onclick="deletarGaleria('${itemId}')">Excluir</button>
                   </div>
