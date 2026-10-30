@@ -1117,7 +1117,7 @@
     }
 
     /* ==========================================
-       8. CHATBOT IA ASSISTENTE HUD (NOVO RECURSO)
+       8. CHATBOT IA ASSISTENTE HUD
        ========================================== */
     .ai-chat-toggle {
       position: fixed;
@@ -1821,7 +1821,7 @@
 
         <div class="cyber-frame comment-card">
           <div class="stars">★★★★★</div>
-          <p class="comment-text">"Servidor do Discord completamente organized, rápido e com permissões alinhadas. Recomendo muito o trabalho!"</p>
+          <p class="comment-text">"Servidor do Discord completamente organizado, rápido e com permissões alinhadas. Recomendo muito o trabalho!"</p>
           <div class="author-info">
             <div class="avatar-frame">
               <img src="img/avatar_2.jpg" alt="Cliente 2" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'color:var(--cyan-neon);display:flex;align-items:center;justify-content:center;height:100%;font-weight:900;\'>C2</span>';">
@@ -1957,7 +1957,7 @@
     overlay.addEventListener('click', closeSidebar);
     menuLinks.forEach(link => link.addEventListener('click', closeSidebar));
 
-    // Calculadora
+    // Calculadora Interativa
     const checkboxes = document.querySelectorAll('.service-calc-item');
     const summaryItemsList = document.getElementById('summary-items-list');
     const totalDisplay = document.getElementById('calc-total-display');
@@ -1983,7 +1983,7 @@
 
     checkboxes.forEach(chk => chk.addEventListener('change', updateCalculator));
 
-    // Chatbot Widget Interativo
+    // Chatbot Widget Conectado ao Back-end (Express API)
     const aiToggle = document.getElementById('ai-chat-toggle');
     const aiBox = document.getElementById('ai-chat-box');
     const aiClose = document.getElementById('ai-close-btn');
@@ -1994,11 +1994,11 @@
     aiToggle.addEventListener('click', () => aiBox.classList.toggle('active'));
     aiClose.addEventListener('click', () => aiBox.classList.remove('active'));
 
-    function sendAiMessage() {
+    async function sendAiMessage() {
       const text = aiInput.value.trim();
       if (!text) return;
 
-      // Mensagem do usuário
+      // Exibe a mensagem do usuário na tela
       const userMsg = document.createElement('div');
       userMsg.className = 'msg msg-user';
       userMsg.textContent = text;
@@ -2007,25 +2007,30 @@
       aiInput.value = '';
       aiMessages.scrollTop = aiMessages.scrollHeight;
 
-      // Resposta simulada imediata da IA
-      setTimeout(() => {
+      try {
+        // Envia a mensagem para o Back-end
+        const response = await fetch('http://localhost:3000/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+
+        const data = await response.json();
+
+        // Exibe a resposta da IA na tela
         const botMsg = document.createElement('div');
         botMsg.className = 'msg msg-bot';
-        
-        const lower = text.toLowerCase();
-        if (lower.includes('preço') || lower.includes('valor') || lower.includes('quanto')) {
-          botMsg.innerHTML = 'Você pode simular o valor exato do seu projeto na nossa <strong>Calculadora de Orçamento</strong> aqui na página!';
-        } else if (lower.includes('discord') || lower.includes('servidor')) {
-          botMsg.innerHTML = 'Configuramos servidores completos de Discord com cargos, canais de suporte, tickets e Webhooks. Deseja iniciar um projeto?';
-        } else if (lower.includes('site') || lower.includes('página') || lower.includes('web')) {
-          botMsg.innerHTML = 'Desenvolvemos páginas web modernas, responsivas e em alta performance com visual Dark/Cyberpunk!';
-        } else {
-          botMsg.innerHTML = 'Entendido! Para alinhar esses detalhes do seu projeto, você também pode chamar nossa equipe direto no WhatsApp ou Discord.';
-        }
-
+        botMsg.innerHTML = data.reply || 'Desculpe, tive um problema ao processar sua resposta.';
         aiMessages.appendChild(botMsg);
         aiMessages.scrollTop = aiMessages.scrollHeight;
-      }, 600);
+
+      } catch (err) {
+        const errorMsg = document.createElement('div');
+        errorMsg.className = 'msg msg-bot';
+        errorMsg.textContent = 'Erro de conexão com o servidor back-end.';
+        aiMessages.appendChild(errorMsg);
+        aiMessages.scrollTop = aiMessages.scrollHeight;
+      }
     }
 
     aiSend.addEventListener('click', sendAiMessage);
