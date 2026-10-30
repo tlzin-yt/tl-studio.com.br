@@ -3,7 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TL STUDIO — Loja Oficial & Soluções Digitais</title>
+  <title>TL STUDIO — Soluções Digitais & Design de Elite</title>
+  
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
@@ -11,156 +13,298 @@
   <style>
     :root {
       --bg-dark: #020408;
-      --bg-card: rgba(8, 13, 24, 0.85);
-      --border-color: rgba(0, 242, 254, 0.25);
+      --bg-card: rgba(8, 13, 24, 0.82);
+      --border-color: rgba(0, 242, 254, 0.28);
+      --border-glow: rgba(0, 242, 254, 0.8);
       --cyan-neon: #00f2fe;
       --blue-accent: #0072ff;
       --text-main: #f8fafc;
       --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-sm: 8px;
       --radius-md: 14px;
-      --transition: all 0.3s ease;
+      --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
     html { scroll-behavior: smooth; }
-    body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+    body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; position: relative; }
 
-    /* Fundo HUD */
-    .bg-image-container { position: fixed; inset: 0; z-index: 0; pointer-events: none; }
-    .bg-image-container img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.2) contrast(1.2); }
-    .bg-overlay { position: fixed; inset: 0; background: radial-gradient(circle at 50% 15%, rgba(2, 4, 8, 0.4) 0%, #020408 90%); z-index: 0; pointer-events: none; }
+    .bg-image-container { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .bg-image-container img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.25) contrast(1.25) saturate(1.4); transform: scale(1.03); }
+    .bg-overlay-dark { position: fixed; inset: 0; background: radial-gradient(circle at 50% 15%, rgba(2, 4, 8, 0.4) 0%, rgba(2, 4, 8, 0.9) 75%, #020408 100%); z-index: 0; pointer-events: none; }
+    .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(to right, rgba(0, 242, 254, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 242, 254, 0.04) 1px, transparent 1px); background-size: 40px 40px; z-index: 0; pointer-events: none; }
 
     h1, h2, h3, h4, .brand { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-    /* Header Estilo Discord / App Store */
+    .cyber-frame {
+      position: relative; background: var(--bg-card); border: 1px solid var(--border-color);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: var(--radius-md);
+      overflow: hidden; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(0, 242, 254, 0.03); transition: var(--transition);
+    }
+    .cyber-frame::before { content: ''; position: absolute; top: 0; left: 0; width: 20px; height: 20px; border-top: 2px solid var(--cyan-neon); border-left: 2px solid var(--cyan-neon); z-index: 3; pointer-events: none; }
+    .cyber-frame::after { content: ''; position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; border-bottom: 2px solid var(--cyan-neon); border-right: 2px solid var(--cyan-neon); z-index: 3; pointer-events: none; }
+
     header {
-      position: sticky; top: 0; z-index: 100;
-      background: rgba(2, 4, 8, 0.9);
-      border-bottom: 1px solid rgba(0, 242, 254, 0.2);
-      backdrop-filter: blur(20px);
-      padding: 1rem 2.5rem;
-      display: flex; justify-content: space-between; align-items: center;
+      position: sticky; top: 0; z-index: 100; background: rgba(2, 4, 8, 0.85);
+      border-bottom: 1px solid rgba(0, 242, 254, 0.25); backdrop-filter: blur(25px);
+      padding: 1rem 2.5rem; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
     }
-    .brand { font-size: 1.5rem; font-weight: 900; color: #fff; display: flex; align-items: center; gap: 10px; }
+    .brand { font-size: 1.6rem; font-weight: 900; color: #fff; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
+    .brand-icon { width: 12px; height: 12px; background: var(--cyan-neon); border-radius: 50%; box-shadow: 0 0 15px var(--cyan-neon); }
     .brand span { background: linear-gradient(135deg, var(--cyan-neon), var(--blue-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-    
-    .header-actions { display: flex; gap: 1rem; align-items: center; }
-    .btn-action { background: linear-gradient(135deg, #00c6ff, #0072ff); color: #fff; border: none; padding: 8px 18px; font-weight: 700; border-radius: 8px; cursor: pointer; transition: var(--transition); }
-    .btn-action:hover { box-shadow: 0 0 20px rgba(0, 242, 254, 0.6); }
 
-    /* Container Principal */
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; width: 100%; position: relative; z-index: 1; }
+    .header-actions { display: flex; align-items: center; gap: 1.2rem; }
+    .btn-login { background: linear-gradient(135deg, #00c6ff, #0072ff); color: #fff; border: none; padding: 10px 20px; font-size: 0.9rem; font-weight: 800; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); box-shadow: 0 0 25px rgba(0, 114, 255, 0.5); }
+    .btn-login:hover { transform: translateY(-2px); box-shadow: 0 0 35px rgba(0, 242, 254, 0.8); }
+    .btn-danger { background: linear-gradient(135deg, #f72585, #b5179e); padding: 5px 12px; font-size: 0.75rem; border-radius: 4px; border: none; color: #fff; cursor: pointer; }
 
-    /* Painel Admin Oculto por padrão */
+    /* Painel do Admin (Túlio) */
     #admin-dashboard {
-      display: none; background: rgba(0, 242, 254, 0.05); border: 2px dashed var(--cyan-neon);
-      padding: 2rem; border-radius: var(--radius-md); margin: 2rem 0;
+      display: none; background: rgba(0, 242, 254, 0.08); border: 2px dashed var(--cyan-neon);
+      padding: 2.5rem; border-radius: var(--radius-md); margin-bottom: 3rem;
     }
-    #admin-dashboard h3 { color: var(--cyan-neon); margin-bottom: 1rem; }
+    #admin-dashboard h3 { color: var(--cyan-neon); margin-bottom: 1rem; font-size: 1.4rem; }
+    .admin-form { display: grid; gap: 1rem; margin-top: 1.5rem; max-width: 600px; }
+    .admin-form input, .admin-form textarea { background: #050812; border: 1px solid var(--border-color); padding: 12px; border-radius: var(--radius-sm); color: #fff; font-size: 0.9rem; outline: none; }
+    .admin-form input:focus, .admin-form textarea:focus { border-color: var(--cyan-neon); box-shadow: 0 0 10px rgba(0,242,254,0.3); }
 
-    /* Vitrine Estilo Loja Discord */
-    .store-section { padding: 4rem 0; }
-    .section-title { font-size: 2rem; font-weight: 800; margin-bottom: 2rem; display: flex; align-items: center; gap: 10px; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; width: 100%; position: relative; z-index: 1; }
+    section { padding: 5.5rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .section-header { margin-bottom: 3.5rem; }
+    .section-subtitle { color: var(--cyan-neon); font-size: 0.85rem; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
+    .section-title { font-size: 2.5rem; font-weight: 900; color: #fff; }
+
+    /* Hero */
+    .hero { text-align: center; padding: 6rem 1rem 5rem; display: flex; flex-direction: column; align-items: center; }
+    .badge-status { display: inline-flex; align-items: center; gap: 10px; background: rgba(0, 242, 254, 0.08); border: 1px solid var(--border-glow); padding: 8px 22px; border-radius: 30px; font-size: 0.8rem; font-weight: 800; color: var(--cyan-neon); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 2rem; }
+    .pulse-dot { width: 8px; height: 8px; background: var(--cyan-neon); border-radius: 50%; box-shadow: 0 0 12px var(--cyan-neon); animation: pulse 1.8s infinite; }
+    @keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.8); } 70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(0, 242, 254, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0); } }
+    .hero h1 { font-size: 4.2rem; font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+    .hero h1 span { background: linear-gradient(135deg, #fff, var(--cyan-neon), var(--blue-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 760px; line-height: 1.8; margin-bottom: 3rem; }
+
+    /* Produtos / Loja Dinâmica */
+    .products-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(270px, 1fr)); gap: 2rem; }
+    .product-card { display: flex; flex-direction: column; }
+    .media-slot { position: relative; width: 100%; height: 220px; background: #050812; overflow: hidden; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(0, 242, 254, 0.2); }
+    .media-slot img { width: 100%; height: 100%; object-fit: cover; }
+    .card-content { padding: 2rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
+    .product-title { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.6rem; }
+    .product-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 1.5rem; }
+    .product-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1.2rem; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+    .price-value { font-size: 1.15rem; font-weight: 900; color: var(--cyan-neon); }
+    .btn-details { background: rgba(255, 255, 255, 0.06); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); padding: 9px 20px; font-size: 0.85rem; font-weight: 800; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); }
+    .btn-details:hover { background: var(--cyan-neon); color: #020408; border-color: var(--cyan-neon); box-shadow: 0 0 25px rgba(0, 242, 254, 0.7); }
+
+    /* Calculadora */
+    .calc-card { padding: 3rem 2.5rem; }
+    .calc-grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 2.5rem; align-items: flex-start; }
+    .calc-options-group h4 { font-size: 1.1rem; color: #fff; font-weight: 800; margin-bottom: 1rem; }
+    .calc-checkboxes { display: flex; flex-direction: column; gap: 0.85rem; }
+    .calc-option { background: rgba(5, 8, 18, 0.6); border: 1px solid rgba(0, 242, 254, 0.15); padding: 1rem 1.2rem; border-radius: var(--radius-sm); display: flex; align-items: center; justify-content: space-between; cursor: pointer; transition: var(--transition); }
+    .calc-option:hover { border-color: var(--cyan-neon); background: rgba(0, 242, 254, 0.05); }
+    .calc-option-left { display: flex; align-items: center; gap: 12px; }
+    .calc-option input[type="checkbox"] { width: 18px; height: 18px; accent-color: var(--cyan-neon); cursor: pointer; }
+    .calc-summary-panel { background: rgba(2, 4, 8, 0.85); border: 1px solid var(--border-glow); border-radius: var(--radius-sm); padding: 2rem; display: flex; flex-direction: column; gap: 1.5rem; }
+    .summary-items { border-top: 1px solid rgba(255,255,255,0.08); border-bottom: 1px solid rgba(255,255,255,0.08); padding: 1rem 0; min-height: 90px; display: flex; flex-direction: column; gap: 8px; font-size: 0.85rem; color: var(--text-muted); }
+    .summary-total { display: flex; justify-content: space-between; align-items: center; }
+    .total-price { font-size: 1.6rem; font-weight: 900; color: var(--cyan-neon); }
+    .btn-send-whatsapp { width: 100%; background: linear-gradient(135deg, #00c6ff, #0072ff); color: #fff; border: none; padding: 12px; font-size: 0.95rem; font-weight: 800; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); box-shadow: 0 0 20px rgba(0, 114, 255, 0.4); }
+
+    /* Outras Secções originais mantidas */
+    .partners-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; }
+    .partner-card { padding: 2rem 1.5rem; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .partner-avatar { width: 60px; height: 60px; border-radius: 50%; border: 2px solid var(--cyan-neon); background: #050812; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; color: var(--cyan-neon); }
     
-    .store-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
-    .store-card {
-      background: var(--bg-card); border: 1px solid var(--border-color); border-radius: var(--radius-md);
-      overflow: hidden; display: flex; flex-direction: column; transition: var(--transition);
-    }
-    .store-card:hover { border-color: var(--cyan-neon); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2); }
-    .store-img { height: 180px; background: #000; position: relative; }
-    .store-img img { width: 100%; height: 100%; object-fit: cover; }
-    .store-content { padding: 1.5rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
-    .store-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 0.5rem; color: #fff; }
-    .store-desc { font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem; line-height: 1.5; }
-    .store-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid rgba(255,255,255,0.08); padding-top: 1rem; }
-    .store-price { font-size: 1.1rem; font-weight: 800; color: var(--cyan-neon); }
+    .workflow-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+    .workflow-step-card { padding: 2.2rem 1.8rem; display: flex; flex-direction: column; gap: 1rem; }
+    .step-number { font-size: 2.2rem; font-weight: 900; color: rgba(0, 242, 254, 0.25); }
 
-    /* Calculadora e Rodapé */
-    .calc-box { background: var(--bg-card); border: 1px solid var(--border-color); padding: 2.5rem; border-radius: var(--radius-md); margin: 3rem 0; }
-    footer { background: #010204; border-top: 1px solid rgba(255,255,255,0.08); padding: 2rem; text-align: center; color: var(--text-muted); font-size: 0.85rem; margin-top: auto; z-index: 1; }
+    .portfolio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 2rem; }
+    .portfolio-card .media-slot { height: 240px; }
+    .portfolio-info { padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+
+    .faq-wrapper { max-width: 900px; margin: 0 auto; display: flex; flex-direction: column; gap: 1.25rem; }
+    .faq-item { padding: 1.8rem; }
+    .faq-question { font-size: 1.15rem; font-weight: 800; color: #fff; margin-bottom: 0.6rem; }
+    .faq-answer { font-size: 0.95rem; color: var(--text-muted); line-height: 1.7; }
+
+    .links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+    .link-card { padding: 1.8rem; text-decoration: none; display: flex; align-items: center; justify-content: space-between; }
+    .link-info h4 { color: #fff; font-size: 1.05rem; font-weight: 800; }
+    .link-info span { color: var(--text-dim); font-size: 0.8rem; }
+    .link-arrow { color: var(--cyan-neon); font-size: 1.4rem; }
+
+    footer { background: rgba(1, 2, 4, 0.98); border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 3.5rem 2rem; text-align: center; margin-top: auto; }
+    
+    @media (max-width: 850px) { .calc-grid, .about-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
 
-  <div class="bg-image-container"><img src="img/tl_studio.jpg" alt="Fundo"></div>
-  <div class="bg-overlay"></div>
+  <div class="bg-image-container">
+    <img src="img/tl_studio.jpg" alt="Fundo TL STUDIO" onerror="this.style.display='none';">
+  </div>
+  <div class="bg-overlay-dark"></div>
+  <div class="bg-grid"></div>
 
   <!-- Header -->
   <header>
-    <div class="brand"><div style="width:10px;height:10px;background:var(--cyan-neon);border-radius:50%;"></div> TL <span>STUDIO STORE</span></div>
+    <div class="brand">
+      <div class="brand-icon"></div>
+      TL <span>STUDIO</span>
+    </div>
     <div class="header-actions">
-      <button class="btn-action" id="btn-login-google">Entrar com Google</button>
+      <button class="btn-login" id="btn-login-google">Entrar (Admin)</button>
       <span id="user-display" style="font-size: 0.85rem; color: var(--cyan-neon);"></span>
     </div>
   </header>
 
   <main class="container">
 
-    <!-- DASHBOARD EXCLUSIVO DO ADMIN (TÚLIO) -->
-    <div id="admin-dashboard">
-      <h3>⚡ PAINEL DE CONTROLO ADMINISTRADOR (TÚLIO)</h3>
-      <p style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.9rem;">Esta área é visível exclusivamente para tuliofonseca00@gmail.com.</p>
-      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-        <button class="btn-action" onclick="alert('Funcionalidade de Adicionar Produto em desenvolvimento no Firestore')">Adicionar Novo Produto</button>
-        <button class="btn-action" onclick="alert('Painel de Gestão de Tickets aberto')">Ver Tickets de Suporte</button>
+    <!-- PAINEL DE CONTROLO DO ADMIN (Exclusivo tuliofonseca00@gmail.com) -->
+    <div id="admin-dashboard" class="cyber-frame">
+      <h3>⚡ PAINEL ADMINISTRADOR (GERIR LOJA)</h3>
+      <p style="color: var(--text-muted); font-size: 0.9rem;">Adiciona ou remove produtos em tempo real na nuvem.</p>
+      
+      <div class="admin-form">
+        <input type="text" id="adm-title" placeholder="Nome do Produto / Serviço">
+        <input type="text" id="adm-price" placeholder="Preço (Ex: R$ 150,00)">
+        <textarea id="adm-desc" placeholder="Descrição" rows="2"></textarea>
+        <input type="text" id="adm-img" placeholder="Link da Imagem (URL)">
+        <button class="btn-login" id="btn-save-product">Adicionar Produto na Loja</button>
       </div>
     </div>
 
-    <!-- LOJA / VITRINE ESTILO DISCORD -->
-    <section class="store-section">
-      <h2 class="section-title">✦ Loja de Serviços & Apps</h2>
-      <div class="store-grid" id="products-container">
-        <!-- Produto 1 -->
-        <div class="store-card">
-          <div class="store-img"><img src="img/product_web.jpg" alt="Web"></div>
-          <div class="store-content">
-            <div>
-              <div class="store-title">Página Web Cyberpunk</div>
-              <div class="store-desc">Página moderna de alta performance com design exclusivo para o seu projeto.</div>
-            </div>
-            <div class="store-footer">
-              <span class="store-price">R$ 150,00</span>
-              <button class="btn-action" onclick="comprarServico('Página Web Cyberpunk', 150)">Comprar</button>
+    <!-- Hero Section -->
+    <section class="hero" id="inicio">
+      <div class="badge-status">
+        <div class="pulse-dot"></div>
+        Sistemas Digitais & Design de Elite
+      </div>
+      <h1>Sua Presença Digital <span>Elevada ao Máximo.</span></h1>
+      <p>Desenvolvimento web de alta performance, arquitetura avançada para servidores de Discord, edições dinâmicas e identidades visuais marcantes.</p>
+    </section>
+
+    <!-- PRODUTOS / LOJA DINÂMICA (Carregada do Firebase Firestore) -->
+    <section id="produtos">
+      <div class="section-header">
+        <span class="section-subtitle">Serviços Exclusivos</span>
+        <h2 class="section-title">Nossos Produtos</h2>
+      </div>
+
+      <div class="products-grid" id="products-container">
+        <p style="color: var(--text-muted);">A carregar produtos do banco de dados...</p>
+      </div>
+    </section>
+
+    <!-- CALCULADORA DE ORÇAMENTO INTERATIVA -->
+    <section id="calculadora">
+      <div class="section-header">
+        <span class="section-subtitle">Estimativa em Tempo Real</span>
+        <h2 class="section-title">Calculadora de Orçamento</h2>
+      </div>
+
+      <div class="cyber-frame calc-card">
+        <div class="calc-grid">
+          <div class="calc-options-group">
+            <h4><span>✦</span> Selecione os Serviços Desejados:</h4>
+            
+            <div class="calc-checkboxes">
+              <label class="calc-option">
+                <div class="calc-option-left">
+                  <input type="checkbox" class="service-calc-item" data-name="Página Web Responsiva" data-price="150">
+                  <span style="font-weight:600;">Página Web Responsiva</span>
+                </div>
+                <span style="color:var(--cyan-neon); font-weight:800;">+ R$ 150</span>
+              </label>
+
+              <label class="calc-option">
+                <div class="calc-option-left">
+                  <input type="checkbox" class="service-calc-item" data-name="Configuração Servidor Discord" data-price="80">
+                  <span style="font-weight:600;">Configuração de Servidor Discord</span>
+                </div>
+                <span style="color:var(--cyan-neon); font-weight:800;">+ R$ 80</span>
+              </label>
+
+              <label class="calc-option">
+                <div class="calc-option-left">
+                  <input type="checkbox" class="service-calc-item" data-name="Pacote de Artes & Banners" data-price="50">
+                  <span style="font-weight:600;">Pacote de Artes & Banners</span>
+                </div>
+                <span style="color:var(--cyan-neon); font-weight:800;">+ R$ 50</span>
+              </label>
             </div>
           </div>
-        </div>
-        <!-- Produto 2 -->
-        <div class="store-card">
-          <div class="store-img"><img src="img/product_discord.jpg" alt="Discord"></div>
-          <div class="store-content">
-            <div>
-              <div class="store-title">Setup Servidor Discord</div>
-              <div class="store-desc">Configuração completa de cargos, canais, sistema de tickets e webhooks profissionais.</div>
+
+          <div class="calc-summary-panel">
+            <h4>Resumo da Estimativa</h4>
+            <div class="summary-items" id="summary-items-list">
+              <div style="font-style: italic;">Nenhum serviço selecionado.</div>
             </div>
-            <div class="store-footer">
-              <span class="store-price">R$ 80,00</span>
-              <button class="btn-action" onclick="comprarServico('Setup Servidor Discord', 80)">Comprar</button>
+            <div class="summary-total">
+              <span>Total Estimado:</span>
+              <span class="total-price" id="calc-total-display">R$ 0</span>
             </div>
+            <button class="btn-send-whatsapp" id="btn-send-order">Salvar Orçamento no Sistema →</button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- CALCULADORA DE ORÇAMENTO -->
-    <section class="calc-box">
-      <h2 style="margin-bottom: 1.5rem;">Calculadora Rápida</h2>
-      <p style="color: var(--text-muted); margin-bottom: 1rem;">Selecione os itens para calcular e abrir atendimento automático.</p>
-      <div style="font-size: 1.5rem; font-weight: 800; color: var(--cyan-neon); margin-bottom: 1.5rem;" id="calc-total">Total: R$ 0</div>
-      <button class="btn-action" onclick="enviarAtendimento()">Abrir Suporte / Checkout</button>
+    <!-- PARCEIROS & GUILDAS -->
+    <section id="parceiros">
+      <div class="section-header">
+        <span class="section-subtitle">Autoridade & Ecossistema</span>
+        <h2 class="section-title">Parceiros & Guildas</h2>
+      </div>
+      <div class="partners-grid">
+        <div class="cyber-frame partner-card"><div class="partner-avatar">⚡</div><h4>L7 ESPORTS™</h4><span style="color:var(--cyan-neon); font-size:0.75rem;">Guilda Oficial</span></div>
+        <div class="cyber-frame partner-card"><div class="partner-avatar">🎮</div><h4>Facções & FiveM</h4><span style="color:var(--cyan-neon); font-size:0.75rem;">Gestão RP</span></div>
+        <div class="cyber-frame partner-card"><div class="partner-avatar">💅</div><h4>Alê Nail Designer</h4><span style="color:var(--cyan-neon); font-size:0.75rem;">Catálogo Web</span></div>
+      </div>
+    </section>
+
+    <!-- WORKFLOW -->
+    <section id="processo">
+      <div class="section-header"><span class="section-subtitle">Fluxo Operacional</span><h2 class="section-title">Como o Projeto Acontece</h2></div>
+      <div class="workflow-grid">
+        <div class="cyber-frame workflow-step-card"><div class="step-number">01</div><h4>Briefing</h4><p>Envias a ideia inicial e os requisitos exatos do teu projeto.</p></div>
+        <div class="cyber-frame workflow-step-card"><div class="step-number">02</div><h4>Desenvolvimento</h4><p>Nossa equipe estrutura o código ou produz as artes com padrão de elite.</p></div>
+        <div class="cyber-frame workflow-step-card"><div class="step-number">03</div><h4>Entrega</h4><p>Projeto finalizado e entregue com suporte dedicado.</p></div>
+      </div>
+    </section>
+
+    <!-- FAQ -->
+    <section id="faq">
+      <div class="section-header"><span class="section-subtitle">Dúvidas Frequentes</span><h2 class="section-title">FAQ</h2></div>
+      <div class="faq-wrapper">
+        <div class="cyber-frame faq-item"><div class="faq-question">Como funciona a contratação?</div><div class="faq-answer">Escolhes o serviço, defines os detalhes com a equipa e acompanhas a criação até à entrega.</div></div>
+        <div class="cyber-frame faq-item"><div class="faq-question">Quais são os métodos de pagamento?</div><div class="faq-answer">Aceitamos PIX com confirmação rápida e transferências instantâneas.</div></div>
+      </div>
+    </section>
+
+    <!-- LINKS ÚTEIS -->
+    <section id="links">
+      <div class="section-header"><span class="section-subtitle">Conecte-se</span><h2 class="section-title">Links & Atendimento</h2></div>
+      <div class="links-grid">
+        <a href="#" class="cyber-frame link-card"><div class="link-info"><h4>Discord Oficial</h4><span>Comunidade e Suporte</span></div><span class="link-arrow">→</span></a>
+        <a href="#" class="cyber-frame link-card"><div class="link-info"><h4>WhatsApp Direct</h4><span>Atendimento Comercial</span></div><span class="link-arrow">→</span></a>
+      </div>
     </section>
 
   </main>
 
   <footer>
-    <p>&copy; 2026 TL STUDIO. Todos os direitos reservados. Sistema Protegido por Firebase Auth.</p>
+    <p>&copy; 2026 TL STUDIO. Todos os direitos reservados. Interface System V3.5 Secure HUD.</p>
   </footer>
 
-  <!-- Scripts Firebase & Lógica de Admin -->
+  <!-- Scripts Firebase e Gestão -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDq8GZiKqDz2TOkemTegDqUknWfXSFN2dA",
@@ -180,35 +324,139 @@
     const btnLogin = document.getElementById('btn-login-google');
     const userDisplay = document.getElementById('user-display');
     const adminDashboard = document.getElementById('admin-dashboard');
+    const productsContainer = document.getElementById('products-container');
+    const btnSaveProduct = document.getElementById('btn-save-product');
+
+    let isAdmin = false;
 
     btnLogin.addEventListener('click', () => {
       signInWithPopup(auth, provider).catch(err => console.error(err));
     });
 
-    // Monitorizar autenticação e verificar se é o Admin (Túlio)
     onAuthStateChanged(auth, (user) => {
       if (user) {
         btnLogin.style.display = 'none';
         userDisplay.textContent = `Olá, ${user.displayName}`;
-        
-        // VERIFICAÇÃO DE SEGURANÇA DO E-MAIL DO ADMIN
         if (user.email === 'tuliofonseca00@gmail.com') {
+          isAdmin = true;
           adminDashboard.style.display = 'block';
+          loadProducts();
         }
       } else {
         btnLogin.style.display = 'block';
         userDisplay.textContent = '';
+        isAdmin = false;
         adminDashboard.style.display = 'none';
+        loadProducts();
       }
     });
 
-    window.comprarServico = function(nome, preco) {
-      alert(`A processar compra de: ${nome} por R$ ${preco}. Redirecionando para o canal de suporte...`);
+    // Carregar produtos da coleção "produtos" no Firestore
+    async function loadProducts() {
+      productsContainer.innerHTML = '<p style="color: var(--text-muted);">A carregar produtos do banco de dados...</p>';
+      try {
+        const querySnapshot = await getDocs(collection(db, "produtos"));
+        if (querySnapshot.empty) {
+          productsContainer.innerHTML = '<p style="color: var(--text-muted);">Nenhum produto cadastrado. Entra com a conta admin para adicionar!</p>';
+          return;
+        }
+
+        let html = '';
+        querySnapshot.forEach((docItem) => {
+          const prod = docItem.data();
+          const prodId = docItem.id;
+          
+          html += `
+            <div class="cyber-frame product-card">
+              <div class="media-slot">
+                <img src="${prod.imagem || 'img/product_web.jpg'}" alt="${prod.titulo}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop&q=60';">
+              </div>
+              <div class="card-content">
+                <div>
+                  <h3 class="product-title">${prod.titulo}</h3>
+                  <p class="product-desc">${prod.descricao}</p>
+                </div>
+                <div class="product-footer">
+                  <span class="price-value">${prod.preco}</span>
+                  <button class="btn-details" onclick="alert('Produto selecionado: ${prod.titulo}')">Comprar</button>
+                </div>
+                ${isAdmin ? `<button class="btn-danger" style="margin-top:10px;" onclick="deletarProduto('${prodId}')">Excluir Produto</button>` : ''}
+              </div>
+            </div>
+          `;
+        });
+        productsContainer.innerHTML = html;
+      } catch (e) {
+        console.error(e);
+        productsContainer.innerHTML = '<p style="color: red;">Erro ao carregar produtos.</p>';
+      }
     }
 
-    window.enviarAtendimento = function() {
-      alert('Redirecionando para o sistema de tickets da TL STUDIO.');
+    // Adicionar produto pelo Admin
+    btnSaveProduct.addEventListener('click', async () => {
+      const titulo = document.getElementById('adm-title').value;
+      const preco = document.getElementById('adm-price').value;
+      const descricao = document.getElementById('adm-desc').value;
+      const imagem = document.getElementById('adm-img').value;
+
+      if (!titulo || !preco) {
+        alert('Preencha o título e o preço.');
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, "produtos"), { titulo, preco, descricao, imagem });
+        alert('Produto adicionado com sucesso!');
+        document.getElementById('adm-title').value = '';
+        document.getElementById('adm-price').value = '';
+        document.getElementById('adm-desc').value = '';
+        document.getElementById('adm-img').value = '';
+        loadProducts();
+      } catch (e) {
+        alert('Erro ao salvar no banco de dados.');
+      }
+    });
+
+    window.deletarProduto = async function(id) {
+      if (confirm('Excluir este produto?')) {
+        await deleteDoc(doc(db, "produtos", id));
+        loadProducts();
+      }
     }
+
+    // Calculadora e envio para o Firestore
+    const checkboxes = document.querySelectorAll('.service-calc-item');
+    const summaryList = document.getElementById('summary-items-list');
+    const totalDisplay = document.getElementById('calc-total-display');
+    const btnSendOrder = document.getElementById('btn-send-order');
+
+    checkboxes.forEach(chk => chk.addEventListener('change', () => {
+      let total = 0, html = '', has = false;
+      checkboxes.forEach(c => {
+        if(c.checked) {
+          has = true;
+          total += parseInt(c.dataset.price);
+          html += `<div>✦ ${c.dataset.name} (+R$ ${c.dataset.price})</div>`;
+        }
+      });
+      summaryList.innerHTML = has ? html : '<div style="font-style: italic;">Nenhum serviço selecionado.</div>';
+      totalDisplay.textContent = `R$ ${total}`;
+    }));
+
+    btnSendOrder.addEventListener('click', async () => {
+      const selected = [];
+      checkboxes.forEach(c => { if(c.checked) selected.push({ servico: c.dataset.name, preco: c.dataset.price }); });
+      if(selected.length === 0) { alert('Selecione pelo menos um serviço.'); return; }
+
+      try {
+        await addDoc(collection(db, "orcamentos"), { itens: selected, total: totalDisplay.textContent, criadoEm: serverTimestamp() });
+        alert('Orçamento guardado com sucesso no Firebase!');
+      } catch(e) {
+        alert('Erro ao guardar orçamento.');
+      }
+    });
+
+    loadProducts();
   </script>
 
 </body>
