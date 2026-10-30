@@ -1983,7 +1983,7 @@
 
     checkboxes.forEach(chk => chk.addEventListener('change', updateCalculator));
 
-    // Chatbot Widget Conectado ao Back-end (Express API)
+    // Chatbot Widget Conectado ao Back-end da Vercel (/api/chat)
     const aiToggle = document.getElementById('ai-chat-toggle');
     const aiBox = document.getElementById('ai-chat-box');
     const aiClose = document.getElementById('ai-close-btn');
@@ -2008,8 +2008,8 @@
       aiMessages.scrollTop = aiMessages.scrollHeight;
 
       try {
-        // Envia a mensagem para o Back-end
-        const response = await fetch('http://localhost:3000/api/chat', {
+        // Envia a mensagem para a rota de API da Vercel
+        const response = await fetch('/api/chat', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ message: text })
@@ -2027,7 +2027,7 @@
       } catch (err) {
         const errorMsg = document.createElement('div');
         errorMsg.className = 'msg msg-bot';
-        errorMsg.textContent = 'Erro de conexão com o servidor back-end.';
+        errorMsg.textContent = 'Erro de conexão com a API da Vercel.';
         aiMessages.appendChild(errorMsg);
         aiMessages.scrollTop = aiMessages.scrollHeight;
       }
