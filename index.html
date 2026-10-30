@@ -260,26 +260,6 @@
       gap: 1.2rem;
     }
 
-    .btn-login {
-      position: relative;
-      background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-      color: #fff;
-      border: none;
-      padding: 10px 24px;
-      font-size: 0.9rem;
-      font-weight: 800;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      overflow: hidden;
-      transition: var(--transition);
-      box-shadow: 0 0 25px rgba(0, 114, 255, 0.5);
-    }
-
-    .btn-login:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 0 35px rgba(0, 242, 254, 0.8);
-    }
-
     .menu-toggle {
       background: rgba(8, 13, 24, 0.9);
       border: 1px solid var(--border-color);
@@ -342,6 +322,17 @@
       box-shadow: 0 0 10px rgba(0,242,254,0.3);
     }
 
+    .btn-admin-action {
+      background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+      color: #fff;
+      border: none;
+      padding: 12px 20px;
+      font-weight: 800;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
     .btn-danger {
       background: linear-gradient(135deg, #f72585, #b5179e);
       padding: 6px 14px;
@@ -391,6 +382,7 @@
       flex-direction: column;
       gap: 2rem;
       transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      overflow-y: auto;
     }
 
     .sidebar.active {
@@ -417,6 +409,38 @@
     .btn-close:hover {
       color: var(--cyan-neon);
       transform: rotate(90deg);
+    }
+
+    .sidebar-auth-box {
+      background: rgba(0, 242, 254, 0.05);
+      border: 1px solid var(--border-color);
+      padding: 1.2rem;
+      border-radius: var(--radius-sm);
+      text-align: center;
+    }
+
+    .sidebar-auth-box p {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .btn-sidebar-login {
+      width: 100%;
+      background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
+      color: #fff;
+      border: none;
+      padding: 10px;
+      font-size: 0.9rem;
+      font-weight: 800;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: var(--transition);
+      box-shadow: 0 0 15px rgba(0, 114, 255, 0.4);
+    }
+
+    .btn-sidebar-login:hover {
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.7);
     }
 
     .sidebar-nav {
@@ -1237,19 +1261,24 @@
       TL <span>STUDIO</span>
     </div>
     <div class="header-actions">
-      <button class="btn-login" id="btn-login-google">Login</button>
-      <span id="user-display" style="font-size: 0.85rem; color: var(--cyan-neon); font-weight: 700;"></span>
       <button class="menu-toggle" id="menu-toggle" aria-label="Abrir Menu">☰</button>
     </div>
   </header>
 
-  <!-- Sidebar Overlay & Menu Drawer -->
+  <!-- Sidebar Overlay & Menu Drawer com Sistema de Login -->
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
       <div class="brand">TL <span>STUDIO</span></div>
       <button class="btn-close" id="btn-close">&times;</button>
     </div>
+
+    <!-- Bloco de Login Integrado no Menu Lateral -->
+    <div class="sidebar-auth-box">
+      <p id="user-display" style="font-weight: 700; color: var(--cyan-neon);">Conta Não Autenticada</p>
+      <button class="btn-sidebar-login" id="btn-login-google">Entrar com Google</button>
+    </div>
+
     <nav class="sidebar-nav">
       <a href="#inicio" class="menu-link">Início <span class="tech-status-dot"></span></a>
       <a href="#sobre" class="menu-link">Sobre a Loja <span class="tech-status-dot"></span></a>
@@ -1267,7 +1296,7 @@
   <!-- Conteúdo Principal -->
   <main class="container">
 
-    <!-- PAINEL ADMINISTRATIVO EXCLUSIVO PARA ADMIN (tuliofonseca00@gmail.com) -->
+    <!-- PAINEL ADMINISTRATIVO EXCLUSIVO (tuliofonseca00@gmail.com) -->
     <div id="admin-dashboard" class="cyber-frame">
       <h3>⚡ PAINEL ADMINISTRADOR (GERENCIAR LOJA)</h3>
       <p style="color: var(--text-muted); font-size: 0.9rem;">Adicione ou remova os produtos da vitrine em tempo real na nuvem.</p>
@@ -1277,7 +1306,7 @@
         <input type="text" id="adm-price" placeholder="Preço (Ex: R$ 150,00)">
         <textarea id="adm-desc" placeholder="Descrição do Produto" rows="2"></textarea>
         <input type="text" id="adm-img" placeholder="Link da Imagem (URL ou img/nome.jpg)">
-        <button class="btn-login" id="btn-save-product">Adicionar Produto na Loja</button>
+        <button class="btn-admin-action" id="btn-save-product">Adicionar Produto na Loja</button>
       </div>
     </div>
 
@@ -1364,7 +1393,7 @@
       </div>
     </section>
 
-    <!-- Produtos e Serviços (LOJA DINÂMICA INTEGRADA COM FIRESTORE) -->
+    <!-- Produtos e Serviços (Diodinâmicos via Firestore) -->
     <section id="produtos">
       <div class="section-header">
         <span class="section-subtitle">Serviços Exclusivos</span>
@@ -1372,7 +1401,6 @@
       </div>
 
       <div class="products-grid" id="products-container">
-        <!-- Produtos estáticos padrão mantidos como exemplo de carregamento inicial -->
         <div class="cyber-frame product-card">
           <div class="media-slot">
             <div class="scanline"></div>
@@ -1387,28 +1415,6 @@
             <div>
               <h3 class="product-title">Página Web</h3>
               <p class="product-desc">Página web personalizada com design ultra-moderno, responsivo para celulares e focado em alta conversão.</p>
-            </div>
-            <div class="product-footer">
-              <span class="price-value">Sob Consulta</span>
-              <button class="btn-details">Ver Detalhes</button>
-            </div>
-          </div>
-        </div>
-
-        <div class="cyber-frame product-card">
-          <div class="media-slot">
-            <div class="scanline"></div>
-            <span class="hud-tag">DISCORD</span>
-            <img src="img/product_discord.jpg" alt="Servidor Discord" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="media-slot-placeholder" style="display: none;">
-              <span>⚙</span>
-              <p>img/product_discord.jpg</p>
-            </div>
-          </div>
-          <div class="card-content">
-            <div>
-              <h3 class="product-title">Configuração Discord</h3>
-              <p class="product-desc">Estruturação completa de cargos, canais, sistemas de tickets, automação por Webhooks e bots customizados.</p>
             </div>
             <div class="product-footer">
               <span class="price-value">Sob Consulta</span>
@@ -1762,7 +1768,7 @@
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Configuração oficial do Firebase da TL STUDIO
+    // Configuração oficial do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDq8GZiKqDz2TOkemTegDqUknWfXSFN2dA",
       authDomain: "tl-studio-f0f75.firebaseapp.com",
@@ -1788,7 +1794,7 @@
 
     let isAdmin = false;
 
-    // Login com Google
+    // Ação do Botão de Login/Logout dentro do Menu Lateral
     btnLogin.addEventListener('click', () => {
       if (auth.currentUser) {
         signOut(auth);
@@ -1800,7 +1806,7 @@
     // Monitorar Autenticação e Verificar Permissões de Admin (tuliofonseca00@gmail.com)
     onAuthStateChanged(auth, (user) => {
       if (user) {
-        btnLogin.textContent = 'Sair';
+        btnLogin.textContent = 'Sair da Conta';
         userDisplay.textContent = `Olá, ${user.displayName || user.email}`;
         
         // Ativa o Dashboard exclusivo se o e-mail for o do admin
@@ -1812,8 +1818,8 @@
           adminDashboard.style.display = 'none';
         }
       } else {
-        btnLogin.textContent = 'Login';
-        userDisplay.textContent = '';
+        btnLogin.textContent = 'Entrar com Google';
+        userDisplay.textContent = 'Conta Não Autenticada';
         isAdmin = false;
         adminDashboard.style.display = 'none';
       }
