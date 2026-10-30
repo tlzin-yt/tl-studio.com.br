@@ -333,6 +333,10 @@
       transition: var(--transition);
     }
 
+    .btn-admin-action:hover {
+      box-shadow: 0 0 25px rgba(0, 242, 254, 0.7);
+    }
+
     .btn-danger {
       background: linear-gradient(135deg, #f72585, #b5179e);
       padding: 6px 14px;
@@ -1296,7 +1300,7 @@
   <!-- Conteúdo Principal -->
   <main class="container">
 
-    <!-- PAINEL ADMINISTRATIVO EXCLUSIVO (tuliofonseca00@gmail.com) -->
+    <!-- PAINEL ADMINISTRATIVO EXCLUSIVO (tuliofonseca00@gmail.com) COM CONSULTA DE COMPRAS -->
     <div id="admin-dashboard" class="cyber-frame">
       <h3>⚡ PAINEL ADMINISTRADOR (GERENCIAR LOJA)</h3>
       <p style="color: var(--text-muted); font-size: 0.9rem;">Adicione ou remova os produtos da vitrine em tempo real na nuvem.</p>
@@ -1307,6 +1311,16 @@
         <textarea id="adm-desc" placeholder="Descrição do Produto" rows="2"></textarea>
         <input type="text" id="adm-img" placeholder="Link da Imagem (URL ou img/nome.jpg)">
         <button class="btn-admin-action" id="btn-save-product">Adicionar Produto na Loja</button>
+      </div>
+
+      <!-- Ferramenta de Consulta de Compras por E-mail -->
+      <div style="margin-top: 2rem; border-top: 1px dashed var(--border-color); padding-top: 1.5rem;">
+        <h4 style="color: var(--cyan-neon); margin-bottom: 0.8rem; font-size: 1.1rem;">🔍 Consultar Cliente por E-mail</h4>
+        <div style="display: flex; gap: 10px; max-width: 600px;">
+          <input type="email" id="search-email-input" placeholder="Digite o e-mail do cliente..." style="flex: 1; background: #050812; border: 1px solid var(--border-color); padding: 10px; border-radius: var(--radius-sm); color: #fff; outline: none;">
+          <button class="btn-admin-action" id="btn-search-purchase" style="padding: 10px 20px;">Buscar</button>
+        </div>
+        <div id="search-result-box" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);"></div>
       </div>
     </div>
 
@@ -1393,7 +1407,7 @@
       </div>
     </section>
 
-    <!-- Produtos e Serviços (Diodinâmicos via Firestore) -->
+    <!-- Produtos e Serviços -->
     <section id="produtos">
       <div class="section-header">
         <span class="section-subtitle">Serviços Exclusivos</span>
@@ -1766,7 +1780,7 @@
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
     // Configuração oficial do Firebase
     const firebaseConfig = {
@@ -1907,6 +1921,56 @@
         }
       }
     };
+
+    // Funcionalidade de Consulta de Compras por E-mail no Painel Admin
+    const btnSearchPurchase = document.getElementById('btn-search-purchase');
+    const searchEmailInput = document.getElementById('search-email-input');
+    const searchResultBox = document.getElementById('search-result-box');
+
+    if (btnSearchPurchase) {
+      btnSearchPurchase.addEventListener('click', async () => {
+        const emailBuscado = searchEmailInput.value.trim().toLowerCase();
+
+        if (!emailBuscado) {
+          alert('Por favor, digite um e-mail para consultar.');
+          return;
+        }
+
+        searchResultBox.innerHTML = 'A pesquisar na base de dados...';
+
+        try {
+          const comprasRef = collection(db, "compras");
+          const q = query(comprasRef, where("email", "==", emailBuscado));
+          const querySnapshot = await getDocs(q);
+
+          if (querySnapshot.empty) {
+            searchResultBox.innerHTML = `<span style="color: #f72585;">❌ Nenhuma compra encontrada para o e-mail: <strong>${emailBuscado}</strong></span>`;
+            return;
+          }
+
+          let resultadoHtml = `<div style="background: rgba(0,242,254,0.05); border: 1px solid var(--cyan-neon); padding: 1rem; border-radius: 8px;">`;
+          resultadoHtml += `<p style="color: var(--cyan-neon); font-weight: 800; margin-bottom: 0.5rem;">✅ Compras encontradas:</p>`;
+
+          querySnapshot.forEach((docItem) => {
+            const dados = docItem.data();
+            resultadoHtml += `
+              <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; margin-top: 8px;">
+                <p><strong>Produto:</strong> ${dados.produto || 'N/A'}</p>
+                <p><strong>Data:</strong> ${dados.data || 'Recente'}</p>
+                <p><strong>Status:</strong> <span style="color: #00f2fe;">${dados.status || 'Aprovado'}</span></p>
+              </div>
+            `;
+          });
+
+          resultadoHtml += `</div>`;
+          searchResultBox.innerHTML = resultadoHtml;
+
+        } catch (error) {
+          console.error("Erro ao pesquisar compra:", error);
+          searchResultBox.innerHTML = '<span style="color: red;">Erro ao realizar a consulta no banco de dados.</span>';
+        }
+      });
+    }
 
     // Drawer Menu Logic
     const menuToggle = document.getElementById('menu-toggle');
