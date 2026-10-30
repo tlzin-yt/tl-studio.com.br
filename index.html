@@ -39,7 +39,6 @@
 
     h1, h2, h3, h4, .brand { font-family: 'Plus Jakarta Sans', sans-serif; }
 
-    /* Componentes HUD */
     .cyber-frame {
       position: relative; background: var(--bg-card); border: 1px solid var(--border-color);
       backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: var(--radius-md);
@@ -51,7 +50,6 @@
     .media-slot { position: relative; width: 100%; height: 220px; background: #050812; overflow: hidden; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(0, 242, 254, 0.2); }
     .media-slot img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease, filter 0.6s ease; filter: brightness(0.85) contrast(1.15); }
     .cyber-frame:hover .media-slot img { transform: scale(1.07); filter: brightness(1.05) contrast(1.2); }
-    .scanline { position: absolute; inset: 0; background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.3) 51%); background-size: 100% 4px; pointer-events: none; z-index: 2; }
     .hud-tag { position: absolute; top: 12px; left: 12px; background: rgba(2, 4, 8, 0.9); border: 1px solid var(--cyan-neon); color: var(--cyan-neon); font-size: 0.65rem; font-weight: 900; padding: 4px 10px; border-radius: 4px; z-index: 2; }
 
     header {
@@ -111,7 +109,6 @@
     .section-subtitle { color: var(--cyan-neon); font-size: 0.85rem; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
     .section-title { font-size: 2.5rem; font-weight: 900; color: #fff; }
 
-    /* Grids */
     .products-grid, .portfolio-grid, .comments-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
     .product-card, .portfolio-card, .comment-card { display: flex; flex-direction: column; }
     .card-content { padding: 2rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
@@ -121,14 +118,12 @@
     .price-value { font-size: 1.15rem; font-weight: 900; color: var(--cyan-neon); }
     .btn-details { background: rgba(255, 255, 255, 0.06); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); padding: 9px 20px; font-size: 0.85rem; font-weight: 800; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); }
 
-    /* Formulário de Comentários dos Clientes */
     .client-comment-form { background: var(--bg-card); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-md); margin-top: 2.5rem; max-width: 600px; }
     .client-comment-form input, .client-comment-form textarea, .client-comment-form select { width: 100%; background: #050812; border: 1px solid var(--border-color); padding: 10px; border-radius: var(--radius-sm); color: #fff; margin-bottom: 1rem; outline: none; }
 
     .about-card { padding: 3.5rem; }
     .about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: center; }
 
-    /* Links Úteis */
     .links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
     .link-card { padding: 1.8rem; text-decoration: none; display: flex; align-items: center; justify-content: space-between; }
     .link-info h4 { color: #fff; font-size: 1.05rem; font-weight: 800; margin-bottom: 0.2rem; }
@@ -151,7 +146,7 @@
     </div>
   </header>
 
-  <!-- Sidebar com Login via Redirecionamento -->
+  <!-- Sidebar com Login via Redirecionamento Integrado nos 3 risquinhos -->
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -276,7 +271,7 @@
       </div>
     </section>
 
-    <!-- Produtos (Carregados Dinamicamente pelo Firestore) -->
+    <!-- Produtos Dinâmicos -->
     <section id="produtos">
       <div class="section-header">
         <span class="section-subtitle">Serviços Exclusivos</span>
@@ -287,7 +282,7 @@
       </div>
     </section>
 
-    <!-- Galeria de Trabalhos (Carregada Dinamicamente pelo Firestore) -->
+    <!-- Galeria Dinâmica -->
     <section id="portfolio">
       <div class="section-header">
         <span class="section-subtitle">Showcase Visual</span>
@@ -298,7 +293,7 @@
       </div>
     </section>
 
-    <!-- Avaliações dos Clientes (Clientes adicionam) -->
+    <!-- Avaliações -->
     <section id="comentarios">
       <div class="section-header">
         <span class="section-subtitle">Depoimentos</span>
@@ -359,7 +354,7 @@
     <p>&copy; 2026 TL STUDIO. Todos os direitos reservados. Sistema Protegido por Firebase.</p>
   </footer>
 
-  <!-- Scripts Firebase com Gestão Completa -->
+  <!-- Scripts Firebase -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithRedirect, getRedirectResult, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
