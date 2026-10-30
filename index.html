@@ -61,9 +61,20 @@
     .brand-icon { width: 12px; height: 12px; background: var(--cyan-neon); border-radius: 50%; box-shadow: 0 0 15px var(--cyan-neon); }
     .brand span { background: linear-gradient(135deg, var(--cyan-neon), var(--blue-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
+    .header-actions { display: flex; align-items: center; gap: 15px; }
+    
+    /* Botão flutuante do Admin na Header */
+    .btn-open-dashboard {
+      background: linear-gradient(135deg, var(--cyan-neon), var(--blue-accent));
+      color: #020408; border: none; padding: 8px 16px; font-weight: 900;
+      border-radius: var(--radius-sm); cursor: pointer; display: none; font-size: 0.85rem;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4); transition: var(--transition);
+    }
+    .btn-open-dashboard:hover { box-shadow: 0 0 25px rgba(0, 242, 254, 0.8); transform: translateY(-2px); }
+
     .menu-toggle { background: rgba(8, 13, 24, 0.9); border: 1px solid var(--border-color); color: var(--cyan-neon); width: 44px; height: 44px; border-radius: var(--radius-sm); display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.3rem; }
 
-    /* Painel Admin */
+    /* Painel Admin Modal / Seção */
     #admin-dashboard { display: none; background: rgba(0, 242, 254, 0.08); border: 2px dashed var(--cyan-neon); padding: 2.5rem; border-radius: var(--radius-md); margin: 2rem 0; }
     #admin-dashboard h3 { color: var(--cyan-neon); margin-bottom: 1rem; font-size: 1.4rem; }
     .admin-tabs { display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; }
@@ -74,7 +85,9 @@
     .admin-panel-section.active { display: block; }
 
     .admin-form { display: grid; gap: 1rem; max-width: 600px; }
-    .admin-form input, .admin-form textarea { background: #050812; border: 1px solid var(--border-color); padding: 12px; border-radius: var(--radius-sm); color: #fff; font-size: 0.9rem; outline: none; }
+    .admin-form input, .admin-form textarea, .admin-form select { background: #050812; border: 1px solid var(--border-color); padding: 12px; border-radius: var(--radius-sm); color: #fff; font-size: 0.9rem; outline: none; }
+    .file-input-label { display: block; background: rgba(0,242,254,0.1); border: 1px dashed var(--cyan-neon); padding: 10px; text-align: center; border-radius: var(--radius-sm); color: var(--cyan-neon); font-weight: 700; cursor: pointer; font-size: 0.85rem; }
+    
     .btn-admin-action { background: linear-gradient(135deg, #00c6ff, #0072ff); color: #fff; border: none; padding: 12px 20px; font-weight: 800; border-radius: var(--radius-sm); cursor: pointer; }
     .btn-danger { background: linear-gradient(135deg, #f72585, #b5179e); padding: 6px 14px; font-size: 0.8rem; border-radius: 4px; border: none; color: #fff; cursor: pointer; font-weight: 700; }
     .btn-edit { background: linear-gradient(135deg, #ffb703, #fb8500); padding: 6px 14px; font-size: 0.8rem; border-radius: 4px; border: none; color: #000; cursor: pointer; font-weight: 800; }
@@ -142,11 +155,13 @@
   <header>
     <div class="brand"><div class="brand-icon"></div> TL <span>STUDIO</span></div>
     <div class="header-actions">
+      <!-- Botão visível apenas para o Administrador abrir o Dashboard -->
+      <button class="btn-open-dashboard" id="btn-open-dashboard">⚡ PAINEL DASHBOARD</button>
       <button class="menu-toggle" id="menu-toggle" aria-label="Abrir Menu">☰</button>
     </div>
   </header>
 
-  <!-- Sidebar com Login via Redirecionamento Integrado -->
+  <!-- Sidebar com Login -->
   <div class="sidebar-overlay" id="sidebar-overlay"></div>
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-header">
@@ -173,7 +188,10 @@
 
     <!-- DASHBOARD ADMINISTRATIVO COMPLETO (Exclusivo tuliofonseca00@gmail.com) -->
     <div id="admin-dashboard" class="cyber-frame">
-      <h3>⚡ PAINEL ADMINISTRADOR — TL STUDIO</h3>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3>⚡ PAINEL ADMINISTRADOR — TL STUDIO</h3>
+        <button class="btn-danger" id="btn-close-dashboard" style="padding: 6px 12px;">✕ Fechar Painel</button>
+      </div>
       
       <!-- Abas de Navegação Admin -->
       <div class="admin-tabs">
@@ -184,27 +202,41 @@
         <button class="admin-tab-btn" onclick="switchAdminTab('tab-vendas')">🔍 Vendas / E-mail</button>
       </div>
 
-      <!-- ABA 1: PRODUTOS -->
+      <!-- ABA 1: PRODUTOS (Com upload direto da galeria do aparelho) -->
       <div id="tab-produtos" class="admin-panel-section active">
         <h4 style="color: var(--cyan-neon); margin-bottom: 1rem;">Gerenciar Produtos da Loja</h4>
         <input type="hidden" id="adm-prod-id">
+        <input type="hidden" id="adm-prod-img-base64">
         <div class="admin-form">
           <input type="text" id="adm-prod-title" placeholder="Nome do Produto">
           <input type="text" id="adm-prod-price" placeholder="Preço (Ex: R$ 150,00)">
           <textarea id="adm-prod-desc" placeholder="Descrição do Produto" rows="2"></textarea>
-          <input type="text" id="adm-prod-img" placeholder="URL da Imagem (ou img/nome.jpg)">
+          
+          <label class="file-input-label">
+            📁 Escolher Imagem da Galeria do Aparelho
+            <input type="file" id="adm-prod-file" accept="image/*" style="display: none;">
+          </label>
+          <div id="prod-preview-text" style="font-size: 0.8rem; color: var(--text-dim);">Nenhuma imagem selecionada.</div>
+
           <button class="btn-admin-action" id="btn-save-product">Salvar Produto</button>
         </div>
       </div>
 
-      <!-- ABA 2: GALERIA -->
+      <!-- ABA 2: GALERIA (Com upload direto da galeria do aparelho) -->
       <div id="tab-galeria" class="admin-panel-section">
         <h4 style="color: var(--cyan-neon); margin-bottom: 1rem;">Gerenciar Galeria / Portfólio</h4>
         <input type="hidden" id="adm-galeria-id">
+        <input type="hidden" id="adm-galeria-img-base64">
         <div class="admin-form">
           <input type="text" id="adm-galeria-title" placeholder="Título do Projeto">
           <input type="text" id="adm-galeria-sub" placeholder="Categoria/Subtítulo (Ex: Web & UI)">
-          <input type="text" id="adm-galeria-img" placeholder="URL da Imagem">
+          
+          <label class="file-input-label">
+            📁 Escolher Imagem da Galeria do Aparelho
+            <input type="file" id="adm-galeria-file" accept="image/*" style="display: none;">
+          </label>
+          <div id="galeria-preview-text" style="font-size: 0.8rem; color: var(--text-dim);">Nenhuma imagem selecionada.</div>
+
           <button class="btn-admin-action" id="btn-save-galeria">Salvar na Galeria</button>
         </div>
       </div>
@@ -354,7 +386,7 @@
     <p>&copy; 2026 TL STUDIO. Todos os direitos reservados. Sistema Protegido por Firebase.</p>
   </footer>
 
-  <!-- Scripts Firebase -->
+  <!-- Scripts Firebase & Lógica do Painel com Galeria -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -378,29 +410,27 @@
     const btnLogin = document.getElementById('btn-login-google');
     const userDisplay = document.getElementById('user-display');
     const adminDashboard = document.getElementById('admin-dashboard');
+    const btnOpenDashboard = document.getElementById('btn-open-dashboard');
+    const btnCloseDashboard = document.getElementById('btn-close-dashboard');
 
     let isAdmin = false;
 
+    // Login com Google
     btnLogin.addEventListener('click', async () => {
       if (auth.currentUser) {
-        try {
-          await signOut(auth);
-          window.location.reload();
-        } catch (error) {
-          console.error("Erro ao sair:", error);
-        }
+        try { await signOut(auth); window.location.reload(); } catch (e) { console.error(e); }
       } else {
         try {
           userDisplay.textContent = "A abrir login...";
           await signInWithPopup(auth, provider);
         } catch (error) {
-          console.error("Erro detalhado no login com Google:", error);
           alert("Erro ao fazer login: " + error.message);
           userDisplay.textContent = "Erro na autenticação";
         }
       }
     });
 
+    // Controlar visibilidade do botão e do painel dashboard
     onAuthStateChanged(auth, (user) => {
       if (user) {
         btnLogin.textContent = 'Sair da Conta';
@@ -408,29 +438,63 @@
         
         if (user.email === 'tuliofonseca00@gmail.com') {
           isAdmin = true;
-          adminDashboard.style.display = 'block';
+          btnOpenDashboard.style.display = 'block'; // Mostra o botão flutuante do Admin
         } else {
           isAdmin = false;
+          btnOpenDashboard.style.display = 'none';
           adminDashboard.style.display = 'none';
         }
       } else {
         btnLogin.textContent = 'Entrar com Google';
         userDisplay.textContent = 'Conta Não Autenticada';
         isAdmin = false;
+        btnOpenDashboard.style.display = 'none';
         adminDashboard.style.display = 'none';
       }
       loadProducts();
       loadGallery();
     });
 
+    // Abrir e Fechar o Painel Dashboard pelo Botão
+    btnOpenDashboard.addEventListener('click', () => {
+      adminDashboard.style.display = 'block';
+      adminDashboard.scrollIntoView({ behavior: 'smooth' });
+    });
+
+    btnCloseDashboard.addEventListener('click', () => {
+      adminDashboard.style.display = 'none';
+    });
+
     window.switchAdminTab = function(tabId) {
       document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.remove('active'));
       document.querySelectorAll('.admin-panel-section').forEach(sec => sec.classList.remove('active'));
-      
       event.target.classList.add('active');
       document.getElementById(tabId).classList.add('active');
     };
 
+    // Converter Imagem da Galeria do Aparelho para Base64
+    function handleImageUpload(inputElement, previewTextElement, hiddenInputBase64) {
+      const file = inputElement.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          hiddenInputBase64.value = e.target.result;
+          previewTextElement.textContent = `✔ Imagem carregada: ${file.name}`;
+          previewTextElement.style.color = 'var(--cyan-neon)';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+
+    document.getElementById('adm-prod-file').addEventListener('change', function() {
+      handleImageUpload(this, document.getElementById('prod-preview-text'), document.getElementById('adm-prod-img-base64'));
+    });
+
+    document.getElementById('adm-galeria-file').addEventListener('change', function() {
+      handleImageUpload(this, document.getElementById('galeria-preview-text'), document.getElementById('adm-galeria-img-base64'));
+    });
+
+    // --- PRODUTOS ---
     async function loadProducts() {
       const productsContainer = document.getElementById('products-container');
       try {
@@ -479,23 +543,28 @@
       const titulo = document.getElementById('adm-prod-title').value.trim();
       const preco = document.getElementById('adm-prod-price').value.trim();
       const descricao = document.getElementById('adm-prod-desc').value.trim();
-      const imagem = document.getElementById('adm-prod-img').value.trim();
+      let imagem = document.getElementById('adm-prod-img-base64').value;
 
       if (!titulo || !preco) { alert('Preencha o título e o preço.'); return; }
 
+      const dadosProduto = { titulo, preco, descricao };
+      if (imagem) dadosProduto.imagem = imagem;
+
       if (id) {
-        await updateDoc(doc(db, "produtos", id), { titulo, preco, descricao, imagem });
+        await updateDoc(doc(db, "produtos", id), dadosProduto);
         alert('Produto atualizado!');
       } else {
-        await addDoc(collection(db, "produtos"), { titulo, preco, descricao, imagem, criadoEm: serverTimestamp() });
-        alert('Produto cadastrado!');
+        dadosProduto.criadoEm = serverTimestamp();
+        await addDoc(collection(db, "produtos"), dadosProduto);
+        alert('Produto cadastrado com sucesso!');
       }
 
       document.getElementById('adm-prod-id').value = '';
       document.getElementById('adm-prod-title').value = '';
       document.getElementById('adm-prod-price').value = '';
       document.getElementById('adm-prod-desc').value = '';
-      document.getElementById('adm-prod-img').value = '';
+      document.getElementById('adm-prod-img-base64').value = '';
+      document.getElementById('prod-preview-text').textContent = 'Nenhuma imagem selecionada.';
       loadProducts();
     });
 
@@ -504,7 +573,10 @@
       document.getElementById('adm-prod-title').value = titulo;
       document.getElementById('adm-prod-price').value = preco;
       document.getElementById('adm-prod-desc').value = desc;
-      document.getElementById('adm-prod-img').value = img;
+      document.getElementById('adm-prod-img-base64').value = img;
+      document.getElementById('prod-preview-text').textContent = '✔ Imagem atual mantida (ou escolha nova)';
+      adminDashboard.style.display = 'block';
+      adminDashboard.scrollIntoView({ behavior: 'smooth' });
       switchAdminTab('tab-produtos');
     };
 
@@ -515,6 +587,7 @@
       }
     };
 
+    // --- GALERIA ---
     async function loadGallery() {
       const galleryContainer = document.getElementById('gallery-container');
       try {
@@ -556,22 +629,28 @@
       const id = document.getElementById('adm-galeria-id').value;
       const titulo = document.getElementById('adm-galeria-title').value.trim();
       const subtitulo = document.getElementById('adm-galeria-sub').value.trim();
-      const imagem = document.getElementById('adm-galeria-img').value.trim();
+      let imagem = document.getElementById('adm-galeria-img-base64').value;
 
-      if (!titulo || !imagem) { alert('Preencha o título e a URL da imagem.'); return; }
+      if (!titulo) { alert('Preencha o título do projeto.'); return; }
+
+      const dadosGaleria = { titulo, subtitulo };
+      if (imagem) dadosGaleria.imagem = imagem;
 
       if (id) {
-        await updateDoc(doc(db, "galeria", id), { titulo, subtitulo, imagem });
+        await updateDoc(doc(db, "galeria", id), dadosGaleria);
         alert('Item da galeria atualizado!');
       } else {
-        await addDoc(collection(db, "galeria"), { titulo, subtitulo, imagem, criadoEm: serverTimestamp() });
-        alert('Item adicionado à galeria!');
+        if (!imagem) { alert('Selecione uma imagem da galeria.'); return; }
+        dadosGaleria.criadoEm = serverTimestamp();
+        await addDoc(collection(db, "galeria"), dadosGaleria);
+        alert('Imagem adicionada à galeria com sucesso!');
       }
 
       document.getElementById('adm-galeria-id').value = '';
       document.getElementById('adm-galeria-title').value = '';
       document.getElementById('adm-galeria-sub').value = '';
-      document.getElementById('adm-galeria-img').value = '';
+      document.getElementById('adm-galeria-img-base64').value = '';
+      document.getElementById('galeria-preview-text').textContent = 'Nenhuma imagem selecionada.';
       loadGallery();
     });
 
@@ -579,7 +658,10 @@
       document.getElementById('adm-galeria-id').value = id;
       document.getElementById('adm-galeria-title').value = titulo;
       document.getElementById('adm-galeria-sub').value = sub;
-      document.getElementById('adm-galeria-img').value = img;
+      document.getElementById('adm-galeria-img-base64').value = img;
+      document.getElementById('galeria-preview-text').textContent = '✔ Imagem atual mantida (ou escolha nova)';
+      adminDashboard.style.display = 'block';
+      adminDashboard.scrollIntoView({ behavior: 'smooth' });
       switchAdminTab('tab-galeria');
     };
 
@@ -590,6 +672,7 @@
       }
     };
 
+    // --- AVALIAÇÕES ---
     async function loadComments() {
       const commentsContainer = document.getElementById('comments-container');
       try {
@@ -646,6 +729,7 @@
       }
     };
 
+    // --- CONFIGURAÇÕES (SOBRE & LINKS) ---
     async function loadConfig() {
       try {
         const docRef = doc(db, "configuracoes", "geral");
@@ -687,6 +771,7 @@
       loadConfig();
     });
 
+    // --- CONSULTA DE VENDAS ---
     document.getElementById('btn-search-purchase').addEventListener('click', async () => {
       const email = document.getElementById('search-email-input').value.trim().toLowerCase();
       const box = document.getElementById('search-result-box');
@@ -715,6 +800,7 @@
       } catch (e) { box.innerHTML = 'Erro na busca.'; }
     });
 
+    // Sidebar
     const menuToggle = document.getElementById('menu-toggle');
     const btnClose = document.getElementById('btn-close');
     const sidebar = document.getElementById('sidebar');
@@ -724,6 +810,7 @@
     btnClose.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
     overlay.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
 
+    // Inicialização
     loadComments();
     loadConfig();
   </script>
