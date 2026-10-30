@@ -1750,9 +1750,30 @@
     </div>
   </footer>
 
-  <!-- Scripts JS -->
-  <script>
-    // Menu Drawer
+  <!-- Scripts JS & Firebase Integration -->
+  <script type="module">
+    // Importações do Firebase SDK
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+    // Configuração oficial do projeto Firebase da TL STUDIO
+    const firebaseConfig = {
+      apiKey: "AIzaSyDq8GZiKqDz2TOkemTegDqUknWfXSFN2dA",
+      authDomain: "tl-studio-f0f75.firebaseapp.com",
+      projectId: "tl-studio-f0f75",
+      storageBucket: "tl-studio-f0f75.firebasestorage.app",
+      messagingSenderId: "29136188051",
+      appId: "1:29136188051:web:90ce7b85e2f7c9c9d0d366",
+      measurementId: "G-ENQDHDPHT9"
+    };
+
+    // Inicializar Firebase, Analytics e Firestore
+    const app = initializeApp(firebaseConfig);
+    const analytics = getAnalytics(app);
+    const db = getFirestore(app);
+
+    // Menu Drawer Logic
     const menuToggle = document.getElementById('menu-toggle');
     const btnClose = document.getElementById('btn-close');
     const sidebar = document.getElementById('sidebar');
@@ -1774,10 +1795,11 @@
     overlay.addEventListener('click', closeSidebar);
     menuLinks.forEach(link => link.addEventListener('click', closeSidebar));
 
-    // Calculadora Interativa
+    // Calculadora Interativa & Envio para o Firestore
     const checkboxes = document.querySelectorAll('.service-calc-item');
     const summaryItemsList = document.getElementById('summary-items-list');
     const totalDisplay = document.getElementById('calc-total-display');
+    const btnSendOrder = document.getElementById('btn-send-order');
 
     function updateCalculator() {
       let total = 0;
@@ -1799,6 +1821,41 @@
     }
 
     checkboxes.forEach(chk => chk.addEventListener('change', updateCalculator));
+
+    // Ação do Botão para salvar o orçamento direto no Firestore
+    btnSendOrder.addEventListener('click', async () => {
+      const selectedItems = [];
+      checkboxes.forEach(chk => {
+        if (chk.checked) {
+          selectedItems.push({
+            servico: chk.getAttribute('data-name'),
+            preco: parseInt(chk.getAttribute('data-price'), 10)
+          });
+        }
+      });
+
+      if (selectedItems.length === 0) {
+        alert('Selecione pelo menos um serviço na calculadora antes de enviar o projeto.');
+        return;
+      }
+
+      const totalVal = totalDisplay.textContent;
+
+      try {
+        // Envia os dados para a coleção "orcamentos" no Firestore
+        await addDoc(collection(db, "orcamentos"), {
+          itens: selectedItems,
+          total: totalVal,
+          criadoEm: serverTimestamp(),
+          status: "Pendente"
+        });
+
+        alert('Sucesso! O seu pedido de orçamento foi registado no sistema do TL STUDIO.');
+      } catch (error) {
+        console.error("Erro ao salvar no Firestore: ", error);
+        alert('Ocorreu um erro ao enviar o orçamento. Verifique a consola.');
+      }
+    });
   </script>
 
 </body>
