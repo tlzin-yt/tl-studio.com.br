@@ -1,4 +1,388 @@
-<script type="module">
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TL STUDIO — Soluções Digitais & Design de Elite</title>
+  
+  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark: #020408;
+      --bg-card: rgba(8, 13, 24, 0.82);
+      --bg-card-hover: rgba(14, 22, 38, 0.95);
+      --border-color: rgba(0, 242, 254, 0.28);
+      --border-glow: rgba(0, 242, 254, 0.8);
+      --cyan-neon: #00f2fe;
+      --blue-accent: #0072ff;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-dim: #64748b;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    html { scroll-behavior: smooth; }
+    body { background-color: var(--bg-dark); color: var(--text-main); min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; position: relative; }
+
+    /* Fundo HUD */
+    .bg-image-container { position: fixed; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+    .bg-image-container img { width: 100%; height: 100%; object-fit: cover; filter: brightness(0.25) contrast(1.25) saturate(1.4); transform: scale(1.03); }
+    .bg-overlay-dark { position: fixed; inset: 0; background: radial-gradient(circle at 50% 15%, rgba(2, 4, 8, 0.4) 0%, rgba(2, 4, 8, 0.9) 75%, #020408 100%); z-index: 0; pointer-events: none; }
+    .bg-grid { position: fixed; inset: 0; background-image: linear-gradient(to right, rgba(0, 242, 254, 0.04) 1px, transparent 1px), linear-gradient(to bottom, rgba(0, 242, 254, 0.04) 1px, transparent 1px); background-size: 40px 40px; z-index: 0; pointer-events: none; }
+
+    h1, h2, h3, h4, .brand { font-family: 'Plus Jakarta Sans', sans-serif; }
+
+    .cyber-frame {
+      position: relative; background: var(--bg-card); border: 1px solid var(--border-color);
+      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px); border-radius: var(--radius-md);
+      overflow: hidden; box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(0, 242, 254, 0.03); transition: var(--transition);
+    }
+    .cyber-frame::before { content: ''; position: absolute; top: 0; left: 0; width: 20px; height: 20px; border-top: 2px solid var(--cyan-neon); border-left: 2px solid var(--cyan-neon); z-index: 3; pointer-events: none; }
+    .cyber-frame::after { content: ''; position: absolute; bottom: 0; right: 0; width: 20px; height: 20px; border-bottom: 2px solid var(--cyan-neon); border-right: 2px solid var(--cyan-neon); z-index: 3; pointer-events: none; }
+
+    .media-slot { position: relative; width: 100%; height: 220px; background: #050812; overflow: hidden; display: flex; align-items: center; justify-content: center; border-bottom: 1px solid rgba(0, 242, 254, 0.2); }
+    .media-slot img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease, filter 0.6s ease; filter: brightness(0.85) contrast(1.15); }
+    .cyber-frame:hover .media-slot img { transform: scale(1.07); filter: brightness(1.05) contrast(1.2); }
+    .hud-tag { position: absolute; top: 12px; left: 12px; background: rgba(2, 4, 8, 0.9); border: 1px solid var(--cyan-neon); color: var(--cyan-neon); font-size: 0.65rem; font-weight: 900; padding: 4px 10px; border-radius: 4px; z-index: 2; }
+
+    header {
+      position: sticky; top: 0; z-index: 100; background: rgba(2, 4, 8, 0.85);
+      border-bottom: 1px solid rgba(0, 242, 254, 0.25); backdrop-filter: blur(25px);
+      padding: 1rem 2.5rem; display: flex; justify-content: space-between; align-items: center;
+    }
+    .brand { font-size: 1.6rem; font-weight: 900; color: #fff; letter-spacing: 2px; display: flex; align-items: center; gap: 10px; }
+    .brand-icon { width: 12px; height: 12px; background: var(--cyan-neon); border-radius: 50%; box-shadow: 0 0 15px var(--cyan-neon); }
+    .brand span { background: linear-gradient(135deg, var(--cyan-neon), var(--blue-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+
+    .header-actions { display: flex; align-items: center; gap: 15px; }
+    
+    .btn-open-dashboard {
+      background: linear-gradient(135deg, var(--cyan-neon), var(--blue-accent));
+      color: #020408; border: none; padding: 8px 16px; font-weight: 900;
+      border-radius: var(--radius-sm); cursor: pointer; display: none; font-size: 0.85rem;
+      box-shadow: 0 0 15px rgba(0, 242, 254, 0.4); transition: var(--transition);
+    }
+    .btn-open-dashboard:hover { box-shadow: 0 0 25px rgba(0, 242, 254, 0.8); transform: translateY(-2px); }
+
+    .menu-toggle { background: rgba(8, 13, 24, 0.9); border: 1px solid var(--border-color); color: var(--cyan-neon); width: 44px; height: 44px; border-radius: var(--radius-sm); display: flex; justify-content: center; align-items: center; cursor: pointer; font-size: 1.3rem; }
+
+    #admin-dashboard { display: none; background: rgba(0, 242, 254, 0.08); border: 2px dashed var(--cyan-neon); padding: 2.5rem; border-radius: var(--radius-md); margin: 2rem 0; }
+    #admin-dashboard h3 { color: var(--cyan-neon); margin-bottom: 1rem; font-size: 1.4rem; }
+    .admin-tabs { display: flex; gap: 10px; margin-bottom: 1.5rem; flex-wrap: wrap; }
+    .admin-tab-btn { background: rgba(5, 8, 18, 0.8); border: 1px solid var(--border-color); color: #fff; padding: 8px 16px; border-radius: 6px; cursor: pointer; font-weight: 700; font-size: 0.85rem; }
+    .admin-tab-btn.active { background: var(--cyan-neon); color: #020408; border-color: var(--cyan-neon); }
+    
+    .admin-panel-section { display: none; }
+    .admin-panel-section.active { display: block; }
+
+    .admin-form { display: grid; gap: 1rem; max-width: 600px; }
+    .admin-form input, .admin-form textarea, .admin-form select { background: #050812; border: 1px solid var(--border-color); padding: 12px; border-radius: var(--radius-sm); color: #fff; font-size: 0.9rem; outline: none; }
+    .file-input-label { display: block; background: rgba(0,242,254,0.1); border: 1px dashed var(--cyan-neon); padding: 10px; text-align: center; border-radius: var(--radius-sm); color: var(--cyan-neon); font-weight: 700; cursor: pointer; font-size: 0.85rem; }
+    
+    .btn-admin-action { background: linear-gradient(135deg, #00c6ff, #0072ff); color: #fff; border: none; padding: 12px 20px; font-weight: 800; border-radius: var(--radius-sm); cursor: pointer; }
+    .btn-danger { background: linear-gradient(135deg, #f72585, #b5179e); padding: 6px 14px; font-size: 0.8rem; border-radius: 4px; border: none; color: #fff; cursor: pointer; font-weight: 700; }
+    .btn-edit { background: linear-gradient(135deg, #ffb703, #fb8500); padding: 6px 14px; font-size: 0.8rem; border-radius: 4px; border: none; color: #000; cursor: pointer; font-weight: 800; }
+
+    .sidebar-overlay { position: fixed; inset: 0; background: rgba(1, 2, 4, 0.9); backdrop-filter: blur(12px); z-index: 200; opacity: 0; pointer-events: none; transition: var(--transition); }
+    .sidebar-overlay.active { opacity: 1; pointer-events: auto; }
+    .sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: rgba(4, 7, 14, 0.98); border-left: 1px solid var(--border-glow); z-index: 201; padding: 2.5rem 2rem; display: flex; flex-direction: column; gap: 2rem; transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1); overflow-y: auto; }
+    .sidebar.active { right: 0; }
+    .sidebar-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 1.2rem; }
+    .btn-close { background: transparent; border: none; color: var(--text-muted); font-size: 1.8rem; cursor: pointer; }
+
+    .sidebar-auth-box { background: rgba(0, 242, 254, 0.05); border: 1px solid var(--border-color); padding: 1.2rem; border-radius: var(--radius-sm); text-align: center; }
+    .sidebar-auth-box p { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 0.8rem; }
+    .btn-sidebar-login { width: 100%; background: linear-gradient(135deg, #00c6ff, #0072ff); color: #fff; border: none; padding: 10px; font-size: 0.9rem; font-weight: 800; border-radius: var(--radius-sm); cursor: pointer; }
+
+    .sidebar-nav { display: flex; flex-direction: column; gap: 0.85rem; }
+    .sidebar-nav a { color: var(--text-muted); text-decoration: none; font-size: 1.05rem; font-weight: 700; padding: 14px 18px; border-radius: var(--radius-sm); transition: var(--transition); display: flex; align-items: center; justify-content: space-between; }
+    .sidebar-nav a:hover { color: #fff; background: rgba(0, 242, 254, 0.1); border-color: rgba(0, 242, 254, 0.4); transform: translateX(8px); }
+
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; width: 100%; position: relative; z-index: 1; }
+    .hero { text-align: center; padding: 6rem 1rem 5rem; display: flex; flex-direction: column; align-items: center; }
+    .badge-status { display: inline-flex; align-items: center; gap: 10px; background: rgba(0, 242, 254, 0.08); border: 1px solid var(--border-glow); padding: 8px 22px; border-radius: 30px; font-size: 0.8rem; font-weight: 800; color: var(--cyan-neon); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 2rem; }
+    .pulse-dot { width: 8px; height: 8px; background: var(--cyan-neon); border-radius: 50%; box-shadow: 0 0 12px var(--cyan-neon); animation: pulse 1.8s infinite; }
+    @keyframes pulse { 0% { transform: scale(0.95); } 70% { transform: scale(1); } 100% { transform: scale(0.95); } }
+    .hero h1 { font-size: 4.2rem; font-weight: 900; line-height: 1.1; margin-bottom: 1.5rem; }
+    .hero h1 span { background: linear-gradient(135deg, #fff, var(--cyan-neon), var(--blue-accent)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+    .hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 760px; line-height: 1.8; margin-bottom: 3rem; }
+
+    section { padding: 5.5rem 0; border-bottom: 1px solid rgba(255, 255, 255, 0.05); }
+    .section-header { margin-bottom: 3.5rem; }
+    .section-subtitle { color: var(--cyan-neon); font-size: 0.85rem; font-weight: 800; letter-spacing: 2.5px; text-transform: uppercase; margin-bottom: 0.5rem; display: block; }
+    .section-title { font-size: 2.5rem; font-weight: 900; color: #fff; }
+
+    .products-grid, .portfolio-grid, .comments-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; }
+    .product-card, .portfolio-card, .comment-card { display: flex; flex-direction: column; }
+    .card-content { padding: 2rem; display: flex; flex-direction: column; flex: 1; justify-content: space-between; }
+    .product-title { font-size: 1.4rem; font-weight: 800; color: #fff; margin-bottom: 0.6rem; }
+    .product-desc { font-size: 0.95rem; color: var(--text-muted); line-height: 1.65; margin-bottom: 1.5rem; }
+    .product-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1.2rem; border-top: 1px solid rgba(255, 255, 255, 0.08); }
+    .price-value { font-size: 1.15rem; font-weight: 900; color: var(--cyan-neon); }
+    .btn-details { background: rgba(255, 255, 255, 0.06); color: #fff; border: 1px solid rgba(255, 255, 255, 0.2); padding: 9px 20px; font-size: 0.85rem; font-weight: 800; border-radius: var(--radius-sm); cursor: pointer; transition: var(--transition); }
+
+    .client-comment-form { background: var(--bg-card); border: 1px solid var(--border-color); padding: 2rem; border-radius: var(--radius-md); margin-top: 2.5rem; max-width: 600px; }
+    .client-comment-form input, .client-comment-form textarea, .client-comment-form select { width: 100%; background: #050812; border: 1px solid var(--border-color); padding: 10px; border-radius: var(--radius-sm); color: #fff; margin-bottom: 1rem; outline: none; }
+
+    .about-card { padding: 3.5rem; }
+    .about-grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 3rem; align-items: center; }
+
+    .links-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.5rem; }
+    .link-card { padding: 1.8rem; text-decoration: none; display: flex; align-items: center; justify-content: space-between; }
+    .link-info h4 { color: #fff; font-size: 1.05rem; font-weight: 800; margin-bottom: 0.2rem; }
+    .link-info span { color: var(--text-dim); font-size: 0.8rem; }
+
+    footer { background: rgba(1, 2, 4, 0.98); border-top: 1px solid rgba(255, 255, 255, 0.08); padding: 3.5rem 2rem; text-align: center; margin-top: auto; }
+  </style>
+</head>
+<body>
+
+  <div class="bg-image-container"><img src="img/tl_studio.jpg" alt="Fundo TL STUDIO" onerror="this.style.display='none';"></div>
+  <div class="bg-overlay-dark"></div>
+  <div class="bg-grid"></div>
+
+  <!-- Header -->
+  <header>
+    <div class="brand"><div class="brand-icon"></div> TL <span>STUDIO</span></div>
+    <div class="header-actions">
+      <button class="btn-open-dashboard" id="btn-open-dashboard">⚡ PAINEL DASHBOARD</button>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir Menu">☰</button>
+    </div>
+  </header>
+
+  <!-- Sidebar com Login -->
+  <div class="sidebar-overlay" id="sidebar-overlay"></div>
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <div class="brand">TL <span>STUDIO</span></div>
+      <button class="btn-close" id="btn-close">&times;</button>
+    </div>
+
+    <div class="sidebar-auth-box">
+      <p id="user-display" style="font-weight: 700; color: var(--cyan-neon);">Verificando sessão...</p>
+      <button class="btn-sidebar-login" id="btn-login-google">Entrar com Google</button>
+    </div>
+
+    <nav class="sidebar-nav">
+      <a href="#inicio" class="menu-link">Início</a>
+      <a href="#sobre" class="menu-link">Sobre</a>
+      <a href="#produtos" class="menu-link">Produtos</a>
+      <a href="#portfolio" class="menu-link">Galeria</a>
+      <a href="#comentarios" class="menu-link">Avaliações</a>
+      <a href="#links" class="menu-link">Links Úteis</a>
+    </nav>
+  </aside>
+
+  <main class="container">
+
+    <!-- DASHBOARD ADMINISTRATIVO COMPLETO -->
+    <div id="admin-dashboard" class="cyber-frame">
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h3>⚡ PAINEL ADMINISTRADOR — TL STUDIO</h3>
+        <button class="btn-danger" id="btn-close-dashboard" style="padding: 6px 12px;">✕ Fechar Painel</button>
+      </div>
+      
+      <!-- Abas de Navegação Admin -->
+      <div class="admin-tabs">
+        <button class="admin-tab-btn active" onclick="switchAdminTab('tab-produtos')">📦 Produtos</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab('tab-galeria')">🖼️ Galeria</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab('tab-sobre')">📝 Sobre Mim</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab('tab-links')">🔗 Links Úteis</button>
+        <button class="admin-tab-btn" onclick="switchAdminTab('tab-vendas')">🔍 Vendas / E-mail</button>
+      </div>
+
+      <!-- ABA 1: PRODUTOS -->
+      <div id="tab-produtos" class="admin-panel-section active">
+        <h4 style="color: var(--cyan-neon); margin-bottom: 1rem;">Gerenciar Produtos da Loja</h4>
+        <input type="hidden" id="adm-prod-id">
+        <input type="hidden" id="adm-prod-img-base64">
+        <div class="admin-form">
+          <input type="text" id="adm-prod-title" placeholder="Nome do Produto">
+          <input type="text" id="adm-prod-price" placeholder="Preço (Ex: R$ 150,00)">
+          <textarea id="adm-prod-desc" placeholder="Descrição do Produto" rows="2"></textarea>
+          
+          <label class="file-input-label">
+            📁 Escolher Imagem da Galeria do Aparelho
+            <input type="file" id="adm-prod-file" accept="image/*" style="display: none;">
+          </label>
+          <div id="prod-preview-text" style="font-size: 0.8rem; color: var(--text-dim);">Nenhuma imagem selecionada.</div>
+
+          <button class="btn-admin-action" id="btn-save-product">Salvar Produto</button>
+        </div>
+      </div>
+
+      <!-- ABA 2: GALERIA -->
+      <div id="tab-galeria" class="admin-panel-section">
+        <h4 style="color: var(--cyan-neon); margin-bottom: 1rem;">Gerenciar Galeria / Portfólio</h4>
+        <input type="hidden" id="adm-galeria-id">
+        <input type="hidden" id="adm-galeria-img-base64">
+        <div class="admin-form">
+          <input type="text" id="adm-galeria-title" placeholder="Título do Projeto">
+          <input type="text" id="adm-galeria-sub" placeholder="Categoria/Subtítulo (Ex: Web & UI)">
+          
+          <label class="file-input-label">
+            📁 Escolher Imagem da Galeria do Aparelho
+            <input type="file" id="adm-galeria-file" accept="image/*" style="display: none;">
+          </label>
+          <div id="galeria-preview-text" style="font-size: 0.8rem; color: var(--text-dim);">Nenhuma imagem selecionada.</div>
+
+          <button class="btn-admin-action" id="btn-save-galeria">Salvar na Galeria</button>
+        </div>
+      </div>
+
+      <!-- ABA 3: SOBRE MIM -->
+      <div id="tab-sobre" class="admin-panel-section">
+        <h4 style="color: var(--cyan-neon); margin-bottom: 1rem;">Editar Texto da Seção "Sobre Mim"</h4>
+        <div class="admin-form">
+          <textarea id="adm-about-p1" placeholder="Primeiro parágrafo..." rows="3"></textarea>
+          <textarea id="adm-about-p2" placeholder="Segundo parágrafo..." rows="3"></textarea>
+          <button class="btn-admin-action" id="btn-save-about">Atualizar Seção Sobre</button>
+        </div>
+      </div>
+
+      <!-- ABA 4: LINKS ÚTEIS -->
+      <div id="tab-links" class="admin-panel-section">
+        <h4 style="color: var(--cyan-neon); margin-bottom: 1rem;">Editar Links dos Botões</h4>
+        <div class="admin-form">
+          <input type="text" id="adm-link-discord" placeholder="Link do Discord Oficial">
+          <input type="text" id="adm-link-whatsapp" placeholder="Link do WhatsApp Direct">
+          <input type="text" id="adm-link-instagram" placeholder="Link do Instagram">
+          <input type="text" id="adm-link-portfolio" placeholder="Link do Portfólio Externo">
+          <button class="btn-admin-action" id="btn-save-links">Atualizar Links</button>
+        </div>
+      </div>
+
+      <!-- ABA 5: CONSULTA DE VENDAS -->
+      <div id="tab-vendas" class="admin-panel-section">
+        <h4 style="color: var(--cyan-neon); margin-bottom: 1rem;">Consultar Compras de Clientes por E-mail</h4>
+        <div style="display: flex; gap: 10px; max-width: 600px;">
+          <input type="email" id="search-email-input" placeholder="Digite o e-mail do cliente..." style="flex: 1; background: #050812; border: 1px solid var(--border-color); padding: 10px; border-radius: 8px; color: #fff; outline: none;">
+          <button class="btn-admin-action" id="btn-search-purchase" style="padding: 10px 20px;">Buscar</button>
+        </div>
+        <div id="search-result-box" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);"></div>
+      </div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="hero" id="inicio">
+      <div class="badge-status"><div class="pulse-dot"></div> Sistemas Digitais & Design de Elite</div>
+      <h1>Sua Presença Digital <span>Elevada ao Máximo.</span></h1>
+      <p>Desenvolvimento web de alta performance, arquitetura avançada para servidores de Discord e identidades visuais marcantes.</p>
+    </section>
+
+    <!-- Sobre -->
+    <section id="sobre">
+      <div class="section-header">
+        <span class="section-subtitle">Conheça Nossa Estrutura</span>
+        <h2 class="section-title">Sobre a TL STUDIO</h2>
+      </div>
+      <div class="cyber-frame about-card">
+        <div class="about-grid">
+          <div class="about-text">
+            <p id="display-about-p1">A TL STUDIO desenvolve ecossistemas digitais focados na experiência do usuário e na estética moderna. Criamos desde páginas web e aplicações sob medida até a configuração técnica completa de servidores e criação de identidades visuais marcantes.</p>
+            <p id="display-about-p2">Nosso compromisso é entregar qualidade profissional, aliando performance, código limpo e layouts otimizados para converter visitantes em clientes.</p>
+          </div>
+          <div class="cyber-frame" style="height: 250px;">
+            <div class="media-slot" style="height: 100%;">
+              <span class="hud-tag">HQ_PREVIEW.JPG</span>
+              <img src="img/about_preview.jpg" alt="Sobre TL Studio" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop&q=60';">
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Produtos Dinâmicos -->
+    <section id="produtos">
+      <div class="section-header">
+        <span class="section-subtitle">Serviços Exclusivos</span>
+        <h2 class="section-title">Nossos Produtos</h2>
+      </div>
+      <div class="products-grid" id="products-container">
+        <p style="color: var(--text-muted);">Carregando produtos...</p>
+      </div>
+    </section>
+
+    <!-- Galeria Dinâmica -->
+    <section id="portfolio">
+      <div class="section-header">
+        <span class="section-subtitle">Showcase Visual</span>
+        <h2 class="section-title">Galeria de Trabalhos</h2>
+      </div>
+      <div class="portfolio-grid" id="gallery-container">
+        <p style="color: var(--text-muted);">Carregando imagens da galeria...</p>
+      </div>
+    </section>
+
+    <!-- Avaliações -->
+    <section id="comentarios">
+      <div class="section-header">
+        <span class="section-subtitle">Depoimentos</span>
+        <h2 class="section-title">O Que Dizem Nossos Clientes</h2>
+      </div>
+      <div class="comments-grid" id="comments-container">
+        <p style="color: var(--text-muted);">Carregando avaliações...</p>
+      </div>
+
+      <div class="client-comment-form">
+        <h4 style="color: var(--cyan-neon); margin-bottom: 1rem;">Deixe sua Avaliação</h4>
+        <input type="text" id="cli-name" placeholder="Seu Nome ou Nick">
+        <input type="text" id="cli-proj" placeholder="Projeto Contratado (Ex: Página Web)">
+        <select id="cli-stars">
+          <option value="5">★★★★★ (5 Estrelas)</option>
+          <option value="4">★★★★☆ (4 Estrelas)</option>
+          <option value="3">★★★☆☆ (3 Estrelas)</option>
+        </select>
+        <textarea id="cli-text" placeholder="Escreva seu depoimento sobre nossos serviços..." rows="3"></textarea>
+        <button class="btn-admin-action" id="btn-send-comment">Enviar Avaliação</button>
+      </div>
+    </section>
+
+    <!-- Links Úteis -->
+    <section id="links">
+      <div class="section-header">
+        <span class="section-subtitle">Conecte-se Conosco</span>
+        <h2 class="section-title">Links & Atendimento</h2>
+      </div>
+
+      <div class="links-grid">
+        <a href="#" id="link-discord-btn" target="_blank" class="cyber-frame link-card">
+          <div class="link-info"><h4>Discord Oficial</h4><span>Comunidade e Suporte</span></div>
+          <span style="color: var(--cyan-neon);">→</span>
+        </a>
+
+        <a href="#" id="link-whatsapp-btn" target="_blank" class="cyber-frame link-card">
+          <div class="link-info"><h4>WhatsApp Direct</h4><span>Atendimento Comercial</span></div>
+          <span style="color: var(--cyan-neon);">→</span>
+        </a>
+
+        <a href="#" id="link-instagram-btn" target="_blank" class="cyber-frame link-card">
+          <div class="link-info"><h4>Instagram</h4><span>Nossos Trabalhos</span></div>
+          <span style="color: var(--cyan-neon);">→</span>
+        </a>
+
+        <a href="#" id="link-portfolio-btn" target="_blank" class="cyber-frame link-card">
+          <div class="link-info"><h4>Portfólio</h4><span>Projetos Anteriores</span></div>
+          <span style="color: var(--cyan-neon);">→</span>
+        </a>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>&copy; 2026 TL STUDIO. Todos os direitos reservados. Sistema Protegido por Firebase.</p>
+  </footer>
+
+  <!-- Scripts Firebase & Lógica JavaScript -->
+  <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
     import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
@@ -82,7 +466,6 @@
       document.getElementById(tabId).classList.add('active');
     };
 
-    // Função redutora de imagem para caber perfeitamente no Firestore
     function comprimirEConverterImagem(file, callback) {
       const reader = new FileReader();
       reader.onload = function(event) {
@@ -104,8 +487,6 @@
           canvas.height = height;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, width, height);
-          
-          // Converte para JPEG comprimido (otimizado para nuvem)
           const dataUrl = canvas.toDataURL('image/jpeg', 0.75);
           callback(dataUrl);
         };
@@ -168,7 +549,7 @@
                 </div>
                 ${isAdmin ? `
                   <div style="display:flex; gap:8px; margin-top:12px;">
-                    <button class="btn-edit" style="flex:1;" onclick="prepararEdicaoProduto('${prodId}', '${prod.titulo}', '${prod.preco}', '${prod.descricao.replace(/'/g, "\\'")}')">Editar</button>
+                    <button class="btn-edit" style="flex:1;" onclick="prepararEdicaoProduto('${prodId}', '${prod.titulo}', '${prod.preco}', '${(prod.descricao || '').replace(/'/g, "\\'")}')">Editar</button>
                     <button class="btn-danger" style="flex:1;" onclick="deletarProduto('${prodId}')">Excluir</button>
                   </div>
                 ` : ''}
@@ -454,3 +835,6 @@
     btnClose.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
     overlay.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
   </script>
+
+</body>
+</html>
