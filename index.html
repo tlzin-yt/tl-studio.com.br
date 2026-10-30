@@ -1,1788 +1,8 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>TL STUDIO — Soluções Digitais & Design de Elite</title>
-  
-  <!-- Google Fonts: Inter & Plus Jakarta Sans -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Plus+Jakarta+Sans:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-
-  <style>
-    /* ==========================================
-       1. VARIÁVEIS GLOBAIS E PALETA CYBERPUNK HUD
-       ========================================== */
-    :root {
-      --bg-dark: #020408;
-      --bg-card: rgba(8, 13, 24, 0.82);
-      --bg-card-hover: rgba(14, 22, 38, 0.95);
-      --border-color: rgba(0, 242, 254, 0.28);
-      --border-glow: rgba(0, 242, 254, 0.8);
-      --cyan-neon: #00f2fe;
-      --blue-accent: #0072ff;
-      --purple-accent: #7928ca;
-      --pink-neon: #f72585;
-      --text-main: #f8fafc;
-      --text-muted: #94a3b8;
-      --text-dim: #64748b;
-      --radius-sm: 8px;
-      --radius-md: 14px;
-      --radius-lg: 22px;
-      --transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Inter', sans-serif;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      background-color: var(--bg-dark);
-      color: var(--text-main);
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      overflow-x: hidden;
-      position: relative;
-    }
-
-    /* ==========================================
-       2. FUNDO TL-STUDIO COM MULTI-CAMADAS HUD
-       ========================================== */
-    .bg-image-container {
-      position: fixed;
-      inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .bg-image-container img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: center;
-      filter: brightness(0.25) contrast(1.25) saturate(1.4);
-      transform: scale(1.03);
-    }
-
-    .bg-overlay-dark {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at 50% 15%, rgba(2, 4, 8, 0.4) 0%, rgba(2, 4, 8, 0.9) 75%, #020408 100%);
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    .bg-grid {
-      position: fixed;
-      inset: 0;
-      background-image: 
-        linear-gradient(to right, rgba(0, 242, 254, 0.04) 1px, transparent 1px),
-        linear-gradient(to bottom, rgba(0, 242, 254, 0.04) 1px, transparent 1px);
-      background-size: 40px 40px;
-      z-index: 0;
-      pointer-events: none;
-    }
-
-    h1, h2, h3, h4, .brand {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    /* ==========================================
-       3. MOLDURAS TÉCNICAS E SISTEMA DE HUD
-       ========================================== */
-    .cyber-frame {
-      position: relative;
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: var(--radius-md);
-      overflow: hidden;
-      box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(0, 242, 254, 0.03);
-      transition: var(--transition);
-    }
-
-    .cyber-frame::before {
-      content: '';
-      position: absolute;
-      top: 0; left: 0;
-      width: 20px; height: 20px;
-      border-top: 2px solid var(--cyan-neon);
-      border-left: 2px solid var(--cyan-neon);
-      z-index: 3;
-      pointer-events: none;
-    }
-
-    .cyber-frame::after {
-      content: '';
-      position: absolute;
-      bottom: 0; right: 0;
-      width: 20px; height: 20px;
-      border-bottom: 2px solid var(--cyan-neon);
-      border-right: 2px solid var(--cyan-neon);
-      z-index: 3;
-      pointer-events: none;
-    }
-
-    .media-slot {
-      position: relative;
-      width: 100%;
-      height: 220px;
-      background: #050812;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border-bottom: 1px solid rgba(0, 242, 254, 0.2);
-    }
-
-    .media-slot img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1), filter 0.6s ease;
-      filter: brightness(0.85) contrast(1.15);
-    }
-
-    .cyber-frame:hover .media-slot img {
-      transform: scale(1.07);
-      filter: brightness(1.05) contrast(1.2);
-    }
-
-    .media-slot-placeholder {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      color: var(--text-dim);
-      font-size: 0.75rem;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      text-transform: uppercase;
-    }
-
-    .media-slot-placeholder span {
-      font-size: 2rem;
-      color: var(--cyan-neon);
-      opacity: 0.8;
-      text-shadow: 0 0 15px var(--cyan-neon);
-    }
-
-    .scanline {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.3) 51%);
-      background-size: 100% 4px;
-      pointer-events: none;
-      z-index: 2;
-    }
-
-    .hud-tag {
-      position: absolute;
-      top: 12px; left: 12px;
-      background: rgba(2, 4, 8, 0.9);
-      border: 1px solid var(--cyan-neon);
-      color: var(--cyan-neon);
-      font-size: 0.65rem;
-      font-weight: 900;
-      padding: 4px 10px;
-      border-radius: 4px;
-      letter-spacing: 1.5px;
-      z-index: 2;
-      backdrop-filter: blur(6px);
-      box-shadow: 0 0 10px rgba(0, 242, 254, 0.25);
-    }
-
-    .tech-status-dot {
-      display: inline-block;
-      width: 6px;
-      height: 6px;
-      background: var(--cyan-neon);
-      border-radius: 50%;
-      box-shadow: 0 0 8px var(--cyan-neon);
-    }
-
-    /* ==========================================
-       4. HEADER & NAVBAR GLASS
-       ========================================== */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 100;
-      background: rgba(2, 4, 8, 0.85);
-      border-bottom: 1px solid rgba(0, 242, 254, 0.25);
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      padding: 1rem 2.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
-    }
-
-    .brand {
-      font-size: 1.6rem;
-      font-weight: 900;
-      color: #ffffff;
-      letter-spacing: 2px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .brand-icon {
-      width: 12px;
-      height: 12px;
-      background: var(--cyan-neon);
-      border-radius: 50%;
-      box-shadow: 0 0 15px var(--cyan-neon);
-    }
-
-    .brand span {
-      background: linear-gradient(135deg, var(--cyan-neon) 0%, var(--blue-accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .header-actions {
-      display: flex;
-      align-items: center;
-      gap: 1.2rem;
-    }
-
-    .menu-toggle {
-      background: rgba(8, 13, 24, 0.9);
-      border: 1px solid var(--border-color);
-      color: var(--cyan-neon);
-      width: 44px;
-      height: 44px;
-      border-radius: var(--radius-sm);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      transition: var(--transition);
-      font-size: 1.3rem;
-    }
-
-    .menu-toggle:hover {
-      border-color: var(--cyan-neon);
-      box-shadow: 0 0 20px rgba(0, 242, 254, 0.4);
-      background: rgba(0, 242, 254, 0.15);
-    }
-
-    /* ==========================================
-       PAINEL ADMINISTRATIVO (ADMIN DASHBOARD)
-       ========================================== */
-    #admin-dashboard {
-      display: none;
-      background: rgba(0, 242, 254, 0.08);
-      border: 2px dashed var(--cyan-neon);
-      padding: 2.5rem;
-      border-radius: var(--radius-md);
-      margin-top: 2rem;
-      margin-bottom: 2rem;
-    }
-
-    #admin-dashboard h3 {
-      color: var(--cyan-neon);
-      margin-bottom: 1rem;
-      font-size: 1.4rem;
-    }
-
-    .admin-form {
-      display: grid;
-      gap: 1rem;
-      margin-top: 1.5rem;
-      max-width: 600px;
-    }
-
-    .admin-form input, .admin-form textarea {
-      background: #050812;
-      border: 1px solid var(--border-color);
-      padding: 12px;
-      border-radius: var(--radius-sm);
-      color: #fff;
-      font-size: 0.9rem;
-      outline: none;
-    }
-
-    .admin-form input:focus, .admin-form textarea:focus {
-      border-color: var(--cyan-neon);
-      box-shadow: 0 0 10px rgba(0,242,254,0.3);
-    }
-
-    .btn-admin-action {
-      background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-      color: #fff;
-      border: none;
-      padding: 12px 20px;
-      font-weight: 800;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .btn-admin-action:hover {
-      box-shadow: 0 0 25px rgba(0, 242, 254, 0.7);
-    }
-
-    .btn-danger {
-      background: linear-gradient(135deg, #f72585, #b5179e);
-      padding: 6px 14px;
-      font-size: 0.8rem;
-      border-radius: 4px;
-      border: none;
-      color: #fff;
-      cursor: pointer;
-      font-weight: 700;
-      transition: var(--transition);
-    }
-
-    .btn-danger:hover {
-      box-shadow: 0 0 15px rgba(247, 37, 133, 0.6);
-    }
-
-    /* ==========================================
-       5. SIDEBAR NAVIGATION DRAWER
-       ========================================== */
-    .sidebar-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(1, 2, 4, 0.9);
-      backdrop-filter: blur(12px);
-      z-index: 200;
-      opacity: 0;
-      pointer-events: none;
-      transition: var(--transition);
-    }
-
-    .sidebar-overlay.active {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .sidebar {
-      position: fixed;
-      top: 0; right: -400px;
-      width: 400px;
-      height: 100%;
-      background: rgba(4, 7, 14, 0.98);
-      border-left: 1px solid var(--border-glow);
-      box-shadow: -20px 0 60px rgba(0, 0, 0, 0.95);
-      z-index: 201;
-      padding: 2.5rem 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 2rem;
-      transition: right 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      overflow-y: auto;
-    }
-
-    .sidebar.active {
-      right: 0;
-    }
-
-    .sidebar-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding-bottom: 1.2rem;
-    }
-
-    .btn-close {
-      background: transparent;
-      border: none;
-      color: var(--text-muted);
-      font-size: 1.8rem;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .btn-close:hover {
-      color: var(--cyan-neon);
-      transform: rotate(90deg);
-    }
-
-    .sidebar-auth-box {
-      background: rgba(0, 242, 254, 0.05);
-      border: 1px solid var(--border-color);
-      padding: 1.2rem;
-      border-radius: var(--radius-sm);
-      text-align: center;
-    }
-
-    .sidebar-auth-box p {
-      font-size: 0.85rem;
-      color: var(--text-muted);
-      margin-bottom: 0.8rem;
-    }
-
-    .btn-sidebar-login {
-      width: 100%;
-      background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-      color: #fff;
-      border: none;
-      padding: 10px;
-      font-size: 0.9rem;
-      font-weight: 800;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 0 15px rgba(0, 114, 255, 0.4);
-    }
-
-    .btn-sidebar-login:hover {
-      box-shadow: 0 0 25px rgba(0, 242, 254, 0.7);
-    }
-
-    .sidebar-nav {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-
-    .sidebar-nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 1.05rem;
-      font-weight: 700;
-      padding: 14px 18px;
-      border-radius: var(--radius-sm);
-      border: 1px solid transparent;
-      transition: var(--transition);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .sidebar-nav a:hover {
-      color: var(--text-main);
-      background: rgba(0, 242, 254, 0.1);
-      border-color: rgba(0, 242, 254, 0.4);
-      transform: translateX(8px);
-    }
-
-    /* ==========================================
-       6. HERO SECTION
-       ========================================== */
-    .container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 2rem;
-      width: 100%;
-      position: relative;
-      z-index: 1;
-    }
-
-    .hero {
-      text-align: center;
-      padding: 6rem 1rem 5rem;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-
-    .badge-status {
-      display: inline-flex;
-      align-items: center;
-      gap: 10px;
-      background: rgba(0, 242, 254, 0.08);
-      border: 1px solid var(--border-glow);
-      padding: 8px 22px;
-      border-radius: 30px;
-      font-size: 0.8rem;
-      font-weight: 800;
-      color: var(--cyan-neon);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      margin-bottom: 2rem;
-      box-shadow: 0 0 30px rgba(0, 242, 254, 0.25);
-    }
-
-    .pulse-dot {
-      width: 8px;
-      height: 8px;
-      background: var(--cyan-neon);
-      border-radius: 50%;
-      box-shadow: 0 0 12px var(--cyan-neon);
-      animation: pulse 1.8s infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0.8); }
-      70% { transform: scale(1); box-shadow: 0 0 0 12px rgba(0, 242, 254, 0); }
-      100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(0, 242, 254, 0); }
-    }
-
-    .hero h1 {
-      font-size: 4.2rem;
-      font-weight: 900;
-      line-height: 1.1;
-      margin-bottom: 1.5rem;
-      letter-spacing: -1.5px;
-    }
-
-    .hero h1 span {
-      background: linear-gradient(135deg, #ffffff 0%, var(--cyan-neon) 50%, var(--blue-accent) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero p {
-      font-size: 1.25rem;
-      color: var(--text-muted);
-      max-width: 760px;
-      line-height: 1.8;
-      margin-bottom: 3rem;
-    }
-
-    .hero-banner-frame {
-      width: 100%;
-      max-width: 1050px;
-      height: 400px;
-      margin: 0 auto 2.5rem;
-    }
-
-    .hero-banner-frame .media-slot {
-      height: 100%;
-    }
-
-    .hud-metrics-bar {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 1.2rem;
-      width: 100%;
-      max-width: 1050px;
-      margin: 0 auto;
-    }
-
-    .metric-chip {
-      background: var(--bg-card);
-      border: 1px solid var(--border-color);
-      padding: 1rem 1.2rem;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      backdrop-filter: blur(10px);
-      text-align: left;
-    }
-
-    .metric-icon {
-      font-size: 1.5rem;
-      color: var(--cyan-neon);
-    }
-
-    .metric-info h5 {
-      font-size: 0.95rem;
-      color: #fff;
-      font-weight: 800;
-    }
-
-    .metric-info span {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-      font-weight: 700;
-      text-transform: uppercase;
-    }
-
-    /* ==========================================
-       7. SEÇÕES & COMPONENTES
-       ========================================== */
-    section {
-      padding: 5.5rem 0;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-    }
-
-    .section-header {
-      margin-bottom: 3.5rem;
-    }
-
-    .section-subtitle {
-      color: var(--cyan-neon);
-      font-size: 0.85rem;
-      font-weight: 800;
-      letter-spacing: 2.5px;
-      text-transform: uppercase;
-      margin-bottom: 0.5rem;
-      display: block;
-      text-shadow: 0 0 10px rgba(0, 242, 254, 0.3);
-    }
-
-    .section-title {
-      font-size: 2.5rem;
-      font-weight: 900;
-      color: #ffffff;
-      letter-spacing: -0.5px;
-    }
-
-    /* --- SOBRE A LOJA --- */
-    .about-card {
-      padding: 3.5rem;
-    }
-
-    .about-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 3rem;
-      align-items: center;
-    }
-
-    .about-text p {
-      font-size: 1.1rem;
-      color: var(--text-muted);
-      line-height: 1.85;
-      margin-bottom: 1.5rem;
-    }
-
-    .about-features-list {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin-top: 1.5rem;
-    }
-
-    .feature-row {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 0.95rem;
-      color: #fff;
-      font-weight: 600;
-    }
-
-    .feature-row span {
-      color: var(--cyan-neon);
-    }
-
-    .about-showcase-frame {
-      height: 300px;
-    }
-
-    /* --- PRODUTOS & SERVIÇOS --- */
-    .products-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-      gap: 2rem;
-    }
-
-    .product-card {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .product-card:hover {
-      border-color: var(--border-glow);
-      box-shadow: 0 15px 45px rgba(0, 242, 254, 0.25);
-    }
-
-    .card-content {
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      flex: 1;
-      justify-content: space-between;
-    }
-
-    .product-title {
-      font-size: 1.4rem;
-      font-weight: 800;
-      color: #fff;
-      margin-bottom: 0.6rem;
-    }
-
-    .product-desc {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      line-height: 1.65;
-      margin-bottom: 1.5rem;
-    }
-
-    .product-specs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-      margin-bottom: 1.5rem;
-    }
-
-    .spec-badge {
-      background: rgba(0, 242, 254, 0.08);
-      border: 1px solid rgba(0, 242, 254, 0.2);
-      color: var(--cyan-neon);
-      font-size: 0.7rem;
-      font-weight: 700;
-      padding: 3px 8px;
-      border-radius: 4px;
-    }
-
-    .product-footer {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-top: 1.2rem;
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-    }
-
-    .price-value {
-      font-size: 1.15rem;
-      font-weight: 900;
-      color: var(--cyan-neon);
-    }
-
-    .btn-details {
-      background: rgba(255, 255, 255, 0.06);
-      color: #fff;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 9px 20px;
-      font-size: 0.85rem;
-      font-weight: 800;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .btn-details:hover {
-      background: var(--cyan-neon);
-      color: #020408;
-      border-color: var(--cyan-neon);
-      box-shadow: 0 0 25px rgba(0, 242, 254, 0.7);
-    }
-
-    /* --- CALCULADORA --- */
-    .calc-card {
-      padding: 3rem 2.5rem;
-    }
-
-    .calc-grid {
-      display: grid;
-      grid-template-columns: 1.5fr 1fr;
-      gap: 2.5rem;
-      align-items: flex-start;
-    }
-
-    .calc-options-group h4 {
-      font-size: 1.1rem;
-      color: #fff;
-      font-weight: 800;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-    }
-
-    .calc-options-group h4 span {
-      color: var(--cyan-neon);
-    }
-
-    .calc-checkboxes {
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-      margin-bottom: 2rem;
-    }
-
-    .calc-option {
-      background: rgba(5, 8, 18, 0.6);
-      border: 1px solid rgba(0, 242, 254, 0.15);
-      padding: 1rem 1.2rem;
-      border-radius: var(--radius-sm);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      cursor: pointer;
-      transition: var(--transition);
-      user-select: none;
-    }
-
-    .calc-option:hover {
-      border-color: var(--cyan-neon);
-      background: rgba(0, 242, 254, 0.05);
-    }
-
-    .calc-option-left {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .calc-option input[type="checkbox"] {
-      width: 18px;
-      height: 18px;
-      accent-color: var(--cyan-neon);
-      cursor: pointer;
-    }
-
-    .calc-option-label {
-      font-size: 0.95rem;
-      color: var(--text-main);
-      font-weight: 600;
-    }
-
-    .calc-option-price {
-      font-size: 0.85rem;
-      color: var(--cyan-neon);
-      font-weight: 800;
-    }
-
-    .calc-summary-panel {
-      background: rgba(2, 4, 8, 0.85);
-      border: 1px solid var(--border-glow);
-      border-radius: var(--radius-sm);
-      padding: 2rem;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
-      box-shadow: 0 0 25px rgba(0, 242, 254, 0.15);
-    }
-
-    .summary-header h4 {
-      font-size: 1.2rem;
-      color: #fff;
-      font-weight: 800;
-      margin-bottom: 0.3rem;
-    }
-
-    .summary-header p {
-      font-size: 0.8rem;
-      color: var(--text-dim);
-    }
-
-    .summary-items {
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 1rem 0;
-      min-height: 90px;
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
-
-    .summary-item-row {
-      display: flex;
-      justify-content: space-between;
-      font-size: 0.85rem;
-      color: var(--text-muted);
-    }
-
-    .summary-total {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .total-label {
-      font-size: 0.9rem;
-      color: #fff;
-      font-weight: 700;
-    }
-
-    .total-price {
-      font-size: 1.6rem;
-      font-weight: 900;
-      color: var(--cyan-neon);
-      text-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
-    }
-
-    .btn-send-whatsapp {
-      width: 100%;
-      background: linear-gradient(135deg, #00c6ff 0%, #0072ff 100%);
-      color: #fff;
-      border: none;
-      padding: 12px;
-      font-size: 0.95rem;
-      font-weight: 800;
-      border-radius: var(--radius-sm);
-      cursor: pointer;
-      transition: var(--transition);
-      box-shadow: 0 0 20px rgba(0, 114, 255, 0.4);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-    }
-
-    .btn-send-whatsapp:hover {
-      opacity: 0.95;
-      box-shadow: 0 0 30px rgba(0, 242, 254, 0.7);
-      transform: translateY(-2px);
-    }
-
-    /* --- PARCEIROS & CLIENTES --- */
-    .partners-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .partner-card {
-      padding: 2rem 1.5rem;
-      text-align: center;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      transition: var(--transition);
-    }
-
-    .partner-card:hover {
-      border-color: var(--cyan-neon);
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0, 242, 254, 0.2);
-    }
-
-    .partner-avatar {
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      border: 2px solid var(--cyan-neon);
-      background: #050812;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.3rem;
-      color: var(--cyan-neon);
-      box-shadow: 0 0 15px rgba(0, 242, 254, 0.3);
-      overflow: hidden;
-    }
-
-    .partner-avatar img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .partner-info h4 {
-      font-size: 1.1rem;
-      color: #fff;
-      font-weight: 800;
-    }
-
-    .partner-info span {
-      font-size: 0.75rem;
-      color: var(--cyan-neon);
-      font-weight: 700;
-      letter-spacing: 1px;
-      text-transform: uppercase;
-    }
-
-    /* --- WORKFLOW --- */
-    .workflow-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
-      position: relative;
-    }
-
-    .workflow-step-card {
-      padding: 2.2rem 1.8rem;
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-    }
-
-    .step-number {
-      font-size: 2.2rem;
-      font-weight: 900;
-      color: rgba(0, 242, 254, 0.25);
-      line-height: 1;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-    }
-
-    .workflow-step-card h4 {
-      font-size: 1.2rem;
-      color: #fff;
-      font-weight: 800;
-    }
-
-    .workflow-step-card p {
-      font-size: 0.9rem;
-      color: var(--text-muted);
-      line-height: 1.6;
-    }
-
-    /* --- PORTFÓLIO --- */
-    .portfolio-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 2rem;
-    }
-
-    .portfolio-card .media-slot {
-      height: 240px;
-    }
-
-    .portfolio-info {
-      padding: 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .portfolio-info h4 {
-      font-size: 1.15rem;
-      color: #fff;
-      font-weight: 800;
-      margin-bottom: 0.2rem;
-    }
-
-    .portfolio-info p {
-      font-size: 0.85rem;
-      color: var(--text-dim);
-    }
-
-    .btn-view-proj {
-      background: transparent;
-      border: 1px solid var(--border-color);
-      color: var(--cyan-neon);
-      padding: 8px 14px;
-      border-radius: 6px;
-      font-size: 0.8rem;
-      font-weight: 800;
-      cursor: pointer;
-      transition: var(--transition);
-    }
-
-    .btn-view-proj:hover {
-      background: var(--cyan-neon);
-      color: #020408;
-      box-shadow: 0 0 15px var(--cyan-neon);
-    }
-
-    /* --- AVALIAÇÕES --- */
-    .comments-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-      gap: 1.8rem;
-    }
-
-    .comment-card {
-      padding: 2.2rem;
-    }
-
-    .stars {
-      color: #ffb703;
-      font-size: 1rem;
-      margin-bottom: 1rem;
-      letter-spacing: 3px;
-    }
-
-    .comment-text {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-      margin-bottom: 1.8rem;
-      font-style: italic;
-    }
-
-    .author-info {
-      display: flex;
-      align-items: center;
-      gap: 14px;
-    }
-
-    .avatar-frame {
-      width: 50px;
-      height: 50px;
-      position: relative;
-      border: 1px solid var(--cyan-neon);
-      border-radius: 10px;
-      overflow: hidden;
-      background: #000;
-      box-shadow: 0 0 12px rgba(0, 242, 254, 0.3);
-    }
-
-    .avatar-frame img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .author-details h4 {
-      font-size: 1rem;
-      color: #fff;
-      font-weight: 800;
-    }
-
-    .author-details span {
-      font-size: 0.75rem;
-      color: var(--text-dim);
-    }
-
-    /* --- FAQ --- */
-    .faq-wrapper {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      gap: 1.25rem;
-    }
-
-    .faq-item {
-      padding: 1.8rem;
-    }
-
-    .faq-question {
-      font-size: 1.15rem;
-      font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 0.6rem;
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .faq-question::before {
-      content: '✦';
-      color: var(--cyan-neon);
-      font-size: 0.85rem;
-    }
-
-    .faq-answer {
-      font-size: 0.95rem;
-      color: var(--text-muted);
-      line-height: 1.7;
-      padding-left: 24px;
-    }
-
-    /* --- LINKS ÚTEIS --- */
-    .links-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 1.5rem;
-    }
-
-    .link-card {
-      padding: 1.8rem;
-      text-decoration: none;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-
-    .link-card:hover {
-      background: rgba(0, 242, 254, 0.12);
-      border-color: var(--cyan-neon);
-      transform: translateY(-4px);
-      box-shadow: 0 10px 30px rgba(0, 242, 254, 0.25);
-    }
-
-    .link-info h4 {
-      color: #fff;
-      font-size: 1.05rem;
-      font-weight: 800;
-      margin-bottom: 0.2rem;
-    }
-
-    .link-info span {
-      color: var(--text-dim);
-      font-size: 0.8rem;
-    }
-
-    .link-arrow {
-      color: var(--cyan-neon);
-      font-size: 1.4rem;
-      transition: var(--transition);
-    }
-
-    .link-card:hover .link-arrow {
-      transform: translateX(6px);
-    }
-
-    /* ==========================================
-       8. FOOTER
-       ========================================== */
-    footer {
-      background: rgba(1, 2, 4, 0.98);
-      border-top: 1px solid rgba(255, 255, 255, 0.08);
-      padding: 3.5rem 2rem;
-      text-align: center;
-      margin-top: auto;
-      position: relative;
-      z-index: 1;
-    }
-
-    .footer-content {
-      max-width: 1200px;
-      margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1rem;
-    }
-
-    footer p {
-      color: var(--text-dim);
-      font-size: 0.9rem;
-    }
-
-    .footer-tech-info {
-      font-size: 0.75rem;
-      color: var(--cyan-neon);
-      letter-spacing: 2px;
-      text-transform: uppercase;
-      opacity: 0.8;
-    }
-
-    @media (max-width: 850px) {
-      .calc-grid { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 768px) {
-      header { padding: 1rem 1.5rem; }
-      .hero h1 { font-size: 2.8rem; }
-      .about-grid { grid-template-columns: 1fr; }
-      .hero-banner-frame { height: 240px; }
-      .sidebar { width: 320px; right: -320px; }
-    }
-  </style>
-</head>
-<body>
-
-  <!-- Fundo Imagem Integrada TL-STUDIO -->
-  <div class="bg-image-container">
-    <img src="img/tl_studio.jpg" alt="Fundo TL STUDIO" onerror="this.style.display='none';">
-  </div>
-  <div class="bg-overlay-dark"></div>
-  <div class="bg-grid"></div>
-
-  <!-- Navbar Glassmorphism -->
-  <header>
-    <div class="brand">
-      <div class="brand-icon"></div>
-      TL <span>STUDIO</span>
-    </div>
-    <div class="header-actions">
-      <button class="menu-toggle" id="menu-toggle" aria-label="Abrir Menu">☰</button>
-    </div>
-  </header>
-
-  <!-- Sidebar Overlay & Menu Drawer com Sistema de Login -->
-  <div class="sidebar-overlay" id="sidebar-overlay"></div>
-  <aside class="sidebar" id="sidebar">
-    <div class="sidebar-header">
-      <div class="brand">TL <span>STUDIO</span></div>
-      <button class="btn-close" id="btn-close">&times;</button>
-    </div>
-
-    <!-- Bloco de Login Integrado no Menu Lateral -->
-    <div class="sidebar-auth-box">
-      <p id="user-display" style="font-weight: 700; color: var(--cyan-neon);">Conta Não Autenticada</p>
-      <button class="btn-sidebar-login" id="btn-login-google">Entrar com Google</button>
-    </div>
-
-    <nav class="sidebar-nav">
-      <a href="#inicio" class="menu-link">Início <span class="tech-status-dot"></span></a>
-      <a href="#sobre" class="menu-link">Sobre a Loja <span class="tech-status-dot"></span></a>
-      <a href="#produtos" class="menu-link">Produtos & Serviços <span class="tech-status-dot"></span></a>
-      <a href="#calculadora" class="menu-link">Calculadora de Orçamento <span class="tech-status-dot"></span></a>
-      <a href="#parceiros" class="menu-link">Parceiros & Guildas <span class="tech-status-dot"></span></a>
-      <a href="#processo" class="menu-link">Como Trabalhamos <span class="tech-status-dot"></span></a>
-      <a href="#portfolio" class="menu-link">Galeria / Portfólio <span class="tech-status-dot"></span></a>
-      <a href="#comentarios" class="menu-link">Avaliações <span class="tech-status-dot"></span></a>
-      <a href="#faq" class="menu-link">FAQ <span class="tech-status-dot"></span></a>
-      <a href="#links" class="menu-link">Links Úteis <span class="tech-status-dot"></span></a>
-    </nav>
-  </aside>
-
-  <!-- Conteúdo Principal -->
-  <main class="container">
-
-    <!-- PAINEL ADMINISTRATIVO EXCLUSIVO (tuliofonseca00@gmail.com) COM CONSULTA DE COMPRAS -->
-    <div id="admin-dashboard" class="cyber-frame">
-      <h3>⚡ PAINEL ADMINISTRADOR (GERENCIAR LOJA)</h3>
-      <p style="color: var(--text-muted); font-size: 0.9rem;">Adicione ou remova os produtos da vitrine em tempo real na nuvem.</p>
-      
-      <div class="admin-form">
-        <input type="text" id="adm-title" placeholder="Nome do Produto / Serviço">
-        <input type="text" id="adm-price" placeholder="Preço (Ex: R$ 150,00)">
-        <textarea id="adm-desc" placeholder="Descrição do Produto" rows="2"></textarea>
-        <input type="text" id="adm-img" placeholder="Link da Imagem (URL ou img/nome.jpg)">
-        <button class="btn-admin-action" id="btn-save-product">Adicionar Produto na Loja</button>
-      </div>
-
-      <!-- Ferramenta de Consulta de Compras por E-mail -->
-      <div style="margin-top: 2rem; border-top: 1px dashed var(--border-color); padding-top: 1.5rem;">
-        <h4 style="color: var(--cyan-neon); margin-bottom: 0.8rem; font-size: 1.1rem;">🔍 Consultar Cliente por E-mail</h4>
-        <div style="display: flex; gap: 10px; max-width: 600px;">
-          <input type="email" id="search-email-input" placeholder="Digite o e-mail do cliente..." style="flex: 1; background: #050812; border: 1px solid var(--border-color); padding: 10px; border-radius: var(--radius-sm); color: #fff; outline: none;">
-          <button class="btn-admin-action" id="btn-search-purchase" style="padding: 10px 20px;">Buscar</button>
-        </div>
-        <div id="search-result-box" style="margin-top: 1rem; font-size: 0.9rem; color: var(--text-muted);"></div>
-      </div>
-    </div>
-
-    <!-- Hero Section -->
-    <section class="hero" id="inicio">
-      <div class="badge-status">
-        <div class="pulse-dot"></div>
-        Sistemas Digitais & Design de Elite
-      </div>
-      <h1>Sua Presença Digital <span>Elevada ao Máximo.</span></h1>
-      <p>Desenvolvimento web de alta performance, arquitetura avançada para servidores de Discord, edições dinâmicas e identidades visuais marcantes.</p>
-
-      <!-- Moldura Destaque Banner Hero -->
-      <div class="cyber-frame hero-banner-frame">
-        <div class="media-slot">
-          <div class="scanline"></div>
-          <span class="hud-tag">TL-STUDIO // HERO_BANNER.JPG</span>
-          <img src="img/hero_banner.jpg" alt="Banner TL Studio" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-          <div class="media-slot-placeholder" style="display: none;">
-            <span>🖼</span>
-            <p>img/hero_banner.jpg</p>
-          </div>
-        </div>
-      </div>
-
-      <!-- Barra de Métricas HUD -->
-      <div class="hud-metrics-bar">
-        <div class="metric-chip">
-          <div class="metric-icon">⚡</div>
-          <div class="metric-info">
-            <h5>Alta Performance</h5>
-            <span>Otimizado & Responsivo</span>
-          </div>
-        </div>
-        <div class="metric-chip">
-          <div class="metric-icon">🛡️</div>
-          <div class="metric-info">
-            <h5>Segurança Total</h5>
-            <span>Padrões de Elite</span>
-          </div>
-        </div>
-        <div class="metric-chip">
-          <div class="metric-icon">💎</div>
-          <div class="metric-info">
-            <h5>Design Exclusivo</h5>
-            <span>Visual Cyber / Glass</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Sobre a Loja -->
-    <section id="sobre">
-      <div class="section-header">
-        <span class="section-subtitle">Conheça Nossa Estrutura</span>
-        <h2 class="section-title">Sobre a TL STUDIO</h2>
-      </div>
-      
-      <div class="cyber-frame about-card">
-        <div class="about-grid">
-          <div class="about-text">
-            <p>A <strong>TL STUDIO</strong> desenvolve ecossistemas digitais focados na experiência do usuário e na estética moderna. Criamos desde páginas web e aplicações sob medida até a configuração técnica completa de servidores e criação de identidades visuais marcantes.</p>
-            <p>Nosso compromisso é entregar qualidade profissional, aliando performance, código limpo e layouts otimizados para converter visitantes em clientes.</p>
-            
-            <div class="about-features-list">
-              <div class="feature-row"><span>✦</span> Foco absoluto em conversão e usabilidade</div>
-              <div class="feature-row"><span>✦</span> Atendimento dedicado e suporte contínuo</div>
-              <div class="feature-row"><span>✦</span> Padrões visuais modernos em Dark Mode / Glassmorphism</div>
-            </div>
-          </div>
-
-          <div class="cyber-frame about-showcase-frame">
-            <div class="media-slot" style="height: 100%;">
-              <div class="scanline"></div>
-              <span class="hud-tag">HQ_PREVIEW.JPG</span>
-              <img src="img/about_preview.jpg" alt="Sobre TL Studio" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-              <div class="media-slot-placeholder" style="display: none;">
-                <span>🖼</span>
-                <p>img/about_preview.jpg</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Produtos e Serviços -->
-    <section id="produtos">
-      <div class="section-header">
-        <span class="section-subtitle">Serviços Exclusivos</span>
-        <h2 class="section-title">Nossos Produtos</h2>
-      </div>
-
-      <div class="products-grid" id="products-container">
-        <div class="cyber-frame product-card">
-          <div class="media-slot">
-            <div class="scanline"></div>
-            <span class="hud-tag">WEB_DEV</span>
-            <img src="img/product_web.jpg" alt="Página Web" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="media-slot-placeholder" style="display: none;">
-              <span>💻</span>
-              <p>img/product_web.jpg</p>
-            </div>
-          </div>
-          <div class="card-content">
-            <div>
-              <h3 class="product-title">Página Web</h3>
-              <p class="product-desc">Página web personalizada com design ultra-moderno, responsivo para celulares e focado em alta conversão.</p>
-            </div>
-            <div class="product-footer">
-              <span class="price-value">Sob Consulta</span>
-              <button class="btn-details">Ver Detalhes</button>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CALCULADORA DE ORÇAMENTO INTERATIVA -->
-    <section id="calculadora">
-      <div class="section-header">
-        <span class="section-subtitle">Estimativa em Tempo Real</span>
-        <h2 class="section-title">Calculadora de Orçamento</h2>
-      </div>
-
-      <div class="cyber-frame calc-card">
-        <div class="calc-grid">
-          <div class="calc-options-group">
-            <h4><span>✦</span> Selecione os Serviços Desejados:</h4>
-            
-            <div class="calc-checkboxes">
-              <label class="calc-option">
-                <div class="calc-option-left">
-                  <input type="checkbox" class="service-calc-item" data-name="Página Web Responsiva" data-price="150">
-                  <span class="calc-option-label">Página Web Responsiva</span>
-                </div>
-                <span class="calc-option-price">+ R$ 150</span>
-              </label>
-
-              <label class="calc-option">
-                <div class="calc-option-left">
-                  <input type="checkbox" class="service-calc-item" data-name="Configuração Servidor Discord" data-price="80">
-                  <span class="calc-option-label">Configuração de Servidor Discord</span>
-                </div>
-                <span class="calc-option-price">+ R$ 80</span>
-              </label>
-
-              <label class="calc-option">
-                <div class="calc-option-left">
-                  <input type="checkbox" class="service-calc-item" data-name="Pacote de Artes & Banners" data-price="50">
-                  <span class="calc-option-label">Pacote de Artes & Banners</span>
-                </div>
-                <span class="calc-option-price">+ R$ 50</span>
-              </label>
-
-              <label class="calc-option">
-                <div class="calc-option-left">
-                  <input type="checkbox" class="service-calc-item" data-name="Edição de Vídeo Curto" data-price="40">
-                  <span class="calc-option-label">Edição de Vídeo Curto</span>
-                </div>
-                <span class="calc-option-price">+ R$ 40</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="calc-summary-panel">
-            <div class="summary-header">
-              <h4>Resumo da Estimativa</h4>
-              <p>Valores estimativos para planejamento inicial.</p>
-            </div>
-
-            <div class="summary-items" id="summary-items-list">
-              <div style="color: var(--text-dim); font-size: 0.85rem; font-style: italic;">Nenhum serviço selecionado.</div>
-            </div>
-
-            <div class="summary-total">
-              <span class="total-label">Total Estimado:</span>
-              <span class="total-price" id="calc-total-display">R$ 0</span>
-            </div>
-
-            <button class="btn-send-whatsapp" id="btn-send-order">
-              Enviar Projeto no Atendimento →
-            </button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- PARCEIROS & CLIENTES -->
-    <section id="parceiros">
-      <div class="section-header">
-        <span class="section-subtitle">Autoridade & Ecossistema</span>
-        <h2 class="section-title">Parceiros, Guildas & Clientes</h2>
-      </div>
-
-      <div class="partners-grid">
-        <div class="cyber-frame partner-card">
-          <div class="partner-avatar">
-            <img src="img/partner_l7.jpg" alt="L7 Esports" onerror="this.style.display='none'; this.parentElement.innerHTML='⚡';">
-          </div>
-          <div class="partner-info">
-            <h4>L7 ESPORTS™</h4>
-            <span>Guilda Oficial & Comp</span>
-          </div>
-        </div>
-
-        <div class="cyber-frame partner-card">
-          <div class="partner-avatar">
-            <img src="img/partner_rp.jpg" alt="FiveM RP" onerror="this.style.display='none'; this.parentElement.innerHTML='🎮';">
-          </div>
-          <div class="partner-info">
-            <h4>Facções & FiveM</h4>
-            <span>Gestão & Servidores RP</span>
-          </div>
-        </div>
-
-        <div class="cyber-frame partner-card">
-          <div class="partner-avatar">
-            <img src="img/partner_ale.jpg" alt="Alê Nail Designer" onerror="this.style.display='none'; this.parentElement.innerHTML='💅';">
-          </div>
-          <div class="partner-info">
-            <h4>Alê Nail Designer</h4>
-            <span>Web & Catálogo Digital</span>
-          </div>
-        </div>
-
-        <div class="cyber-frame partner-card">
-          <div class="partner-avatar">
-            <img src="img/partner_tl.jpg" alt="TL STUDIO" onerror="this.style.display='none'; this.parentElement.innerHTML='🚀';">
-          </div>
-          <div class="partner-info">
-            <h4>TL STUDIO NETWORK</h4>
-            <span>Parceiro Tecnológico</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- WORKFLOW -->
-    <section id="processo">
-      <div class="section-header">
-        <span class="section-subtitle">Fluxo Operacional</span>
-        <h2 class="section-title">Como o Projeto Acontece</h2>
-      </div>
-
-      <div class="workflow-grid">
-        <div class="cyber-frame workflow-step-card">
-          <div class="step-number">01</div>
-          <h4>Briefing & Alinhamento</h4>
-          <p>Você nos envia a ideia inicial, referências visuais e os requisitos exatos do que deseja para o seu projeto.</p>
-        </div>
-
-        <div class="cyber-frame workflow-step-card">
-          <div class="step-number">02</div>
-          <h4>Desenvolvimento HUD</h4>
-          <p>Nossa equipe entra em ação estruturando o código, configurando o Discord ou produzindo as artes com padrão de elite.</p>
-        </div>
-
-        <div class="cyber-frame workflow-step-card">
-          <div class="step-number">03</div>
-          <h4>Revisão & Ajustes</h4>
-          <p>Apresentamos o resultado preliminar para validação e realizamos todos os ajustes necessários para garantir sua total satisfação.</p>
-        </div>
-
-        <div class="cyber-frame workflow-step-card">
-          <div class="step-number">04</div>
-          <h4>Entrega Oficial</h4>
-          <p>Projeto finalizado, testado e entregue com suporte dedicado para você colocar sua marca em destaque no digital.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Galeria / Portfólio -->
-    <section id="portfolio">
-      <div class="section-header">
-        <span class="section-subtitle">Showcase Visual</span>
-        <h2 class="section-title">Galeria de Trabalhos</h2>
-      </div>
-
-      <div class="portfolio-grid">
-        <div class="cyber-frame portfolio-card">
-          <div class="media-slot">
-            <div class="scanline"></div>
-            <span class="hud-tag">PROJECT #01</span>
-            <img src="img/portfolio_1.jpg" alt="Projeto 1" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="media-slot-placeholder" style="display: none;">
-              <span>🖼</span>
-              <p>img/portfolio_1.jpg</p>
-            </div>
-          </div>
-          <div class="portfolio-info">
-            <div>
-              <h4>Landing Page Gamer</h4>
-              <p>Desenvolvimento Web & UI</p>
-            </div>
-            <button class="btn-view-proj">Ver</button>
-          </div>
-        </div>
-
-        <div class="cyber-frame portfolio-card">
-          <div class="media-slot">
-            <div class="scanline"></div>
-            <span class="hud-tag">PROJECT #02</span>
-            <img src="img/portfolio_2.jpg" alt="Projeto 2" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="media-slot-placeholder" style="display: none;">
-              <span>🖼</span>
-              <p>img/portfolio_2.jpg</p>
-            </div>
-          </div>
-          <div class="portfolio-info">
-            <div>
-              <h4>Servidor FiveM / RP</h4>
-              <p>Discord & Automação</p>
-            </div>
-            <button class="btn-view-proj">Ver</button>
-          </div>
-        </div>
-
-        <div class="cyber-frame portfolio-card">
-          <div class="media-slot">
-            <div class="scanline"></div>
-            <span class="hud-tag">PROJECT #03</span>
-            <img src="img/portfolio_3.jpg" alt="Projeto 3" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-            <div class="media-slot-placeholder" style="display: none;">
-              <span>🖼</span>
-              <p>img/portfolio_3.jpg</p>
-            </div>
-          </div>
-          <div class="portfolio-info">
-            <div>
-              <h4>Identidade Guilda Esports</h4>
-              <p>Design Gráfico & Banner</p>
-            </div>
-            <button class="btn-view-proj">Ver</button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Comentários -->
-    <section id="comentarios">
-      <div class="section-header">
-        <span class="section-subtitle">Depoimentos</span>
-        <h2 class="section-title">O Que Dizem Nossos Clientes</h2>
-      </div>
-
-      <div class="comments-grid">
-        <div class="cyber-frame comment-card">
-          <div class="stars">★★★★★</div>
-          <p class="comment-text">"O design da página web superou totalmente nossas expectativas. O suporte foi ágil e o resultado final muito profissional."</p>
-          <div class="author-info">
-            <div class="avatar-frame">
-              <img src="img/avatar_1.jpg" alt="Cliente 1" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'color:var(--cyan-neon);display:flex;align-items:center;justify-content:center;height:100%;font-weight:900;\'>C1</span>';">
-            </div>
-            <div class="author-details">
-              <h4>Cliente Verificado</h4>
-              <span>Projeto Web</span>
-            </div>
-          </div>
-        </div>
-
-        <div class="cyber-frame comment-card">
-          <div class="stars">★★★★★</div>
-          <p class="comment-text">"Servidor do Discord completamente organizado, rápido e com permissões alinhadas. Recomendo muito o trabalho!"</p>
-          <div class="author-info">
-            <div class="avatar-frame">
-              <img src="img/avatar_2.jpg" alt="Cliente 2" onerror="this.style.display='none'; this.parentElement.innerHTML='<span style=\'color:var(--cyan-neon);display:flex;align-items:center;justify-content:center;height:100%;font-weight:900;\'>C2</span>';">
-            </div>
-            <div class="author-details">
-              <h4>Cliente Verificado</h4>
-              <span>Configuração Discord</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section id="faq">
-      <div class="section-header">
-        <span class="section-subtitle">Dúvidas Frequentes</span>
-        <h2 class="section-title">Perguntas Frequentes</h2>
-      </div>
-
-      <div class="faq-wrapper">
-        <div class="cyber-frame faq-item">
-          <div class="faq-question">Como funciona a contratação e entrega?</div>
-          <div class="faq-answer">Você escolhe o serviço desejado, define as especificações com nossa equipe via atendimento e acompanha cada etapa da criação até a entrega final.</div>
-        </div>
-
-        <div class="cyber-frame faq-item">
-          <div class="faq-question">Quais são os métodos de pagamento?</div>
-          <div class="faq-answer">Aceitamos PIX com confirmação rápida e transferências diretas instantâneas.</div>
-        </div>
-
-        <div class="cyber-frame faq-item">
-          <div class="faq-question">Posso solicitar alterações no projeto?</div>
-          <div class="faq-answer">Sim! Cada projeto conta com etapas de aprovação para garantir que tudo fique exatamente de acordo com suas preferências.</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Links Úteis -->
-    <section id="links">
-      <div class="section-header">
-        <span class="section-subtitle">Conecte-se Conosco</span>
-        <h2 class="section-title">Links & Atendimento</h2>
-      </div>
-
-      <div class="links-grid">
-        <a href="#" class="cyber-frame link-card">
-          <div class="link-info">
-            <h4>Discord Oficial</h4>
-            <span>Comunidade e Suporte</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-
-        <a href="#" class="cyber-frame link-card">
-          <div class="link-info">
-            <h4>WhatsApp Direct</h4>
-            <span>Atendimento Comercial</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-
-        <a href="#" class="cyber-frame link-card">
-          <div class="link-info">
-            <h4>Instagram</h4>
-            <span>Nossos Trabalhos</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-
-        <a href="#" class="cyber-frame link-card">
-          <div class="link-info">
-            <h4>Portfólio</h4>
-            <span>Projetos Anteriores</span>
-          </div>
-          <span class="link-arrow">→</span>
-        </a>
-      </div>
-    </section>
-
-  </main>
-
-  <!-- Footer Complexo -->
-  <footer>
-    <div class="footer-content">
-      <p>&copy; 2026 TL STUDIO. Todos os direitos reservados.</p>
-      <div class="footer-tech-info">INTERFACE SYSTEM // V3.5 SECURE HUD</div>
-    </div>
-  </footer>
-
-  <!-- Scripts JS & Firebase Full Integration -->
-  <script type="module">
+<script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-    import { getAnalytics } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-analytics.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-    import { getFirestore, collection, getDocs, addDoc, deleteDoc, doc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+    import { getFirestore, collection, getDocs, addDoc, updateDoc, deleteDoc, doc, setDoc, getDoc, serverTimestamp, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    // Configuração oficial do Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyDq8GZiKqDz2TOkemTegDqUknWfXSFN2dA",
       authDomain: "tl-studio-f0f75.firebaseapp.com",
@@ -1794,36 +14,43 @@
     };
 
     const app = initializeApp(firebaseConfig);
-    const analytics = getAnalytics(app);
     const auth = getAuth(app);
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    // Elementos da Interface
     const btnLogin = document.getElementById('btn-login-google');
     const userDisplay = document.getElementById('user-display');
     const adminDashboard = document.getElementById('admin-dashboard');
-    const productsContainer = document.getElementById('products-container');
-    const btnSaveProduct = document.getElementById('btn-save-product');
 
     let isAdmin = false;
 
-    // Ação do Botão de Login/Logout dentro do Menu Lateral
-    btnLogin.addEventListener('click', () => {
+    // Ação do Botão de Login via Pop-up com captura de erros detalhada
+    btnLogin.addEventListener('click', async () => {
       if (auth.currentUser) {
-        signOut(auth);
+        try {
+          await signOut(auth);
+          window.location.reload();
+        } catch (error) {
+          console.error("Erro ao sair:", error);
+        }
       } else {
-        signInWithPopup(auth, provider).catch(err => console.error("Erro no login:", err));
+        try {
+          userDisplay.textContent = "A abrir login...";
+          await signInWithPopup(auth, provider);
+        } catch (error) {
+          console.error("Erro detalhado no login com Google:", error);
+          alert("Erro ao fazer login: " + error.message);
+          userDisplay.textContent = "Erro na autenticação";
+        }
       }
     });
 
-    // Monitorar Autenticação e Verificar Permissões de Admin (tuliofonseca00@gmail.com)
+    // Monitorar o estado da sessão em tempo real
     onAuthStateChanged(auth, (user) => {
       if (user) {
         btnLogin.textContent = 'Sair da Conta';
         userDisplay.textContent = `Olá, ${user.displayName || user.email}`;
         
-        // Ativa o Dashboard exclusivo se o e-mail for o do admin
         if (user.email === 'tuliofonseca00@gmail.com') {
           isAdmin = true;
           adminDashboard.style.display = 'block';
@@ -1838,224 +65,311 @@
         adminDashboard.style.display = 'none';
       }
       loadProducts();
+      loadGallery();
     });
 
-    // Carregar Produtos Dinâmicos da Coleção "produtos" no Firestore
-    async function loadProducts() {
-      try {
-        const querySnapshot = await getDocs(collection(db, "produtos"));
-        if (!querySnapshot.empty) {
-          let html = '';
-          querySnapshot.forEach((docItem) => {
-            const prod = docItem.data();
-            const prodId = docItem.id;
-            
-            html += `
-              <div class="cyber-frame product-card">
-                <div class="media-slot">
-                  <div class="scanline"></div>
-                  <span class="hud-tag">STORE_ITEM</span>
-                  <img src="${prod.imagem || 'img/product_web.jpg'}" alt="${prod.titulo}" onerror="this.src='img/product_web.jpg';">
-                </div>
-                <div class="card-content">
-                  <div>
-                    <h3 class="product-title">${prod.titulo}</h3>
-                    <p class="product-desc">${prod.descricao || 'Serviço sob medida desenvolvido pela equipe da TL STUDIO.'}</p>
-                  </div>
-                  <div class="product-footer">
-                    <span class="price-value">${prod.preco}</span>
-                    <button class="btn-details" onclick="alert('Solicitação recebida para: ${prod.titulo}')">Comprar</button>
-                  </div>
-                  ${isAdmin ? `<button class="btn-danger" style="margin-top: 12px; width: 100%;" onclick="deletarProduto('${prodId}')">🗑️ Excluir Produto</button>` : ''}
-                </div>
-              </div>
-            `;
-          });
-          productsContainer.innerHTML = html;
-        }
-      } catch (e) {
-        console.error("Erro ao carregar produtos:", e);
-      }
-    }
-
-    // Salvar Novo Produto no Firestore pelo Painel Admin
-    btnSaveProduct.addEventListener('click', async () => {
-      const titulo = document.getElementById('adm-title').value.trim();
-      const preco = document.getElementById('adm-price').value.trim();
-      const descricao = document.getElementById('adm-desc').value.trim();
-      const imagem = document.getElementById('adm-img').value.trim();
-
-      if (!titulo || !preco) {
-        alert('Preencha ao menos o nome do produto e o preço.');
-        return;
-      }
-
-      try {
-        await addDoc(collection(db, "produtos"), {
-          titulo,
-          preco,
-          descricao,
-          imagem,
-          criadoEm: serverTimestamp()
-        });
-        alert('Produto publicado com sucesso no site!');
-        document.getElementById('adm-title').value = '';
-        document.getElementById('adm-price').value = '';
-        document.getElementById('adm-desc').value = '';
-        document.getElementById('adm-img').value = '';
-        loadProducts();
-      } catch (e) {
-        console.error("Erro ao salvar produto:", e);
-        alert('Erro ao salvar no banco de dados.');
-      }
-    });
-
-    // Função de Excluir Produto para Admin
-    window.deletarProduto = async function(id) {
-      if (confirm('Tem certeza de que deseja excluir este produto do site?')) {
-        try {
-          await deleteDoc(doc(db, "produtos", id));
-          loadProducts();
-        } catch (e) {
-          console.error("Erro ao excluir:", e);
-        }
-      }
+    // Restante das funções do painel (Produtos, Galeria, Avaliações, Configurações e Vendas)
+    window.switchAdminTab = function(tabId) {
+      document.querySelectorAll('.admin-tab-btn').forEach(btn => btn.classList.remove('active'));
+      document.querySelectorAll('.admin-panel-section').forEach(sec => sec.classList.remove('active'));
+      
+      event.target.classList.add('active');
+      document.getElementById(tabId).classList.add('active');
     };
 
-    // Funcionalidade de Consulta de Compras por E-mail no Painel Admin
-    const btnSearchPurchase = document.getElementById('btn-search-purchase');
-    const searchEmailInput = document.getElementById('search-email-input');
-    const searchResultBox = document.getElementById('search-result-box');
-
-    if (btnSearchPurchase) {
-      btnSearchPurchase.addEventListener('click', async () => {
-        const emailBuscado = searchEmailInput.value.trim().toLowerCase();
-
-        if (!emailBuscado) {
-          alert('Por favor, digite um e-mail para consultar.');
+    async function loadProducts() {
+      const productsContainer = document.getElementById('products-container');
+      try {
+        const querySnapshot = await getDocs(collection(db, "produtos"));
+        if (querySnapshot.empty) {
+          productsContainer.innerHTML = '<p style="color: var(--text-muted);">Nenhum produto cadastrado.</p>';
           return;
         }
 
-        searchResultBox.innerHTML = 'A pesquisar na base de dados...';
-
-        try {
-          const comprasRef = collection(db, "compras");
-          const q = query(comprasRef, where("email", "==", emailBuscado));
-          const querySnapshot = await getDocs(q);
-
-          if (querySnapshot.empty) {
-            searchResultBox.innerHTML = `<span style="color: #f72585;">❌ Nenhuma compra encontrada para o e-mail: <strong>${emailBuscado}</strong></span>`;
-            return;
-          }
-
-          let resultadoHtml = `<div style="background: rgba(0,242,254,0.05); border: 1px solid var(--cyan-neon); padding: 1rem; border-radius: 8px;">`;
-          resultadoHtml += `<p style="color: var(--cyan-neon); font-weight: 800; margin-bottom: 0.5rem;">✅ Compras encontradas:</p>`;
-
-          querySnapshot.forEach((docItem) => {
-            const dados = docItem.data();
-            resultadoHtml += `
-              <div style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 8px; margin-top: 8px;">
-                <p><strong>Produto:</strong> ${dados.produto || 'N/A'}</p>
-                <p><strong>Data:</strong> ${dados.data || 'Recente'}</p>
-                <p><strong>Status:</strong> <span style="color: #00f2fe;">${dados.status || 'Aprovado'}</span></p>
+        let html = '';
+        querySnapshot.forEach((docItem) => {
+          const prod = docItem.data();
+          const prodId = docItem.id;
+          
+          html += `
+            <div class="cyber-frame product-card">
+              <div class="media-slot">
+                <span class="hud-tag">PRODUTO</span>
+                <img src="${prod.imagem || 'img/product_web.jpg'}" alt="${prod.titulo}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop&q=60';">
               </div>
-            `;
-          });
-
-          resultadoHtml += `</div>`;
-          searchResultBox.innerHTML = resultadoHtml;
-
-        } catch (error) {
-          console.error("Erro ao pesquisar compra:", error);
-          searchResultBox.innerHTML = '<span style="color: red;">Erro ao realizar a consulta no banco de dados.</span>';
-        }
-      });
+              <div class="card-content">
+                <div>
+                  <h3 class="product-title">${prod.titulo}</h3>
+                  <p class="product-desc">${prod.descricao || ''}</p>
+                </div>
+                <div class="product-footer">
+                  <span class="price-value">${prod.preco}</span>
+                  <button class="btn-details" onclick="alert('Iniciando atendimento para: ${prod.titulo}')">Comprar</button>
+                </div>
+                ${isAdmin ? `
+                  <div style="display:flex; gap:8px; margin-top:12px;">
+                    <button class="btn-edit" style="flex:1;" onclick="prepararEdicaoProduto('${prodId}', '${prod.titulo}', '${prod.preco}', '${prod.descricao}', '${prod.imagem}')">Editar</button>
+                    <button class="btn-danger" style="flex:1;" onclick="deletarProduto('${prodId}')">Excluir</button>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        });
+        productsContainer.innerHTML = html;
+      } catch (e) { console.error(e); }
     }
 
-    // Drawer Menu Logic
+    document.getElementById('btn-save-product').addEventListener('click', async () => {
+      const id = document.getElementById('adm-prod-id').value;
+      const titulo = document.getElementById('adm-prod-title').value.trim();
+      const preco = document.getElementById('adm-prod-price').value.trim();
+      const descricao = document.getElementById('adm-prod-desc').value.trim();
+      const imagem = document.getElementById('adm-prod-img').value.trim();
+
+      if (!titulo || !preco) { alert('Preencha o título e o preço.'); return; }
+
+      if (id) {
+        await updateDoc(doc(db, "produtos", id), { titulo, preco, descricao, imagem });
+        alert('Produto atualizado!');
+      } else {
+        await addDoc(collection(db, "produtos"), { titulo, preco, descricao, imagem, criadoEm: serverTimestamp() });
+        alert('Produto cadastrado!');
+      }
+
+      document.getElementById('adm-prod-id').value = '';
+      document.getElementById('adm-prod-title').value = '';
+      document.getElementById('adm-prod-price').value = '';
+      document.getElementById('adm-prod-desc').value = '';
+      document.getElementById('adm-prod-img').value = '';
+      loadProducts();
+    });
+
+    window.prepararEdicaoProduto = function(id, titulo, preco, desc, img) {
+      document.getElementById('adm-prod-id').value = id;
+      document.getElementById('adm-prod-title').value = titulo;
+      document.getElementById('adm-prod-price').value = preco;
+      document.getElementById('adm-prod-desc').value = desc;
+      document.getElementById('adm-prod-img').value = img;
+      switchAdminTab('tab-produtos');
+    };
+
+    window.deletarProduto = async function(id) {
+      if (confirm('Excluir este produto?')) {
+        await deleteDoc(doc(db, "produtos", id));
+        loadProducts();
+      }
+    };
+
+    async function loadGallery() {
+      const galleryContainer = document.getElementById('gallery-container');
+      try {
+        const querySnapshot = await getDocs(collection(db, "galeria"));
+        if (querySnapshot.empty) {
+          galleryContainer.innerHTML = '<p style="color: var(--text-muted);">Nenhum projeto na galeria.</p>';
+          return;
+        }
+
+        let html = '';
+        querySnapshot.forEach((docItem) => {
+          const item = docItem.data();
+          const itemId = docItem.id;
+
+          html += `
+            <div class="cyber-frame portfolio-card">
+              <div class="media-slot">
+                <span class="hud-tag">PROJETO</span>
+                <img src="${item.imagem}" alt="${item.titulo}" onerror="this.src='https://images.unsplash.com/photo-1550745165-9bc0b252726f?w=500&auto=format&fit=crop&q=60';">
+              </div>
+              <div style="padding: 1.5rem;">
+                <h4>${item.titulo}</h4>
+                <p style="color: var(--text-dim); font-size: 0.85rem;">${item.subtitulo || ''}</p>
+                ${isAdmin ? `
+                  <div style="display:flex; gap:8px; margin-top:12px;">
+                    <button class="btn-edit" style="flex:1;" onclick="prepararEdicaoGaleria('${itemId}', '${item.titulo}', '${item.subtitulo}', '${item.imagem}')">Editar</button>
+                    <button class="btn-danger" style="flex:1;" onclick="deletarGaleria('${itemId}')">Excluir</button>
+                  </div>
+                ` : ''}
+              </div>
+            </div>
+          `;
+        });
+        galleryContainer.innerHTML = html;
+      } catch (e) { console.error(e); }
+    }
+
+    document.getElementById('btn-save-galeria').addEventListener('click', async () => {
+      const id = document.getElementById('adm-galeria-id').value;
+      const titulo = document.getElementById('adm-galeria-title').value.trim();
+      const subtitulo = document.getElementById('adm-galeria-sub').value.trim();
+      const imagem = document.getElementById('adm-galeria-img').value.trim();
+
+      if (!titulo || !imagem) { alert('Preencha o título e a URL da imagem.'); return; }
+
+      if (id) {
+        await updateDoc(doc(db, "galeria", id), { titulo, subtitulo, imagem });
+        alert('Item da galeria atualizado!');
+      } else {
+        await addDoc(collection(db, "galeria"), { titulo, subtitulo, imagem, criadoEm: serverTimestamp() });
+        alert('Item adicionado à galeria!');
+      }
+
+      document.getElementById('adm-galeria-id').value = '';
+      document.getElementById('adm-galeria-title').value = '';
+      document.getElementById('adm-galeria-sub').value = '';
+      document.getElementById('adm-galeria-img').value = '';
+      loadGallery();
+    });
+
+    window.prepararEdicaoGaleria = function(id, titulo, sub, img) {
+      document.getElementById('adm-galeria-id').value = id;
+      document.getElementById('adm-galeria-title').value = titulo;
+      document.getElementById('adm-galeria-sub').value = sub;
+      document.getElementById('adm-galeria-img').value = img;
+      switchAdminTab('tab-galeria');
+    };
+
+    window.deletarGaleria = async function(id) {
+      if (confirm('Excluir este item da galeria?')) {
+        await deleteDoc(doc(db, "galeria", id));
+        loadGallery();
+      }
+    };
+
+    async function loadComments() {
+      const commentsContainer = document.getElementById('comments-container');
+      try {
+        const querySnapshot = await getDocs(collection(db, "comentarios"));
+        if (querySnapshot.empty) {
+          commentsContainer.innerHTML = '<p style="color: var(--text-muted);">Nenhuma avaliação enviada ainda.</p>';
+          return;
+        }
+
+        let html = '';
+        querySnapshot.forEach((docItem) => {
+          const c = docItem.data();
+          const cId = docItem.id;
+          const starsText = '★'.repeat(c.estrelas || 5) + '☆'.repeat(5 - (c.estrelas || 5));
+
+          html += `
+            <div class="cyber-frame comment-card" style="padding: 1.8rem;">
+              <div style="color: #ffb703; margin-bottom: 0.5rem;">${starsText}</div>
+              <p style="font-style: italic; font-size: 0.95rem; margin-bottom: 1rem;">"${c.texto}"</p>
+              <div style="display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                  <h5 style="color:#fff;">${c.nome}</h5>
+                  <span style="font-size:0.75rem; color:var(--text-dim);">${c.projeto}</span>
+                </div>
+                ${isAdmin ? `<button class="btn-danger" onclick="deletarComentario('${cId}')">Remover</button>` : ''}
+              </div>
+            </div>
+          `;
+        });
+        commentsContainer.innerHTML = html;
+      } catch (e) { console.error(e); }
+    }
+
+    document.getElementById('btn-send-comment').addEventListener('click', async () => {
+      const nome = document.getElementById('cli-name').value.trim();
+      const projeto = document.getElementById('cli-proj').value.trim();
+      const estrelas = parseInt(document.getElementById('cli-stars').value, 10);
+      const texto = document.getElementById('cli-text').value.trim();
+
+      if (!nome || !texto) { alert('Preencha seu nome e a sua avaliação.'); return; }
+
+      await addDoc(collection(db, "comentarios"), { nome, projeto, estrelas, texto, criadoEm: serverTimestamp() });
+      alert('Sua avaliação foi enviada com sucesso!');
+      document.getElementById('cli-name').value = '';
+      document.getElementById('cli-proj').value = '';
+      document.getElementById('cli-text').value = '';
+      loadComments();
+    });
+
+    window.deletarComentario = async function(id) {
+      if (confirm('Remover esta avaliação?')) {
+        await deleteDoc(doc(db, "comentarios", id));
+        loadComments();
+      }
+    };
+
+    async function loadConfig() {
+      try {
+        const docRef = doc(db, "configuracoes", "geral");
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          const cfg = docSnap.data();
+          if (cfg.aboutP1) document.getElementById('display-about-p1').textContent = cfg.aboutP1;
+          if (cfg.aboutP2) document.getElementById('display-about-p2').textContent = cfg.aboutP2;
+
+          if (cfg.aboutP1) document.getElementById('adm-about-p1').value = cfg.aboutP1;
+          if (cfg.aboutP2) document.getElementById('adm-about-p2').value = cfg.aboutP2;
+
+          if (cfg.linkDiscord) { document.getElementById('link-discord-btn').href = cfg.linkDiscord; document.getElementById('adm-link-discord').value = cfg.linkDiscord; }
+          if (cfg.linkWhatsapp) { document.getElementById('link-whatsapp-btn').href = cfg.linkWhatsapp; document.getElementById('adm-link-whatsapp').value = cfg.linkWhatsapp; }
+          if (cfg.linkInstagram) { document.getElementById('link-instagram-btn').href = cfg.linkInstagram; document.getElementById('adm-link-instagram').value = cfg.linkInstagram; }
+          if (cfg.linkPortfolio) { document.getElementById('link-portfolio-btn').href = cfg.linkPortfolio; document.getElementById('adm-link-portfolio').value = cfg.linkPortfolio; }
+        }
+      } catch (e) { console.error(e); }
+    }
+
+    document.getElementById('btn-save-about').addEventListener('click', async () => {
+      const p1 = document.getElementById('adm-about-p1').value.trim();
+      const p2 = document.getElementById('adm-about-p2').value.trim();
+
+      await setDoc(doc(db, "configuracoes", "geral"), { aboutP1: p1, aboutP2: p2 }, { merge: true });
+      alert('Texto do Sobre Mim atualizado!');
+      loadConfig();
+    });
+
+    document.getElementById('btn-save-links').addEventListener('click', async () => {
+      const linkDiscord = document.getElementById('adm-link-discord').value.trim();
+      const linkWhatsapp = document.getElementById('adm-link-whatsapp').value.trim();
+      const linkInstagram = document.getElementById('adm-link-instagram').value.trim();
+      const linkPortfolio = document.getElementById('adm-link-portfolio').value.trim();
+
+      await setDoc(doc(db, "configuracoes", "geral"), { linkDiscord, linkWhatsapp, linkInstagram, linkPortfolio }, { merge: true });
+      alert('Links atualizados!');
+      loadConfig();
+    });
+
+    document.getElementById('btn-search-purchase').addEventListener('click', async () => {
+      const email = document.getElementById('search-email-input').value.trim().toLowerCase();
+      const box = document.getElementById('search-result-box');
+      if (!email) { alert('Digite um e-mail.'); return; }
+
+      box.innerHTML = 'Pesquisando...';
+      try {
+        const q = query(collection(db, "compras"), where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+
+        if (querySnapshot.empty) {
+          box.innerHTML = `<span style="color:#f72585;">❌ Nenhuma compra encontrada para: <strong>${email}</strong></span>`;
+          return;
+        }
+
+        let html = `<div style="background:rgba(0,242,254,0.05); border:1px solid var(--cyan-neon); padding:1rem; border-radius:8px;">`;
+        querySnapshot.forEach((docItem) => {
+          const d = docItem.data();
+          html += `<div style="border-top:1px solid rgba(255,255,255,0.1); padding-top:6px; margin-top:6px;">
+            <p><strong>Produto:</strong> ${d.produto || 'N/A'}</p>
+            <p><strong>Status:</strong> <span style="color:var(--cyan-neon);">${d.status || 'Aprovado'}</span></p>
+          </div>`;
+        });
+        html += `</div>`;
+        box.innerHTML = html;
+      } catch (e) { box.innerHTML = 'Erro na busca.'; }
+    });
+
     const menuToggle = document.getElementById('menu-toggle');
     const btnClose = document.getElementById('btn-close');
     const sidebar = document.getElementById('sidebar');
     const overlay = document.getElementById('sidebar-overlay');
-    const menuLinks = document.querySelectorAll('.menu-link');
 
-    function openSidebar() {
-      sidebar.classList.add('active');
-      overlay.classList.add('active');
-    }
+    menuToggle.addEventListener('click', () => { sidebar.classList.add('active'); overlay.classList.add('active'); });
+    btnClose.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
+    overlay.addEventListener('click', () => { sidebar.classList.remove('active'); overlay.classList.remove('active'); });
 
-    function closeSidebar() {
-      sidebar.classList.remove('active');
-      overlay.classList.remove('active');
-    }
-
-    menuToggle.addEventListener('click', openSidebar);
-    btnClose.addEventListener('click', closeSidebar);
-    overlay.addEventListener('click', closeSidebar);
-    menuLinks.forEach(link => link.addEventListener('click', closeSidebar));
-
-    // Calculadora Interativa
-    const checkboxes = document.querySelectorAll('.service-calc-item');
-    const summaryItemsList = document.getElementById('summary-items-list');
-    const totalDisplay = document.getElementById('calc-total-display');
-    const btnSendOrder = document.getElementById('btn-send-order');
-
-    function updateCalculator() {
-      let total = 0;
-      let selectedHtml = '';
-      let hasSelection = false;
-
-      checkboxes.forEach(chk => {
-        if (chk.checked) {
-          hasSelection = true;
-          const name = chk.getAttribute('data-name');
-          const price = parseInt(chk.getAttribute('data-price'), 10);
-          total += price;
-          selectedHtml += `<div class="summary-item-row"><span>✦ ${name}</span><span>R$ ${price}</span></div>`;
-        }
-      });
-
-      summaryItemsList.innerHTML = hasSelection ? selectedHtml : '<div style="color: var(--text-dim); font-size: 0.85rem; font-style: italic;">Nenhum serviço selecionado.</div>';
-      totalDisplay.textContent = `R$ ${total}`;
-    }
-
-    checkboxes.forEach(chk => chk.addEventListener('change', updateCalculator));
-
-    // Salvar Orçamento da Calculadora no Firestore
-    btnSendOrder.addEventListener('click', async () => {
-      const selectedItems = [];
-      checkboxes.forEach(chk => {
-        if (chk.checked) {
-          selectedItems.push({
-            servico: chk.getAttribute('data-name'),
-            preco: parseInt(chk.getAttribute('data-price'), 10)
-          });
-        }
-      });
-
-      if (selectedItems.length === 0) {
-        alert('Selecione pelo menos um serviço na calculadora antes de enviar.');
-        return;
-      }
-
-      try {
-        await addDoc(collection(db, "orcamentos"), {
-          itens: selectedItems,
-          total: totalDisplay.textContent,
-          criadoEm: serverTimestamp(),
-          status: "Pendente"
-        });
-
-        alert('Sucesso! O seu pedido de orçamento foi registrado no sistema da TL STUDIO.');
-      } catch (error) {
-        console.error("Erro ao salvar orçamento:", error);
-        alert('Ocorreu um erro ao enviar o orçamento.');
-      }
-    });
-
-    // Inicialização
-    loadProducts();
+    loadComments();
+    loadConfig();
   </script>
-
-</body>
-</html>
